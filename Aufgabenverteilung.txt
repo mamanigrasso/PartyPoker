@@ -1,6 +1,0 @@
-Grunddesign UI (Grundlayout und Start Menu ,Einstellungen, Prototyp auf dem Emulator ) -> Timo Schmid , Mathias Tratgut
-
-Pokerspielregeln
-	-> Kartenkombinationen (Welche Blätter gibt es , welches Blatt schlägt ein anderes) -- Michael Umschaden, Andreas Kogler
-	-> Spieler Reihenfolge (Wer darf wann setzten wer kommt als nächstes dran, Dealer Wann werden welche Karten aufgedeckt) -- Marco Manigrasso, Manuel Langer
-	
