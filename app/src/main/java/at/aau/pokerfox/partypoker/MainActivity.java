@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(HostGameActivity.class.getSimpleName());
                 Bundle bundle = new Bundle();
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);

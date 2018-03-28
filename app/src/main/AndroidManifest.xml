@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HostGameActivity"></activity>
+        <activity android:name=".HostGameActivity" />
+        <activity android:name=".TablechoiceActivity"></activity>
     </application>
 
 </manifest>

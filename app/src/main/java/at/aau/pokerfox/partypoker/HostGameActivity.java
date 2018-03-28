@@ -2,14 +2,29 @@ package at.aau.pokerfox.partypoker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 public class HostGameActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        Bundle bundle = getIntent().getExtras();
-        String playername = bundle.getString(MainActivity.BUNDLE_PLAYER_NAME);
+        setContentView(R.layout.activity_hostgame);
+
+        EditText txt_tablename = findViewById(R.id.txt_table);
+        CheckBox cbx_cheaton = findViewById(R.id.box_cheatOn);
+        EditText txt_bigblind = findViewById(R.id.txt_bigblind);
+        EditText txt_playerpot= findViewById(R.id.txt_playerpot);
+        Button btn_create = findViewById(R.id.btn_create);
+
+
+
+
+
+
     }
 }
