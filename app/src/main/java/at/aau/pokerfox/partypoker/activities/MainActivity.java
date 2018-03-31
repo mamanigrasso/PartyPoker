@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker;
+package at.aau.pokerfox.partypoker.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import at.aau.pokerfox.partypoker.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_NAME = "BUNDLE_PLAYER_NAME";

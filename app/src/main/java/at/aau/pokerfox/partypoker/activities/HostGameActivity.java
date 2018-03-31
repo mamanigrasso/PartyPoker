@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker;
+package at.aau.pokerfox.partypoker.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import at.aau.pokerfox.partypoker.R;
 
 public class HostGameActivity extends AppCompatActivity {
 

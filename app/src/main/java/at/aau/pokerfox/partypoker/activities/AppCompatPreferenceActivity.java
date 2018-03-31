@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker;
+package at.aau.pokerfox.partypoker.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
