@@ -1,15 +1,17 @@
-package at.aau.pokerfox.partypoker.model;
+package at.aau.pokerfox.partypoker;
 
 public class CardDeck {
-    public Card issueNextCardFromDeck() {
-        return new Card();
+    private static CardDeck DECK = new CardDeck();
+
+    public static Card issueNextCardFromDeck() {
+        return new Card((int)(1+Math.random()*3), (int)(4+Math.random()*10));
     }
 
-    public void randomizeDeck() {
+    public static void randomizeDeck() {
 
     }
 
-    public void fillUp() {
+    public static void fillUp() {
 
     }
 }
