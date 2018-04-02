@@ -1,11 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
         android:src="@drawable/table"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <!-- Player section -->
+    <ImageView
+        android:id="@+id/playerCard1"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.876"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/playerCard2"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.876"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/playerCard1"
+        app:layout_constraintTop_toBottomOf="@+id/playerCard1" />
+
+    <!-- Opponent1 section -->
+    <ImageView
+        android:id="@+id/opponent1Card1"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="90"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.46"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/opponent1Card2"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="90"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.548"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtOpponent1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Opponent 1"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/opponent1Card2"
+        app:layout_constraintTop_toBottomOf="@+id/opponent1Card2" />
+
+    <!-- Opponent2 section -->
+    <ImageView
+        android:id="@+id/opponent2Card1"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.099"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/opponent2Card2"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.099"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtOpponent2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opponent 2"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/opponent2Card1"
+        app:layout_constraintStart_toStartOf="@+id/opponent2Card1" />
+
+    <!-- Opponent3 section -->
+    <ImageView
+        android:id="@+id/opponent3Card1"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.672"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.099"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/opponent3Card2"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.722"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.099"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtOpponent3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opponent 3"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/opponent3Card1"
+        app:layout_constraintStart_toStartOf="@+id/opponent3Card1" />
+
+    <!-- Opponent4 section -->
+    <ImageView
+        android:id="@+id/opponent4Card1"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="270"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.46"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/opponent4Card2"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="270"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.548"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtOpponent4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Opponent 4"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/opponent4Card2"
+        app:layout_constraintTop_toBottomOf="@+id/opponent4Card2" />
+
+    <!-- Opponent5 section -->
+    <ImageView
+        android:id="@+id/opponent5Card1"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.672"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.876"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <ImageView
+        android:id="@+id/opponent5Card2"
+        android:layout_width="32dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.722"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.876"
+        app:srcCompat="?android:attr/actionModePasteDrawable" />
+
+    <TextView
+        android:id="@+id/txtOpponent5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opponent 5"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/opponent5Card1"
+        app:layout_constraintTop_toBottomOf="@+id/opponent5Card1" />
 
 </android.support.constraint.ConstraintLayout>
