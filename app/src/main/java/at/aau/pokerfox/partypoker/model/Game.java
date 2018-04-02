@@ -1,7 +1,9 @@
-package at.aau.pokerfox.partypoker;
+package at.aau.pokerfox.partypoker.model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import at.aau.pokerfox.partypoker.Card;
 
 public class Game {
     private static Game _instance = null;
