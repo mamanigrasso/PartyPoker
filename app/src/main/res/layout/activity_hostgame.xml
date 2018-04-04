@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="at.aau.pokerfox.partypoker.activities.HostGameActivity">
+    tools:context="at.aau.pokerfox.partypoker.activities.HostGameActivity"
+    android:background="@color/black">
 
     <EditText
         android:id="@+id/txt_table"
@@ -22,7 +23,9 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.444" />
+        app:layout_constraintVertical_bias="0.444"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"/>
 
     <CheckBox
         android:id="@+id/box_cheatOn"
@@ -35,7 +38,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:buttonTint="@color/white" />
 
     <EditText
         android:id="@+id/txt_playerpot"
@@ -49,7 +55,9 @@
         android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/btn_create"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"/>
 
     <Button
         android:id="@+id/btn_create"
@@ -61,7 +69,10 @@
         android:text="Create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/foxRed"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"/>
 
     <EditText
         android:id="@+id/txt_bigblind"
@@ -77,6 +88,8 @@
         app:layout_constraintBottom_toTopOf="@+id/txt_playerpot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/box_cheatOn" />
+        app:layout_constraintTop_toBottomOf="@+id/box_cheatOn"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
 </android.support.constraint.ConstraintLayout>

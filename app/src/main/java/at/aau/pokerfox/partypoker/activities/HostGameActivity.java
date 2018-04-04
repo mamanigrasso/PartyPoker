@@ -1,5 +1,6 @@
 package at.aau.pokerfox.partypoker.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextWatcher;
@@ -32,10 +33,14 @@ public class HostGameActivity extends AppCompatActivity {
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (isNullOrEmpty(tableName)) {
-                    Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();
-                }
+                   Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();
+               }
+                Intent intent = new Intent("GameActivity");
+                startActivity(intent);
             }
+
         });
 
 
