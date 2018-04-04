@@ -7,6 +7,22 @@
     tools:context="at.aau.pokerfox.partypoker.activities.HostGameActivity"
     android:background="@color/black">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="154dp"
+        android:layout_height="152dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.018"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055"
+        app:srcCompat="@drawable/fox" />
+
     <EditText
         android:id="@+id/txt_table"
         android:layout_width="wrap_content"
@@ -33,15 +49,15 @@
         android:layout_height="28dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="84dp"
+        android:buttonTint="@color/white"
         android:text="Cheatoption on"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:buttonTint="@color/white" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.403"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/txt_playerpot"
