@@ -21,11 +21,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button btnSettings = findViewById(R.id.btn_host);
-        btnSettings.setOnClickListener(new View.OnClickListener() {
+        final Button btnHost = findViewById(R.id.btn_host);
+        btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HostGameActivity.class.getSimpleName());
+                Intent intent = new Intent("HostGameActivity");
                 Bundle bundle = new Bundle();
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);
@@ -36,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent("TablechoiceActivity");
+                Bundle bundle = new Bundle();
+                bundle.putString(BUNDLE_PLAYER_NAME, playerName);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
@@ -51,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count > 0) {
                     btnJoin.setEnabled(true);
-                    btnSettings.setEnabled(true);
+                    btnHost.setEnabled(true);
                 }
                 else{
                     btnJoin.setEnabled(false);
-                    btnSettings.setEnabled(false);
+                    btnHost.setEnabled(false);
                 }
                 playerName = s.toString();
             }
@@ -65,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        btnJoin.setEnabled(false);
+        btnHost.setEnabled(false);
     }
 
 

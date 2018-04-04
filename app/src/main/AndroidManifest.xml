@@ -16,8 +16,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.HostGameActivity" />
-        <activity android:name=".activities.TablechoiceActivity"></activity>
+        <activity android:name=".activities.HostGameActivity">
+            <intent-filter>
+                <action android:name="HostGameActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.TablechoiceActivity">
+            <intent-filter>
+                <action android:name="TablechoiceActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.GameActivity">
+            <intent-filter>
+                <action android:name="GameActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
