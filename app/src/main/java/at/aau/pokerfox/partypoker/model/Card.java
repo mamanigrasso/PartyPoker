@@ -1,20 +1,15 @@
-package at.aau.pokerfox.partypoker.model;
+package at.aau.pokerfox.partypoker;
 
 public class Card {
+    int color;
+    int number;
 
-    private static String[] suits = { "hearts", "spades", "diamonds", "clubs" };
-    private static String[] ranks  = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
-            "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
-
-    private int suit;
-    private int rank;
-
-    public Card(int suit, int rank) {
-        this.suit = suit;
-        this.rank = rank;
+    public Card(int color, int number) {
+        this.color = color;
+        this.number = number;
     }
 
     public String toString() {
-        return "*** CARD " + suit + " -> " + rank + " ***";
+        return "*** CARD " + color + " -> " + number + " ***";
     }
 }
