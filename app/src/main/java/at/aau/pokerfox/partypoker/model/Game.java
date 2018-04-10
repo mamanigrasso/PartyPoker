@@ -95,9 +95,9 @@ public class Game {
     /**
      * Initializes the Game instance.
      * @param blind - small blind amount to start with
-     * @param blindIncrease - specifies number of rounds between blind increase
+     * @param blindIncrease - specifies rank of rounds between blind increase
      * @param chipCount - chip count every player gets at beginning
-     * @param players - maximum number of allPlayers allowed
+     * @param players - maximum rank of allPlayers allowed
      */
     public static void init(int blind, int blindIncrease, int chipCount, int players) {
         potSize = 0;

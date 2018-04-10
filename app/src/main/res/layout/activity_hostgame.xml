@@ -42,7 +42,7 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="Playerpot"
-        android:inputType="number"
+        android:inputType="rank"
         app:layout_constraintBottom_toTopOf="@+id/btn_create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -69,7 +69,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Bigblindstart"
-        android:inputType="number"
+        android:inputType="rank"
         app:layout_constraintBottom_toTopOf="@+id/txt_playerpot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
