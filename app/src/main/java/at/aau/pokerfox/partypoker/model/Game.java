@@ -17,6 +17,7 @@ public class Game {
     private static final int TURN = 1;
     private static final int RIVER = 2;
     private static ArrayList<Card> communityCards;
+    // test comment
 
     public static void startGame() {
 
