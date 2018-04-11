@@ -2,8 +2,6 @@ package at.aau.pokerfox.partypoker.model;
 
 import java.util.ArrayList;
 
-import at.aau.pokerfox.partypoker.Card;
-
 public class Player {
     private String name;
     private boolean isAllIn = false;
