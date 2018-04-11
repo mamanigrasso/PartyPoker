@@ -8,7 +8,7 @@
     android:background="@color/black">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/logo"
         android:layout_width="154dp"
         android:layout_height="152dp"
         android:layout_marginBottom="8dp"
