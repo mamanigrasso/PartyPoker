@@ -20,14 +20,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.307"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.876"
-        app:srcCompat="@drawable/ic_notifications_black_24dp" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/playerCard2"
@@ -37,14 +36,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.357"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.876"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtPlayer"
@@ -65,14 +63,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:rotation="90"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent1Card2"
@@ -83,14 +80,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:rotation="90"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.548"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent1"
@@ -111,14 +107,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.307"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent2Card2"
@@ -128,14 +123,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.357"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent2"
@@ -155,14 +149,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.672"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent3Card2"
@@ -172,14 +165,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.722"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent3"
@@ -200,14 +192,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:rotation="270"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent4Card2"
@@ -218,14 +209,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:rotation="270"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.548"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent4"
@@ -246,14 +236,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.672"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.876"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent5Card2"
@@ -263,14 +252,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.722"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.876"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent5"
@@ -290,14 +278,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.343"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/flop2"
@@ -307,14 +294,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.402"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/flop3"
@@ -324,14 +310,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.468"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
 
     <ImageView
@@ -342,14 +327,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.527"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
 
     <ImageView
@@ -360,13 +344,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.593"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.46"
-        app:srcCompat="?android:attr/actionModePasteDrawable" />
+        app:srcCompat="@drawable/card_back" />
 
 </android.support.constraint.ConstraintLayout>
