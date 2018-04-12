@@ -7,41 +7,43 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:src="@drawable/table"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:src="@drawable/table"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <!-- Player section -->
     <ImageView
         android:id="@+id/playerCard1"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintHorizontal_bias="0.314"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/playerCard2"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintHorizontal_bias="0.378"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/card_back" />
 
     <TextView
@@ -56,8 +58,8 @@
     <!-- Opponent1 section -->
     <ImageView
         android:id="@+id/opponent1Card1"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -68,13 +70,13 @@
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.426"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent1Card2"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -101,8 +103,8 @@
     <!-- Opponent2 section -->
     <ImageView
         android:id="@+id/opponent2Card1"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -117,18 +119,18 @@
 
     <ImageView
         android:id="@+id/opponent2Card2"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.099"
+        app:layout_constraintVertical_bias="0.1"
         app:srcCompat="@drawable/card_back" />
 
     <TextView
@@ -143,8 +145,8 @@
     <!-- Opponent3 section -->
     <ImageView
         android:id="@+id/opponent3Card1"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -154,23 +156,23 @@
         app:layout_constraintHorizontal_bias="0.672"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.099"
+        app:layout_constraintVertical_bias="0.101"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent3Card2"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.722"
+        app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.099"
+        app:layout_constraintVertical_bias="0.101"
         app:srcCompat="@drawable/card_back" />
 
     <TextView
@@ -185,8 +187,8 @@
     <!-- Opponent4 section -->
     <ImageView
         android:id="@+id/opponent4Card1"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -197,13 +199,13 @@
         app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.426"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent4Card2"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -230,24 +232,24 @@
     <!-- Opponent5 section -->
     <ImageView
         android:id="@+id/opponent5Card1"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.672"
+        app:layout_constraintHorizontal_bias="0.658"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/opponent5Card2"
-        android:layout_width="32dp"
-        android:layout_height="64dp"
+        android:layout_width="35dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -257,13 +259,14 @@
         app:layout_constraintHorizontal_bias="0.722"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/card_back" />
 
     <TextView
         android:id="@+id/txtOpponent5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Opponent 5"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/opponent5Card1"
@@ -272,84 +275,148 @@
 
     <ImageView
         android:id="@+id/flop1"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.343"
+        app:layout_constraintHorizontal_bias="0.327"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.461"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/flop2"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.402"
+        app:layout_constraintHorizontal_bias="0.43"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.461"
         app:srcCompat="@drawable/card_back" />
 
     <ImageView
         android:id="@+id/flop3"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintHorizontal_bias="0.537"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.461"
         app:srcCompat="@drawable/card_back" />
 
 
     <ImageView
         android:id="@+id/turn"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.527"
+        app:layout_constraintHorizontal_bias="0.628"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.461"
         app:srcCompat="@drawable/card_back" />
 
 
     <ImageView
         android:id="@+id/river"
-        android:layout_width="64dp"
-        android:layout_height="32dp"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintHorizontal_bias="0.726"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.46"
+        app:layout_constraintVertical_bias="0.461"
         app:srcCompat="@drawable/card_back" />
+
+    <Button
+        android:id="@+id/btn_fold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="fold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.27"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="CHECK"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_raise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="RAISE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.637"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_cheat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="CHEAT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.817"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
