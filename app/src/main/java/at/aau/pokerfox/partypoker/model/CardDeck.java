@@ -1,7 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
 
-//this is a comment bitch
+
 public class CardDeck {
     private static CardDeck DECK = new CardDeck();
 
