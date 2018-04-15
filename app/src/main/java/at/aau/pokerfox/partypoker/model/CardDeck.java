@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+
+
 public class CardDeck {
     private static CardDeck DECK = new CardDeck();
 
