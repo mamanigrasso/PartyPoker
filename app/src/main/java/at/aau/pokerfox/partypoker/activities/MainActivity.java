@@ -8,6 +8,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+
 
 import at.aau.pokerfox.partypoker.R;
 
@@ -21,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+       MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
+
         final Button btnHost = findViewById(R.id.btn_host);
         btnHost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click1.start();
             }
+
+
         });
         final Button btnJoin = findViewById(R.id.btn_join);
         btnJoin.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click1.start();
             }
         });
 
