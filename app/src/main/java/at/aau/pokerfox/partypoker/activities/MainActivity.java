@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
 
         final Button btnHost = findViewById(R.id.btn_host);
         btnHost.setOnClickListener(new View.OnClickListener() {
@@ -36,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
 
-                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
-                click1.start();
+                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click.start();
             }
 
 
