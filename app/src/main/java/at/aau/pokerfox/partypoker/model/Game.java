@@ -95,9 +95,9 @@ public class Game {
     /**
      * Initializes the Game instance.
      * @param blind - small blind amount to start with
-     * @param blindIncrease - specifies rank of rounds between blind increase
+     * @param blindIncrease - specifies number of rounds between blind increase
      * @param chipCount - chip count every player gets at beginning
-     * @param players - maximum rank of allPlayers allowed
+     * @param players - maximum number of allPlayers allowed
      */
     public static void init(int blind, int blindIncrease, int chipCount, int players) {
         potSize = 0;
@@ -248,7 +248,16 @@ public class Game {
     private static void bidRound(int amount) {
         int maxBid = amount;
         boolean isRaised = true;
-        int activePlayerCount = getActivePlayers().size();	// all players who have not yet folded
+
+        int activePlayerCount = allPlayers.size();	// all players who have not yet folded
+        int allInPlayerCount = 0; // all players who are all in
+
+        for (Player player : allPlayers) {
+            if (player.hasFolded())
+                activePlayerCount--;
+            if (player.isAllIn())
+                allInPlayerCount++;
+        }
 
         while (isRaised) {
             isRaised = false;   // assume nobody raises, otherwise set flag to true and repeat loop
@@ -258,24 +267,31 @@ public class Game {
                 Player player = getNextPlayer();
 
                 if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
-                    int playerBid = player.askForAction(maxBid);
+                    if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
 
-                    Sleep();
+                        int playerBid = player.askForAction(maxBid);
 
-                    if (player.hasFolded()) {
-                        activePlayerCount--;
+                        Sleep();
 
-                        if (activePlayerCount == 1)	{ // all other players have folded, so we have a winner!
-                            addPlayerBidsToPot();
-                            return;
+                        if (player.hasFolded()) {	// player has folded
+                            activePlayerCount--;
+
+                            if (activePlayerCount == 1)	{ // all other players have folded, so we have a winner!
+                                addPlayerBidsToPot();
+                                return;
+                            }
                         }
-                    }
 
-                    if (playerBid > maxBid) {   // player has raised
-                        isRaised = true;
-                        maxBid = playerBid; // current players bid is the new minimum for all other players
-                        break;  // restart for loop (all players need to be asked again now)
-                    }
+                        if (player.isAllIn())	// player is all-in
+                            allInPlayerCount++;
+
+                        if (playerBid > maxBid) {   // player has raised
+                            isRaised = true;
+                            maxBid = playerBid; // current players bid is the new minimum for all other players
+                            break;  // restart for loop (all players need to be asked again now)
+                        }
+                    } else
+                        System.out.println("Only one player left - no need to ask anymore!");
                 }
             }
         }
@@ -298,8 +314,10 @@ public class Game {
      * addPlayerBidsToPot - after each round the bids of each player are added to the total pot
      */
     private static void addPlayerBidsToPot() {
-        for (Player player : allPlayers)
-            potSize += player.getAndResetCurrentBid();
+        for (Player player : allPlayers) {
+            potSize += player.getCurrentBid();
+            player.resetCurrentBid();
+        }
     }
 
     /**
