@@ -1,10 +1,13 @@
 package at.aau.pokerfox.partypoker.activities;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,6 +23,8 @@ public class HostGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_hostgame);
 
         final EditText txt_tablename = findViewById(R.id.txt_table);
@@ -33,6 +38,8 @@ public class HostGameActivity extends AppCompatActivity {
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MediaPlayer click = MediaPlayer.create(HostGameActivity.this,R.raw.click);
+                click.start();
 
                 if (isNullOrEmpty(tableName)) {
                    Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();

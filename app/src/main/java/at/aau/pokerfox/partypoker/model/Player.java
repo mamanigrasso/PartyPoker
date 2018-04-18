@@ -37,11 +37,9 @@ public class Player {
         cards.clear();
     }
 
-    public int getAndResetCurrentBid() {
-        int returnAmount = currentBid;
-        currentBid = 0;
-        return returnAmount;
-    }
+    public int getCurrentBid() { return currentBid; }
+
+    public void resetCurrentBid() { currentBid = 0; }
 
     public int giveBlind(int blind) {
         int returnAmount = blind;
@@ -49,8 +47,7 @@ public class Player {
         if (chipCount < blind) {
             returnAmount = chipCount;
             currentBid = chipCount;
-            chipCount = 0;
-            isAllIn = true;
+            setAllIn();
         }
         else {
             chipCount -= blind;
@@ -69,11 +66,9 @@ public class Player {
                     returnAmount = 60;
                     System.out.println(name + " bet: " + returnAmount);
                 } else {
-                    if (chipCount > 0) {
-                        returnAmount = chipCount + currentBid;
-                        System.out.println(name + " bet: " + returnAmount);
-                    } else
-                        returnAmount = 0;
+                    returnAmount = chipCount + currentBid;
+                    setAllIn();
+                    System.out.println(name + " bet: " + returnAmount);
                 }
             } else {
                 if (chipCount > returnAmount * 2) {
@@ -82,7 +77,7 @@ public class Player {
                 } else {
                     if (chipCount > 0) {
                         returnAmount = chipCount + currentBid;
-                        chipCount = 0;
+                        setAllIn();
                         System.out.println(name + " raised: " + returnAmount);
                     } else
                         returnAmount = 0;
@@ -90,7 +85,7 @@ public class Player {
             }
         }
 
-        else if (Math.random()*2 > Math.random()) {
+        else if (Math.random()/2 > Math.random()) {
             returnAmount = currentBid;
             hasFolded = true;
             System.out.println(name + " folded");
@@ -102,18 +97,14 @@ public class Player {
                     returnAmount = amount;
                 else {
                     returnAmount = chipCount + currentBid;
-                    chipCount = 0;
-                    isAllIn = true;
+                    setAllIn();
                 }
                 System.out.println(name + " called: " + returnAmount);
 
             }
         }
 
-        if (chipCount == 0) {
-            System.out.println(name + " is ALL-IN!!!");
-            isAllIn = true;
-        } else {
+        if (!isAllIn) {
             chipCount -= returnAmount;
             chipCount += currentBid;
         }
@@ -173,5 +164,11 @@ public class Player {
     //Cheating-Area: Gets the status, if the player has Cheated in the last round;
     public boolean getCheatStatus() {
         return cheatStatus;
+    }
+  
+    public void setAllIn() {
+        chipCount = 0;
+        isAllIn = true;
+        System.out.println(name + " is ALL-IN!!!");
     }
 }
