@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
  *
  * Source from CrazyJugglerDrummer
  * <p/>
- * https://www.codeproject.com/Articles/38821/Make-a-poker-hand-evalutator-in-Java
- * <p/>
+ *
+ * <p/>https://www.codeproject.com/Articles/38821/Make-a-poker-hand-evalutator-in-Java
  * Adapted by mamanigrasso to evaluate 7-card-hands instead of 5-card-hands.
  */
 

@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+
 
 import at.aau.pokerfox.partypoker.R;
 
@@ -19,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
 
         final Button btnHost = findViewById(R.id.btn_host);
         btnHost.setOnClickListener(new View.OnClickListener() {
@@ -30,7 +38,12 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click.start();
             }
+
+
         });
         final Button btnJoin = findViewById(R.id.btn_join);
         btnJoin.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click1.start();
             }
         });
 
