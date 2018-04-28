@@ -7,7 +7,7 @@ import android.view.Display;
  * Created by TimoS on 25.04.2018.
  */
 
-public class CardView extends Component {
+public class CardView {
 
 
 }
