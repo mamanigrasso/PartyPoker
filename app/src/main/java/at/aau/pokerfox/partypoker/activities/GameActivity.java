@@ -38,9 +38,8 @@ public class GameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.layout_table);
 
-        //Dialog Created by Andreas on 18.04.2018
+        //Dialog Created by Andreas
         Button btnShowCheater = (Button) findViewById(R.id.btn_table4);
-        //final TextView tvShowCheater = (TextView) findViewById(R.id.tvResult);
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,10 +47,8 @@ public class GameActivity extends AppCompatActivity {
                 AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
                 createDialog.setTitle("Choose the Cheater! You have 5 seconds");
-                // createDialog.setMessage("You have 5 seconds");  //nicht aktivieren, sonst Funktioniert AllertDialog nicht
                 createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int indexPosition) {
-                       // tvShowCheater.setText(playerNames[indexPosition]);
                         dialogInterface.dismiss();
                         if (wasCheating==true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
                             Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
