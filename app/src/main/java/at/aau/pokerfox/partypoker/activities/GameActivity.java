@@ -47,7 +47,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.layout_table);
 
         //Dialog Created by Andreas
-        Button btnShowCheater = (Button) findViewById(R.id.btn_table4);
+        Button btnShowCheater = (Button) findViewById(R.id.btn_cheating);
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +173,7 @@ public class GameActivity extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 myView.setImageResource(R.drawable.chips);
+
                 oa2.start();
             }
         });
