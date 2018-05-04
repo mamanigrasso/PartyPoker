@@ -1,12 +1,15 @@
 package at.aau.pokerfox.partypoker.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import android.os.AsyncTask;
 
-public class Player {
+public class Player implements Parcelable {
     private String name;
     private boolean isAllIn = false;
     private boolean hasFolded = false;
@@ -134,5 +137,44 @@ public class Player {
 
     public void setFolded() {
         hasFolded = true;
+    }
+  
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.name);
+        parcel.writeByte((byte) (this.isAllIn ? 1 : 0));
+        parcel.writeByte((byte) (this.hasFolded ? 1 : 0));
+        parcel.writeByte((byte) (this.isDealer ? 1 : 0));
+        parcel.writeInt(this.chipCount);
+        parcel.writeInt(this.currentBid);
+        parcel.writeTypedList(this.cards);
+        parcel.writeByte((byte) (this.cheatStatus ? 1 : 0));
+    }
+
+    public static final Parcelable.Creator<Player> CREATOR
+            = new Parcelable.Creator<Player>() {
+        public Player createFromParcel(Parcel in) {
+            return new Player(in);
+        }
+
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
+
+    private Player(Parcel in) {
+        this.name = in.readString();
+        this.isAllIn = in.readByte() != 0;
+        this.hasFolded = in.readByte() != 0;
+        this.isDealer = in.readByte() != 0;
+        this.chipCount = in.readInt();
+        this.currentBid = in.readInt();
+        this.cards = in.createTypedArrayList(Card.CREATOR);
+        this.cheatStatus = in.readByte() != 0;
     }
 }
