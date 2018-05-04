@@ -24,12 +24,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.R;
-import at.aau.pokerfox.partypoker.model.Card;
 import at.aau.pokerfox.partypoker.model.Game;
+import at.aau.pokerfox.partypoker.model.ModActInterface;
+import at.aau.pokerfox.partypoker.model.Player;
+import at.aau.pokerfox.partypoker.model.Card;
 import at.aau.pokerfox.partypoker.model.network.messages.BroadcastKeys;
 import at.aau.pokerfox.partypoker.model.network.messages.Broadcasts;
 
@@ -45,7 +50,7 @@ import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.YOUR_
  * Created by TimoS on 04.04.2018.
  */
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements Observer,ModActInterface {
 
 
     //should contain the activePlayerNames so the "getActivePlayer"-method of the GameClass
@@ -55,6 +60,7 @@ public class GameActivity extends AppCompatActivity {
     };
 
     boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+    private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
 
     @Override
@@ -108,7 +114,126 @@ public class GameActivity extends AppCompatActivity {
 
         });
 
+        if (true) {  // if is host
+            startGame();
+        }
+      
         this.receiver = new PokerBroadcastReceiver();
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        updateViews();
+    }
+
+    private void startGame() {
+        players = new ArrayList<Player>();
+
+        Player player1 = new Player("Player1");
+        players.add(player1);
+
+        Player player2 = new Player("Player2");
+        players.add(player2);
+
+        Player player3 = new Player("Player3");
+        players.add(player3);
+
+        Player player4 = new Player("Player4");
+        players.add(player4);
+
+        Player player5 = new Player("Player5");
+        players.add(player5);
+
+        Player player6 = new Player("Player6");
+        players.add(player6);
+
+        Game.init(10, 10, 1000, 6, this);
+        Game.addPlayer(player6);
+        Game.addPlayer(player5);
+        Game.addPlayer(player4);
+        Game.addPlayer(player3);
+        Game.addPlayer(player2);
+        Game.addPlayer(player1);
+
+        updateViews();
+        setPlayerNames();
+
+        Game.getInstance().addObserver(this);
+        Game.getInstance().startRound();
+    }
+
+    private void updateViews() {
+        TextView view1 = (TextView)findViewById(R.id.txt_chipsplayer);
+        view1.setText(String.valueOf(players.get(0).getChipCount()));
+        TextView view2 = (TextView)findViewById(R.id.txt_chipsop1);
+        view2.setText(String.valueOf(players.get(1).getChipCount()));
+        TextView view3 = (TextView)findViewById(R.id.txt_chipsop2);
+        view3.setText(String.valueOf(players.get(2).getChipCount()));
+        TextView view4 = (TextView)findViewById(R.id.txt_chipsop3);
+        view4.setText(String.valueOf(players.get(3).getChipCount()));
+        TextView view5 = (TextView)findViewById(R.id.txt_chipsop4);
+        view5.setText(String.valueOf(players.get(4).getChipCount()));
+        TextView view6 = (TextView)findViewById(R.id.txt_chipsop5);
+        view6.setText(String.valueOf(players.get(5).getChipCount()));
+        TextView view7 = (TextView)findViewById(R.id.txt_pot);
+        view7.setText(String.valueOf(Game.getInstance().getPotSize()));
+    }
+
+    private void setPlayerNames() {
+        TextView viewPlayer1 = (TextView)findViewById(R.id.txtPlayer);
+        viewPlayer1.setText(players.get(0).getName());
+        TextView viewPlayer2 = (TextView)findViewById(R.id.txtOpponent1);
+        viewPlayer2.setText(players.get(1).getName());
+        TextView viewPlayer3 = (TextView)findViewById(R.id.txtOpponent2);
+        viewPlayer3.setText(players.get(2).getName());
+        TextView viewPlayer4 = (TextView)findViewById(R.id.txtOpponent3);
+        viewPlayer4.setText(players.get(3).getName());
+        TextView viewPlayer5 = (TextView)findViewById(R.id.txtOpponent4);
+        viewPlayer5.setText(players.get(4).getName());
+        TextView viewPlayer6 = (TextView)findViewById(R.id.txtOpponent5);
+        viewPlayer6.setText(players.get(5).getName());
+    }
+
+    @Override
+    public void hidePlayerActions() {
+        Button buttonCheck = (Button)findViewById(R.id.btn_check);
+        Button buttonFold = (Button)findViewById(R.id.btn_fold);
+        Button buttonRaise = (Button)findViewById(R.id.btn_raise);
+
+        buttonCheck.setVisibility(View.GONE);
+        buttonFold.setVisibility(View.GONE);
+        buttonRaise.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showPlayerActions(boolean bCheck) {
+        Button buttonCheck = (Button)findViewById(R.id.btn_check);
+        Button buttonFold = (Button)findViewById(R.id.btn_fold);
+        Button buttonRaise = (Button)findViewById(R.id.btn_raise);
+
+        buttonFold.setVisibility(View.VISIBLE);
+        buttonRaise.setVisibility(View.VISIBLE);
+        buttonCheck.setVisibility(View.VISIBLE);
+
+        if (bCheck)
+            buttonCheck.setText("CHECK");
+        else
+            buttonCheck.setText("CALL");
+    }
+
+    public void buttonCheckPressed(View v) {
+        Button buttonCheck = (Button)findViewById(R.id.btn_check);
+
+        if (buttonCheck.getText().toString().compareTo("CHECK") == 0)
+            Game.getInstance().playerBid(0, false);
+    }
+
+    public void buttonFoldPressed(View v) {
+        Game.getInstance().playerFolded();
+    }
+
+    public void buttonRaisePressed(View v) {
+        Game.getInstance().playerBid(100, false);
     }
 
     @Override

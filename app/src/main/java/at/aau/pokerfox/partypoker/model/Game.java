@@ -2,10 +2,11 @@ package at.aau.pokerfox.partypoker.model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Game {
-    private static Game _instance = null;
-    private static final int SPEED_FACTOR = 0;
+public class Game extends Observable{
+    private static final Game _instance = new Game();
     private static LinkedList<Player> allPlayers;
     private static int potSize;
     private static int smallBlind;
@@ -17,16 +18,142 @@ public class Game {
     private static final int TURN = 1;
     private static final int RIVER = 2;
     private static ArrayList<Card> communityCards;
-    // test comment
-    // new comment
+    private static int maxBid = 0;
+    private static Player currentPlayer;
+    private static ModActInterface modActInterface;
+    private static int stepID = 1;
 
-    public static void startGame() {
+    public void startRound() {
+        System.out.println("Round " + roundCount);
+
+        prepareRound();
+        assignBlinds();
+        dealOutCards();
+
+        currentPlayer = getNextPlayer();
+        askNextPlayer(currentPlayer, smallBlind*2);
+    }
+
+    public void askNextPlayer(Player p, int bid) {
+        System.out.println("askNextPlayer: " + p.getName() + " " + bid);
+        if (areAllPlayersAligned(bid)) {
+            if (isThereAWinner())
+                startRound();
+            else if (stepID == 3){
+                roundDoneCheckWinner();
+                startRound();
+            }
+            else {
+                addPlayerBidsToPot();
+                maxBid = 0;
+                showCommunityCards(stepID++);    // either flop, turn or river
+                getDealer();    // move dealer to head of queue
+
+                for (Player player : allPlayers) {
+                    player.setCheckStatus(false);
+                }
+
+                currentPlayer = getNextPlayer();
+                askNextPlayer(currentPlayer, 0);
+            }
+        }
+        else {
+            if (!p.isAllIn() && !p.hasFolded()) {
+                p.setCheckStatus(true);
+
+                if (p.getName().compareTo("Player1") == 0)
+                    if (bid == 0)
+                        modActInterface.showPlayerActions(true);
+                    else
+                        modActInterface.showPlayerActions(false);
+                else {
+                    modActInterface.hidePlayerActions();
+                    p.getNewPlayerAction().execute(bid);
+                }
+            }
+            else {
+                currentPlayer = getNextPlayer();
+                askNextPlayer(currentPlayer, bid);
+            }
+        }
+    }
+
+    private boolean areAllPlayersAligned(int bid) {
+        int playersToAct = allPlayers.size();
+
+        for (Player p : allPlayers) {
+            if (p.isAllIn() || p.hasFolded())
+                playersToAct--;
+            else if (p.getCurrentBid() == bid && p.getCheckStatus())
+                playersToAct--;
+        }
+
+        return playersToAct == 0;
+    }
+
+    public void playerDone() {
+        setChanged();
+        notifyObservers();
+        currentPlayer = getNextPlayer();
+        askNextPlayer(currentPlayer, maxBid);
+    }
+
+    public void playerBid(int amount, boolean isAllIn) {
+        if (amount == 0)
+            currentPlayer.setCheckStatus(true);
+
+        if (amount > maxBid)    // player raised
+            maxBid = amount;
+
+        currentPlayer.setCurrentBid(amount);
+
+        if (isAllIn)
+            currentPlayer.setAllIn();
+        else
+            currentPlayer.setChipCount(currentPlayer.getChipCount() - amount);
+
+        playerDone();
+    }
+
+    public void playerFolded() {
+        currentPlayer.setFolded();
+        playerDone();
+    }
+
+    private void roundDoneCheckWinner() {
+        ArrayList<Player> activePlayers = getActivePlayers();
+
+        if (activePlayers.size() > 1) {   // there is still more than one player active, so we need to check hands to figure out the winner(s)
+            ArrayList<Player> winners = determineWinner(activePlayers, communityCards);
+            System.out.println("------------------- Winner is unknown currently -> determineWinner needs to be implemented!  -------------------");
+
+            winners.add(allPlayers.getFirst());	// simulate any player as winner
+
+            kickOutLosersAndCheckFinalWinner(winners);
+
+            int win = potSize/winners.size();	// in case of split pot
+
+            for (Player player: winners) {
+                player.payOutPot(win);
+            }
+        }
+
+        int chipCountSum = 0;
+
+        for (Player player : allPlayers) {
+            System.out.println("Chip count of " + player.getName() + ": " + player.getChipCount());
+            chipCountSum += player.getChipCount();
+        }
+    }
+
+    public void startGame() {
 
         while (allPlayers.size() > 1) {
 
             System.out.println("__________________________________________ ROUND " + roundCount + "  __________________________________________");
 
             prepareRound();
+            Sleep();
             assignBlinds();
             Sleep();
             dealOutCards();
@@ -86,10 +213,8 @@ public class Game {
         }
     }
 
-    public static Game get() {
-        if (_instance == null)
-            _instance = new Game();
-        return _instance;
+    public void addMyObserver(Observer o) {
+        addObserver(o);
     }
 
     /**
@@ -99,7 +224,7 @@ public class Game {
      * @param chipCount - chip count every player gets at beginning
      * @param players - maximum number of allPlayers allowed
      */
-    public static void init(int blind, int blindIncrease, int chipCount, int players) {
+    public static void init(int blind, int blindIncrease, int chipCount, int players, ModActInterface modAct) {
         potSize = 0;
         smallBlind = blind;
         roundsBetweenBlindIncrease = blindIncrease;
@@ -107,6 +232,11 @@ public class Game {
         maxPlayers = players;
         allPlayers = new LinkedList<Player>();
         communityCards = new ArrayList<Card>();
+        modActInterface = modAct;
+    }
+
+    public static Game getInstance() {
+        return _instance;
     }
 
     /**
@@ -140,12 +270,18 @@ public class Game {
         return false; // only one player left, cannot be deleted!
     }
 
+    public int getPotSize() {
+        return potSize;
+    }
+
     /**
      * prepareRound - reset pot size, prepare players , prepare card deck, ...
      */
     private static void prepareRound() {
-        preparePlayers();
         potSize = 0;
+        stepID = 0;
+        maxBid = 0;
+        preparePlayers();
         assignDealer();
         prepareCardDeck();
         if (roundCount%roundsBetweenBlindIncrease == 0)
@@ -213,7 +349,6 @@ public class Game {
             for (int j = 0; j< allPlayers.size(); j++) {   // first player after dealer gets the first card
                 Player player = getNextPlayer();
                 player.takeCard(CardDeck.issueNextCardFromDeck());
-                Sleep();
             }
         }
     }
@@ -269,7 +404,15 @@ public class Game {
                 if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
                     if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
 
-                        int playerBid = player.askForAction(maxBid);
+                        if (player.getName().compareTo("Player1") == 0)
+                            if (amount == 0)
+                                modActInterface.showPlayerActions(true);
+                            else
+                                modActInterface.showPlayerActions(false);
+                        else {
+                            modActInterface.hidePlayerActions();
+                            player.getNewPlayerAction().execute(amount);
+                        }
 
                         Sleep();
 
@@ -285,9 +428,9 @@ public class Game {
                         if (player.isAllIn())	// player is all-in
                             allInPlayerCount++;
 
-                        if (playerBid > maxBid) {   // player has raised
+                        if (player.getCurrentBid() > maxBid) {   // player has raised
                             isRaised = true;
-                            maxBid = playerBid; // current players bid is the new minimum for all other players
+                            maxBid = player.getCurrentBid(); // current players bid is the new minimum for all other players
                             break;  // restart for loop (all players need to be asked again now)
                         }
                     } else
@@ -391,7 +534,7 @@ public class Game {
 
     private static void Sleep() {
         try {
-            Thread.sleep(100*SPEED_FACTOR);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

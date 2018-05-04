@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnJoin.setEnabled(false);
         btnHost.setEnabled(false);
+
+
     }
 
 
