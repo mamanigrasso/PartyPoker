@@ -1,6 +1,9 @@
 package at.aau.pokerfox.partypoker.model;
 
-public class Card {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Card implements Parcelable {
 
     private static String[] suits = { "hearts", "spades", "diamonds", "clubs" };
     private static String[] ranks  = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
@@ -52,5 +55,32 @@ public class Card {
 
     public static String rankAsString(int rank ) {
         return ranks[rank];
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(this.suit);
+        parcel.writeInt(this.rank);
+    }
+
+    public static final Parcelable.Creator<Card> CREATOR
+            = new Parcelable.Creator<Card>() {
+        public Card createFromParcel(Parcel in) {
+            return new Card(in);
+        }
+
+        public Card[] newArray(int size) {
+            return new Card[size];
+        }
+    };
+
+    private Card(Parcel in) {
+        this.suit = in.readInt();
+        this.rank = in.readInt();
     }
 }

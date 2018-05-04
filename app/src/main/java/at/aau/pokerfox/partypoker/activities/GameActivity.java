@@ -3,8 +3,13 @@ package at.aau.pokerfox.partypoker.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,6 +28,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.R;
+import at.aau.pokerfox.partypoker.model.Card;
+import at.aau.pokerfox.partypoker.model.Game;
+import at.aau.pokerfox.partypoker.model.network.messages.BroadcastKeys;
+import at.aau.pokerfox.partypoker.model.network.messages.Broadcasts;
+
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.ACTION_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.INIT_GAME_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.NEW_CARD_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.PLAYER_ROLES_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.UPDATE_TABLE_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.WON_AMOUNT_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.YOUR_TURN_MESSAGE;
 
 /**
  * Created by TimoS on 04.04.2018.
@@ -38,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
     };
 
     boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+    private PokerBroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +107,8 @@ public class GameActivity extends AppCompatActivity {
             }
 
         });
+
+        this.receiver = new PokerBroadcastReceiver();
     }
 
     @Override
@@ -98,9 +118,17 @@ public class GameActivity extends AppCompatActivity {
        // turnMiddleCards();
        // turnOwnCards();
         turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
+
+        registerForPokerBroadcasts(this.receiver);
     }
 
-    public void turnForXPlayers(boolean player1, boolean player2, boolean player3,boolean player4,boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(this.receiver);
+    }
+
+    public void turnForXPlayers(boolean player1, boolean player2, boolean player3, boolean player4, boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
         // TODO: googlen ob nicht elegantere Variante in JAva möglich mit dynamischen arrays
         if (player1) {
             int[] myIds = {R.id.playerCard1, R.id.playerCard2};
@@ -178,6 +206,77 @@ public class GameActivity extends AppCompatActivity {
             }
         });
         oa1.start();
+        }
+    }
+
+    private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
+        IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
+        filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
+        filter.addAction(Broadcasts.UPDATE_TABLE_MESSAGE);
+        filter.addAction(Broadcasts.YOUR_TURN_MESSAGE);
+        filter.addAction(Broadcasts.PLAYER_ROLES_MESSAGE);
+        filter.addAction(Broadcasts.NEW_CARD_MESSAGE);
+        filter.addAction(Broadcasts.WON_AMOUNT_MESSAGE);
+        registerReceiver(receiver, filter);
+    }
+
+    private void handleActionMessage(Bundle bundle) {
+        int amount = bundle.getInt(BroadcastKeys.AMOUNT);
+        boolean hasFolded = bundle.getBoolean(BroadcastKeys.HAS_FOLDED);
+        boolean isAllIn = bundle.getBoolean(BroadcastKeys.IS_ALL_IN);
+
+        if (hasFolded) {
+            // Game.playerFolded();
+        } else {
+            // Game.playerBid(amount, isAllin);
+        }
+    }
+
+
+    private void handleInitGameMessage(Bundle bundle) {}
+    private void handlePlayerRolesMessage(Bundle bundle) {}
+
+    private void handleNewCardMessage(Bundle bundle) {
+        Card newHandCard = bundle.getParcelable(BroadcastKeys.CARD);
+
+        // update cards UI
+    }
+
+    private void handleWonAmountMessage(Bundle bundle) {}
+    private void handleUpdateTableMessage(Bundle bundle) {}
+    private void handleYourTurnMessage(Bundle bundle) {}
+
+    private class PokerBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Bundle extras = intent.getExtras();
+
+            switch (action) {
+                case ACTION_MESSAGE:
+                    handleActionMessage(extras);
+                    break;
+                case INIT_GAME_MESSAGE:
+                    handleInitGameMessage(extras);
+                    break;
+                case PLAYER_ROLES_MESSAGE:
+                    handlePlayerRolesMessage(extras);
+                    break;
+                case NEW_CARD_MESSAGE:
+                    handleNewCardMessage(extras);
+                    break;
+                case WON_AMOUNT_MESSAGE:
+                    handleWonAmountMessage(extras);
+                    break;
+                case UPDATE_TABLE_MESSAGE:
+                    handleUpdateTableMessage(extras);
+                    break;
+                case YOUR_TURN_MESSAGE:
+                    handleYourTurnMessage(extras);
+                    break;
+
+                    default:
+            }
         }
     }
 }
