@@ -401,8 +401,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                     handleYourTurnMessage(extras);
                     break;
 
-                    default:
+                default:
             }
+        }
     }
       
 //getting the needed Cards from the Class "Card" and link the image with the GUI
