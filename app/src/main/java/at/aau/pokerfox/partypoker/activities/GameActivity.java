@@ -117,8 +117,9 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
        // turnMiddleCards();
        // turnOwnCards();
-        turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-
+        //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
+        getPlayerCards();
+        getRiverCard();
         registerForPokerBroadcasts(this.receiver);
     }
 
@@ -208,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
         oa1.start();
         }
     }
-
+  
     private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
         IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
@@ -277,6 +278,33 @@ public class GameActivity extends AppCompatActivity {
 
                     default:
             }
+    }
+      
+//getting the needed Cards from the Class "Card" and link the image with the GUI
+    public void getPlayerCards () {
+        int [] playerCards = {R.id.playerCard1, R.id.playerCard2};
+        getCards(playerCards);
+    }
+
+    public void getfirstThreeCommunityCards() {
+        int [] firstThreeCommunityCards = {R.id.flop1, R.id.flop2, R.id.flop3};
+        getCards(firstThreeCommunityCards);
+    }
+
+    public void getTurnCard() {
+        int[] getTurn={R.id.turn};
+        getCards(getTurn);
+    }
+
+    public void getRiverCard() {
+        int[] getRiver ={R.id.river};
+        getCards(getRiver);
+    }
+
+    public void getCards (int [] CardIDs) {
+        for(int i : CardIDs) {
+            final ImageView cardView = findViewById(i);
+            cardView.setImageDrawable(getDrawable(Card.getCards()));
         }
     }
 }

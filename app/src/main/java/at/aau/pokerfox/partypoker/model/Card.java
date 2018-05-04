@@ -2,6 +2,7 @@ package at.aau.pokerfox.partypoker.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import at.aau.pokerfox.partypoker.R;
 
 public class Card implements Parcelable {
 
@@ -56,7 +57,7 @@ public class Card implements Parcelable {
     public static String rankAsString(int rank ) {
         return ranks[rank];
     }
-
+  
     @Override
     public int describeContents() {
         return 0;
@@ -82,5 +83,10 @@ public class Card implements Parcelable {
     private Card(Parcel in) {
         this.suit = in.readInt();
         this.rank = in.readInt();
+    }
+
+    //to get the id of the card use: "R.drawable.clubs_4" for example.
+    public static int getCards () {
+        return 0;
     }
 }
