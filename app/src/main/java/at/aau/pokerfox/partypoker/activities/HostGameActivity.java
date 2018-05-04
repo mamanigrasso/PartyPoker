@@ -33,8 +33,6 @@ public class HostGameActivity extends AppCompatActivity {
         EditText txt_playerpot= findViewById(R.id.txt_playerpot);
         Button btn_create = findViewById(R.id.btn_create);
 
-
-
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

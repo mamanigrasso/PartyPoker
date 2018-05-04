@@ -1,6 +1,10 @@
 package at.aau.pokerfox.partypoker.model;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import android.os.AsyncTask;
 
 public class Player {
     private String name;
@@ -9,12 +13,12 @@ public class Player {
     private boolean isDealer = false;
     private int chipCount;
     private int currentBid;
-    private ArrayList<Card> cards;
+    private ArrayList<Card> cards = new ArrayList<Card>();;
     private boolean cheatStatus = false;
+    private boolean checkStatus = false;
 
     public Player(String name) {
         this.name = name;
-        cards = new ArrayList<Card>();
     }
 
     public String getName() {
@@ -25,11 +29,12 @@ public class Player {
         return chipCount;
     }
 
-    public void setChipCount(int startChips) {
-        chipCount = startChips;
+    public void setChipCount(int amount) {
+        chipCount = amount;
     }
 
     public void takeCard(Card card) {
+        cards.add(card);
         System.out.println(name + " got " + card.toString());
     }
 
@@ -41,11 +46,10 @@ public class Player {
 
     public void resetCurrentBid() { currentBid = 0; }
 
-    public int giveBlind(int blind) {
-        int returnAmount = blind;
+    public void setCurrentBid(int bid) { currentBid = bid; }
 
+    public int giveBlind(int blind) {
         if (chipCount < blind) {
-            returnAmount = chipCount;
             currentBid = chipCount;
             setAllIn();
         }
@@ -53,65 +57,9 @@ public class Player {
             chipCount -= blind;
             currentBid = blind;
         }
-        System.out.println(name + " gave blind " + returnAmount);
-        return returnAmount; // return amount is either the required blind or the whole chipCount if it's less than the blind
-    }
 
-    public int askForAction(int amount) {
-        int returnAmount = amount;
-
-        if (Math.random()*3 < Math.random()) {
-            if (amount == 0) {
-                if (chipCount > 60) {
-                    returnAmount = 60;
-                    System.out.println(name + " bet: " + returnAmount);
-                } else {
-                    returnAmount = chipCount + currentBid;
-                    setAllIn();
-                    System.out.println(name + " bet: " + returnAmount);
-                }
-            } else {
-                if (chipCount > returnAmount * 2) {
-                    returnAmount = amount * 2;
-                    System.out.println(name + " raised: " + returnAmount);
-                } else {
-                    if (chipCount > 0) {
-                        returnAmount = chipCount + currentBid;
-                        setAllIn();
-                        System.out.println(name + " raised: " + returnAmount);
-                    } else
-                        returnAmount = 0;
-                }
-            }
-        }
-
-        else if (Math.random()/2 > Math.random()) {
-            returnAmount = currentBid;
-            hasFolded = true;
-            System.out.println(name + " folded");
-        } else {
-            if (amount == 0)
-                System.out.println(name + " checked");
-            else {
-                if (chipCount > amount)
-                    returnAmount = amount;
-                else {
-                    returnAmount = chipCount + currentBid;
-                    setAllIn();
-                }
-                System.out.println(name + " called: " + returnAmount);
-
-            }
-        }
-
-        if (!isAllIn) {
-            chipCount -= returnAmount;
-            chipCount += currentBid;
-        }
-
-        currentBid = returnAmount;
-
-        return returnAmount; // should be the amount specified by the player
+        System.out.println(name + " gave blind " + currentBid);
+        return currentBid; // return amount is either the required blind or the whole chipCount if it's less than the blind
     }
 
     public boolean hasFolded() {
@@ -144,6 +92,18 @@ public class Player {
         isAllIn = false;
     }
 
+    public void setCheckStatus(boolean status) {
+        checkStatus = status;
+    }
+
+    public boolean getCheckStatus() {
+        return checkStatus;
+    }
+
+    public PlayerAction getNewPlayerAction() {
+        return new PlayerAction(this);
+    }
+
     // Cheating-Area: Player1 loses Chips, if his cheating was blown by player2;
     // Or Player2 loses Chips, because he thought player1 was cheating, but he didn´t;
     public void reduceChipCount(int amountOfReduce) {
@@ -170,5 +130,9 @@ public class Player {
         chipCount = 0;
         isAllIn = true;
         System.out.println(name + " is ALL-IN!!!");
+    }
+
+    public void setFolded() {
+        hasFolded = true;
     }
 }

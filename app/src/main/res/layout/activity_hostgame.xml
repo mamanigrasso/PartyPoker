@@ -34,14 +34,16 @@
         android:ems="10"
         android:hint="Tablename"
         android:inputType="textPersonName"
+        android:text="tablename"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/box_cheatOn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.444"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"/>
+        tools:text="tablename" />
 
     <CheckBox
         android:id="@+id/box_cheatOn"
@@ -69,11 +71,13 @@
         android:ems="10"
         android:hint="Playerpot"
         android:inputType="number"
+        android:text="1000"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btn_create"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"/>
+        tools:text="1000" />
 
     <Button
         android:id="@+id/btn_create"
@@ -101,11 +105,13 @@
         android:ems="10"
         android:hint="Bigblindstart"
         android:inputType="number"
+        android:text="10"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/txt_playerpot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/box_cheatOn"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        tools:text="10" />
 
 </android.support.constraint.ConstraintLayout>
