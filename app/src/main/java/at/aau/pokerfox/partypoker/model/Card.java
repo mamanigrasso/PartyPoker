@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+import at.aau.pokerfox.partypoker.R;
+
 public class Card {
 
     private static String[] suits = { "hearts", "spades", "diamonds", "clubs" };
@@ -52,5 +54,11 @@ public class Card {
 
     public static String rankAsString(int rank ) {
         return ranks[rank];
+    }
+
+
+    //to get the id of the card use: "R.drawable.clubs_4" for example.
+    public static int getCards () {
+        return 0;
     }
 }

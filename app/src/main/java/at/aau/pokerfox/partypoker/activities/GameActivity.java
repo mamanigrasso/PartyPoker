@@ -23,6 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.R;
+import at.aau.pokerfox.partypoker.model.Card;
 
 /**
  * Created by TimoS on 04.04.2018.
@@ -97,7 +98,9 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
        // turnMiddleCards();
        // turnOwnCards();
-        turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
+        //turnForXPlayers(true, true, true,true,true,true,true,true,true,true); --> not activated for testing-reasons
+        getPlayerCards();
+        getRiverCard();
     }
 
     public void turnForXPlayers(boolean player1, boolean player2, boolean player3,boolean player4,boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
@@ -178,6 +181,34 @@ public class GameActivity extends AppCompatActivity {
             }
         });
         oa1.start();
+        }
+    }
+
+//getting the needed Cards from the Class "Card" and link the image with the GUI
+    public void getPlayerCards () {
+        int [] playerCards = {R.id.playerCard1, R.id.playerCard2};
+        getCards(playerCards);
+    }
+
+    public void getfirstThreeCommunityCards() {
+        int [] firstThreeCommunityCards = {R.id.flop1, R.id.flop2, R.id.flop3};
+        getCards(firstThreeCommunityCards);
+    }
+
+    public void getTurnCard() {
+        int[] getTurn={R.id.turn};
+        getCards(getTurn);
+    }
+
+    public void getRiverCard() {
+        int[] getRiver ={R.id.river};
+        getCards(getRiver);
+    }
+
+    public void getCards (int [] CardIDs) {
+        for(int i : CardIDs) {
+            final ImageView cardView = findViewById(i);
+            cardView.setImageDrawable(getDrawable(Card.getCards()));
         }
     }
 }
