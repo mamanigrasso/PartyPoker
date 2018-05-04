@@ -154,6 +154,7 @@ public class Player implements Parcelable {
         parcel.writeInt(this.currentBid);
         parcel.writeTypedList(this.cards);
         parcel.writeByte((byte) (this.cheatStatus ? 1 : 0));
+        parcel.writeByte((byte) (this.checkStatus ? 1 : 0));
     }
 
     public static final Parcelable.Creator<Player> CREATOR
@@ -175,6 +176,7 @@ public class Player implements Parcelable {
         this.chipCount = in.readInt();
         this.currentBid = in.readInt();
         this.cards = in.createTypedArrayList(Card.CREATOR);
+        this.cheatStatus = in.readByte() != 0;
         this.cheatStatus = in.readByte() != 0;
     }
 }
