@@ -14,6 +14,8 @@ public class Player implements Parcelable {
     private boolean isAllIn = false;
     private boolean hasFolded = false;
     private boolean isDealer = false;
+    private boolean isSmallBlind = false;
+    private boolean isBigBlind = false;
     private int chipCount;
     private int currentBid;
     private ArrayList<Card> cards = new ArrayList<Card>();;
@@ -93,6 +95,8 @@ public class Player implements Parcelable {
     public void activate() {
         hasFolded = false;
         isAllIn = false;
+        isSmallBlind = false;
+        isBigBlind = false;
     }
 
     public void setCheckStatus(boolean status) {
@@ -150,6 +154,8 @@ public class Player implements Parcelable {
         parcel.writeByte((byte) (this.isAllIn ? 1 : 0));
         parcel.writeByte((byte) (this.hasFolded ? 1 : 0));
         parcel.writeByte((byte) (this.isDealer ? 1 : 0));
+        parcel.writeByte((byte) (this.isSmallBlind ? 1 : 0));
+        parcel.writeByte((byte) (this.isBigBlind ? 1 : 0));
         parcel.writeInt(this.chipCount);
         parcel.writeInt(this.currentBid);
         parcel.writeTypedList(this.cards);
@@ -173,10 +179,28 @@ public class Player implements Parcelable {
         this.isAllIn = in.readByte() != 0;
         this.hasFolded = in.readByte() != 0;
         this.isDealer = in.readByte() != 0;
+        this.isSmallBlind = in.readByte() != 0;
+        this.isBigBlind = in.readByte() != 0;
         this.chipCount = in.readInt();
         this.currentBid = in.readInt();
         this.cards = in.createTypedArrayList(Card.CREATOR);
         this.cheatStatus = in.readByte() != 0;
         this.cheatStatus = in.readByte() != 0;
+    }
+
+    public boolean isBigBlind() {
+        return isBigBlind;
+    }
+
+    public void setIsBigBlind(boolean isBigBlind) {
+        this.isBigBlind = isBigBlind;
+    }
+
+    public boolean isSmallBlind() {
+        return isSmallBlind;
+    }
+
+    public void setIsSmallBlind(boolean isSmallBlind) {
+        this.isSmallBlind = isSmallBlind;
     }
 }
