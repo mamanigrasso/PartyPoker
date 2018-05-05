@@ -370,10 +370,12 @@ public class Game extends Observable{
         Player player = getNextPlayer();
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
+        player.setIsSmallBlind(true);
 
         player = getNextPlayer();
         System.out.println(player.getName() + " is big blind.");
         player.giveBlind(smallBlind*2);
+        player.setIsBigBlind(true);
     }
 
     /**

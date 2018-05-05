@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,8 +61,52 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     };
 
     boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+    int bigBlind;
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
+    private TextView tvTablePot;
+
+    private TextView tvPlayer1Name;
+    private TextView tvPlayer2Name;
+    private TextView tvPlayer3Name;
+    private TextView tvPlayer4Name;
+    private TextView tvPlayer5Name;
+    private TextView tvPlayer6Name;
+
+    private TextView tvPlayer1Chips;
+    private TextView tvPlayer2Chips;
+    private TextView tvPlayer3Chips;
+    private TextView tvPlayer4Chips;
+    private TextView tvPlayer5Chips;
+    private TextView tvPlayer6Chips;
+
+    private TextView tvPlayer1Bid;
+    private TextView tvPlayer2Bid;
+    private TextView tvPlayer3Bid;
+    private TextView tvPlayer4Bid;
+    private TextView tvPlayer5Bid;
+    private TextView tvPlayer6Bid;
+
+    private ImageView ivPlayer1BigBlind;
+    private ImageView ivPlayer2BigBlind;
+    private ImageView ivPlayer3BigBlind;
+    private ImageView ivPlayer4BigBlind;
+    private ImageView ivPlayer5BigBlind;
+    private ImageView ivPlayer6BigBlind;
+
+    private ImageView ivPlayer1SmallBlind;
+    private ImageView ivPlayer2SmallBlind;
+    private ImageView ivPlayer3SmallBlind;
+    private ImageView ivPlayer4SmallBlind;
+    private ImageView ivPlayer5SmallBlind;
+    private ImageView ivPlayer6SmallBlind;
+
+    private ImageView ivPlayer1Dealer;
+    private ImageView ivPlayer2Dealer;
+    private ImageView ivPlayer3Dealer;
+    private ImageView ivPlayer4Dealer;
+    private ImageView ivPlayer5Dealer;
+    private ImageView ivPlayer6Dealer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +159,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         });
 
+        createAllViews();
+
         if (true) {  // if is host
             startGame();
         }
@@ -155,43 +202,131 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Game.addPlayer(player2);
         Game.addPlayer(player1);
 
-        updateViews();
-        setPlayerNames();
-
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
     }
 
-    private void updateViews() {
-        TextView view1 = (TextView)findViewById(R.id.txt_chipsplayer);
-        view1.setText(String.valueOf(players.get(0).getChipCount()));
-        TextView view2 = (TextView)findViewById(R.id.txt_chipsop1);
-        view2.setText(String.valueOf(players.get(1).getChipCount()));
-        TextView view3 = (TextView)findViewById(R.id.txt_chipsop2);
-        view3.setText(String.valueOf(players.get(2).getChipCount()));
-        TextView view4 = (TextView)findViewById(R.id.txt_chipsop3);
-        view4.setText(String.valueOf(players.get(3).getChipCount()));
-        TextView view5 = (TextView)findViewById(R.id.txt_chipsop4);
-        view5.setText(String.valueOf(players.get(4).getChipCount()));
-        TextView view6 = (TextView)findViewById(R.id.txt_chipsop5);
-        view6.setText(String.valueOf(players.get(5).getChipCount()));
-        TextView view7 = (TextView)findViewById(R.id.txt_pot);
-        view7.setText(String.valueOf(Game.getInstance().getPotSize()));
+    private void createTablePotView() {
+        tvTablePot = findViewById(R.id.txt_pot);
+    }
+
+    private void updateTablePot() {
+        tvTablePot.setText(String.valueOf(Game.getInstance().getPotSize()));
+    }
+
+    private void createPlayerNameViews() {
+        tvPlayer1Name = findViewById(R.id.txtPlayer);
+        tvPlayer2Name = findViewById(R.id.txtOpponent1);
+        tvPlayer3Name = findViewById(R.id.txtOpponent2);
+        tvPlayer4Name = findViewById(R.id.txtOpponent3);
+        tvPlayer5Name = findViewById(R.id.txtOpponent4);
+        tvPlayer6Name = findViewById(R.id.txtOpponent5);
     }
 
     private void setPlayerNames() {
-        TextView viewPlayer1 = (TextView)findViewById(R.id.txtPlayer);
-        viewPlayer1.setText(players.get(0).getName());
-        TextView viewPlayer2 = (TextView)findViewById(R.id.txtOpponent1);
-        viewPlayer2.setText(players.get(1).getName());
-        TextView viewPlayer3 = (TextView)findViewById(R.id.txtOpponent2);
-        viewPlayer3.setText(players.get(2).getName());
-        TextView viewPlayer4 = (TextView)findViewById(R.id.txtOpponent3);
-        viewPlayer4.setText(players.get(3).getName());
-        TextView viewPlayer5 = (TextView)findViewById(R.id.txtOpponent4);
-        viewPlayer5.setText(players.get(4).getName());
-        TextView viewPlayer6 = (TextView)findViewById(R.id.txtOpponent5);
-        viewPlayer6.setText(players.get(5).getName());
+        tvPlayer1Name.setText(players.get(0).getName());
+        tvPlayer2Name.setText(players.get(1).getName());
+        tvPlayer3Name.setText(players.get(2).getName());
+        tvPlayer4Name.setText(players.get(3).getName());
+        tvPlayer5Name.setText(players.get(4).getName());
+        tvPlayer6Name.setText(players.get(5).getName());
+    }
+
+    private void createPlayerChipsViews() {
+        tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
+        tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
+        tvPlayer3Chips = findViewById(R.id.txt_chipsop2);
+        tvPlayer4Chips = findViewById(R.id.txt_chipsop3);
+        tvPlayer5Chips = findViewById(R.id.txt_chipsop4);
+        tvPlayer6Chips = findViewById(R.id.txt_chipsop5);
+    }
+
+    private void updatePlayerChipsViews() {
+        tvPlayer1Chips.setText(String.valueOf(players.get(0).getChipCount()));
+        tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
+        tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));
+        tvPlayer4Chips.setText(String.valueOf(players.get(3).getChipCount()));
+        tvPlayer5Chips.setText(String.valueOf(players.get(4).getChipCount()));
+        tvPlayer6Chips.setText(String.valueOf(players.get(5).getChipCount()));
+    }
+
+    private void createPlayerBidViews() {
+        tvPlayer1Bid = findViewById(R.id.gebotself);
+        tvPlayer2Bid = findViewById(R.id.gebotop1);
+        tvPlayer3Bid = findViewById(R.id.gebotop2);
+        tvPlayer4Bid = findViewById(R.id.gebotop3);
+        tvPlayer5Bid = findViewById(R.id.gebotop4);
+        tvPlayer6Bid = findViewById(R.id.gebotop5);
+    }
+
+    private void updatePlayerBidViews() {
+        tvPlayer1Bid.setText(String.valueOf(players.get(0).getCurrentBid()));
+        tvPlayer2Bid.setText(String.valueOf(players.get(1).getCurrentBid()));
+        tvPlayer3Bid.setText(String.valueOf(players.get(2).getCurrentBid()));
+        tvPlayer4Bid.setText(String.valueOf(players.get(3).getCurrentBid()));
+        tvPlayer5Bid.setText(String.valueOf(players.get(4).getCurrentBid()));
+        tvPlayer6Bid.setText(String.valueOf(players.get(5).getCurrentBid()));
+    }
+
+    private void createPlayerRoleViews() {
+        ivPlayer1BigBlind = findViewById(R.id.img_bigblind);
+        ivPlayer2BigBlind = findViewById(R.id.img_bigblindop1);
+        ivPlayer3BigBlind = findViewById(R.id.img_bigblindop2);
+        ivPlayer4BigBlind = findViewById(R.id.img_bigblindop3);
+        ivPlayer5BigBlind = findViewById(R.id.img_bigblindop4);
+        ivPlayer6BigBlind = findViewById(R.id.img_bigblindop5);
+
+        ivPlayer1SmallBlind = findViewById(R.id.img_smallblind);
+        ivPlayer2SmallBlind = findViewById(R.id.img_smallblindop1);
+        ivPlayer3SmallBlind = findViewById(R.id.img_smallblindop2);
+        ivPlayer4SmallBlind = findViewById(R.id.img_smallblindop3);
+        ivPlayer5SmallBlind = findViewById(R.id.img_smallblindop4);
+        ivPlayer6SmallBlind = findViewById(R.id.img_smallblindop5);
+
+        ivPlayer1Dealer = findViewById(R.id.img_dealerbtnself);
+        ivPlayer2Dealer = findViewById(R.id.img_dealerbtnop1);
+        ivPlayer3Dealer = findViewById(R.id.img_dealerbtnop2);
+        ivPlayer4Dealer = findViewById(R.id.img_dealerbtnop3);
+        ivPlayer5Dealer = findViewById(R.id.img_dealerbtnop4);
+        ivPlayer6Dealer = findViewById(R.id.img_dealerbtnop5);
+    }
+
+    private void updatePlayerRoleViews() {
+        ivPlayer1BigBlind.setVisibility(players.get(0).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer2BigBlind.setVisibility(players.get(1).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer3BigBlind.setVisibility(players.get(2).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer4BigBlind.setVisibility(players.get(3).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer5BigBlind.setVisibility(players.get(4).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer6BigBlind.setVisibility(players.get(5).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+
+        ivPlayer1SmallBlind.setVisibility(players.get(0).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer2SmallBlind.setVisibility(players.get(1).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer3SmallBlind.setVisibility(players.get(2).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer4SmallBlind.setVisibility(players.get(3).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer5SmallBlind.setVisibility(players.get(4).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer6SmallBlind.setVisibility(players.get(5).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+
+        ivPlayer1Dealer.setVisibility(players.get(0).isDealer() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer2Dealer.setVisibility(players.get(1).isDealer() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer3Dealer.setVisibility(players.get(2).isDealer() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer4Dealer.setVisibility(players.get(3).isDealer() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer5Dealer.setVisibility(players.get(4).isDealer() ? View.VISIBLE : View.INVISIBLE);
+        ivPlayer6Dealer.setVisibility(players.get(5).isDealer() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void createAllViews() {
+        createTablePotView();
+        createPlayerNameViews();
+        createPlayerChipsViews();
+        createPlayerBidViews();
+        createPlayerRoleViews();
+    }
+
+    private void updateViews() {
+        updateTablePot();
+        updatePlayerChipsViews();
+        updatePlayerBidViews();
+        updatePlayerRoleViews();
     }
 
     @Override
@@ -229,6 +364,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void buttonFoldPressed(View v) {
+
         Game.getInstance().playerFolded();
     }
 
@@ -352,15 +488,32 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         boolean isAllIn = bundle.getBoolean(BroadcastKeys.IS_ALL_IN);
 
         if (hasFolded) {
-            // Game.playerFolded();
+            Game.getInstance().playerFolded();
         } else {
-            // Game.playerBid(amount, isAllin);
+            Game.getInstance().playerBid(amount, isAllIn);
         }
     }
 
+    private void handleInitGameMessage(Bundle bundle) {
+        ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
+        boolean isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
+        int bigBlind = bundle.getInt(BroadcastKeys.BIG_BLIND);
+        int playerPot = bundle.getInt(BroadcastKeys.PLAYER_POT);
 
-    private void handleInitGameMessage(Bundle bundle) {}
-    private void handlePlayerRolesMessage(Bundle bundle) {}
+        this.players = players;
+        setPlayerNames();
+
+        this.bigBlind = bigBlind;
+        updateViews();
+    }
+
+    private void handlePlayerRolesMessage(Bundle bundle) {
+        boolean isDealer = bundle.getBoolean(BroadcastKeys.IS_DEALER);
+        boolean isSmallBlind = bundle.getBoolean(BroadcastKeys.IS_SMALL_BLIND);
+        boolean isBigBlind = bundle.getBoolean(BroadcastKeys.IS_BIG_BLIND);
+
+        // not needed anymore!
+    }
 
     private void handleNewCardMessage(Bundle bundle) {
         Card newHandCard = bundle.getParcelable(BroadcastKeys.CARD);
@@ -368,9 +521,33 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         // update cards UI
     }
 
-    private void handleWonAmountMessage(Bundle bundle) {}
-    private void handleUpdateTableMessage(Bundle bundle) {}
-    private void handleYourTurnMessage(Bundle bundle) {}
+    private void handleWonAmountMessage(Bundle bundle) {
+        int wonAmount = bundle.getInt(BroadcastKeys.AMOUNT);
+
+        // not needed
+    }
+
+    private void handleUpdateTableMessage(Bundle bundle) {
+        ArrayList<Card> communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
+        ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
+        int newPotSize = bundle.getInt(BroadcastKeys.NEW_POT);
+
+        updateTablePot();
+        this.players = players;
+        updateViews();
+    }
+
+    private void handleYourTurnMessage(Bundle bundle) {
+        int minAmountToRaise = bundle.getInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE);
+
+        SeekBar sbRaiseAmount = findViewById(R.id.seekBar2);
+        //sbRaiseAmount.setMin(minAmountToRaise);
+
+        if (minAmountToRaise == 0)
+            showPlayerActions(true);
+        else
+            showPlayerActions(false);
+    }
 
     private class PokerBroadcastReceiver extends BroadcastReceiver {
         @Override
