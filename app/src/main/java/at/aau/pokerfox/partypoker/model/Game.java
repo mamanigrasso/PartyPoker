@@ -30,14 +30,12 @@ public class Game extends Observable{
         assignBlinds();
         dealOutCards();
 
-        currentPlayer = getNextPlayer();
-        askNextPlayer(currentPlayer, smallBlind*2);
+        nextStep();
     }
 
-    public void askNextPlayer(Player p, int bid) {
-        System.out.println("askNextPlayer: " + p.getName() + " " + bid);
-        if (areAllPlayersAligned(bid)) {
-            if (isThereAWinner())
+    public void nextStep() {
+        if (areAllPlayersAligned()) {    // all players have either folded or have called max bid
+            if (isThereAWinner())   // have all players folded except one?
                 startRound();
             else if (stepID == 3){
                 roundDoneCheckWinner();
@@ -49,42 +47,40 @@ public class Game extends Observable{
                 showCommunityCards(stepID++);    // either flop, turn or river
                 getDealer();    // move dealer to head of queue
 
-                for (Player player : allPlayers) {
+                for (Player player : allPlayers) { // all players need to be asked again now
                     player.setCheckStatus(false);
+                    player.setStatus("");
                 }
 
-                currentPlayer = getNextPlayer();
-                askNextPlayer(currentPlayer, 0);
+                nextStep();
             }
         }
-        else {
-            if (!p.isAllIn() && !p.hasFolded()) {
-                p.setCheckStatus(true);
+        else {  // not all players aligned yet
+            currentPlayer = getNextPlayer();
 
-                if (p.getName().compareTo("Player1") == 0)
-                    if (bid == 0)
+            if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
+                if (currentPlayer.getName().compareTo("Player1") == 0) {
+                    if (maxBid == 0)
                         modActInterface.showPlayerActions(true);
                     else
                         modActInterface.showPlayerActions(false);
+                }
                 else {
                     modActInterface.hidePlayerActions();
-                    p.getNewPlayerAction().execute(bid);
+                    currentPlayer.getNewPlayerAction().execute(maxBid);
                 }
             }
             else {
-                currentPlayer = getNextPlayer();
-                askNextPlayer(currentPlayer, bid);
+                nextStep();
             }
         }
     }
 
-    private boolean areAllPlayersAligned(int bid) {
+    private boolean areAllPlayersAligned() {
         int playersToAct = allPlayers.size();
 
         for (Player p : allPlayers) {
-            if (p.isAllIn() || p.hasFolded())
-                playersToAct--;
-            else if (p.getCurrentBid() == bid && p.getCheckStatus())
+            if (p.isAllIn() || p.hasFolded() || p.getCheckStatus()) // if player is all in, has folded or has called maxBid
                 playersToAct--;
         }
 
@@ -94,29 +90,42 @@ public class Game extends Observable{
     public void playerDone() {
         setChanged();
         notifyObservers();
-        currentPlayer = getNextPlayer();
-        askNextPlayer(currentPlayer, maxBid);
+        nextStep();
     }
 
     public void playerBid(int amount, boolean isAllIn) {
         if (amount == 0)
-            currentPlayer.setCheckStatus(true);
-
-        if (amount > maxBid)    // player raised
+            currentPlayer.setStatus("Checked");
+        else if (amount == maxBid)
+            currentPlayer.setStatus("Called");
+        else if (amount > maxBid) {   // player raised, we have a new max to bid
             maxBid = amount;
+            currentPlayer.setStatus("Raised");
 
-        currentPlayer.setCurrentBid(amount);
+            for (Player player : allPlayers) { // all other players need to be asked again now
+                if (player != currentPlayer && !player.hasFolded()) {
+                    player.setCheckStatus(false);
+                    player.setStatus("");
+                }
+            }
+        }
 
         if (isAllIn)
             currentPlayer.setAllIn();
         else
-            currentPlayer.setChipCount(currentPlayer.getChipCount() - amount);
+            currentPlayer.setChipCount(currentPlayer.getChipCount() - maxBid + currentPlayer.getCurrentBid());
+
+        currentPlayer.setCheckStatus(true);
+        currentPlayer.setCurrentBid(maxBid);
 
         playerDone();
     }
 
     public void playerFolded() {
+        currentPlayer.setStatus("Folded");
+
         currentPlayer.setFolded();
+
         playerDone();
     }
 
@@ -144,6 +153,10 @@ public class Game extends Observable{
             System.out.println("Chip count of " + player.getName() + ": " + player.getChipCount());
             chipCountSum += player.getChipCount();
         }
+    }
+
+    public int getMaxBid() {
+        return maxBid;
     }
 
     public void startGame() {
@@ -370,12 +383,16 @@ public class Game extends Observable{
         Player player = getNextPlayer();
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
+        player.setChipCount(player.getChipCount()-smallBlind);
         player.setIsSmallBlind(true);
 
         player = getNextPlayer();
         System.out.println(player.getName() + " is big blind.");
         player.giveBlind(smallBlind*2);
+        player.setChipCount(player.getChipCount()-smallBlind*2);
         player.setIsBigBlind(true);
+
+        maxBid = smallBlind*2;
     }
 
     /**

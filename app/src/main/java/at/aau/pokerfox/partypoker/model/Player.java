@@ -21,6 +21,7 @@ public class Player implements Parcelable {
     private ArrayList<Card> cards = new ArrayList<Card>();;
     private boolean cheatStatus = false;
     private boolean checkStatus = false;
+    private String status = "";
 
     public Player(String name) {
         this.name = name;
@@ -59,7 +60,6 @@ public class Player implements Parcelable {
             setAllIn();
         }
         else {
-            chipCount -= blind;
             currentBid = blind;
         }
 
@@ -136,6 +136,7 @@ public class Player implements Parcelable {
     public void setAllIn() {
         chipCount = 0;
         isAllIn = true;
+        status = "ALL-IN";
         System.out.println(name + " is ALL-IN!!!");
     }
 
@@ -161,6 +162,7 @@ public class Player implements Parcelable {
         parcel.writeTypedList(this.cards);
         parcel.writeByte((byte) (this.cheatStatus ? 1 : 0));
         parcel.writeByte((byte) (this.checkStatus ? 1 : 0));
+        parcel.writeString(this.status);
     }
 
     public static final Parcelable.Creator<Player> CREATOR
@@ -186,6 +188,7 @@ public class Player implements Parcelable {
         this.cards = in.createTypedArrayList(Card.CREATOR);
         this.cheatStatus = in.readByte() != 0;
         this.cheatStatus = in.readByte() != 0;
+        this.status = in.readString();
     }
 
     public boolean isBigBlind() {
@@ -202,5 +205,13 @@ public class Player implements Parcelable {
 
     public void setIsSmallBlind(boolean isSmallBlind) {
         this.isSmallBlind = isSmallBlind;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

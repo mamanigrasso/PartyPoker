@@ -1219,7 +1219,7 @@
         app:layout_constraintVertical_bias="0.876" />
 
     <TextView
-        android:id="@+id/gebotop1"
+        android:id="@+id/gebotop2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -1236,7 +1236,7 @@
         app:layout_constraintVertical_bias="0.293" />
 
     <TextView
-        android:id="@+id/gebotop2"
+        android:id="@+id/gebotop1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -1343,7 +1343,7 @@
         android:layout_height="wrap_content"
         android:text="Check"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/gebotop2"
+        app:layout_constraintStart_toStartOf="@+id/gebotop1"
         app:layout_constraintTop_toTopOf="@+id/text_checkop4" />
 
     <TextView
