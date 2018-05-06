@@ -2,7 +2,6 @@ package at.aau.pokerfox.partypoker.model.network.messages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.drm.DrmStore;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,10 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
 public class MessageHandler implements SalutDataCallback {
+
+    private void sendMessage(AbstractMessage message) {
+
+    }
 
     private void handleMessage(String json) {
         AbstractMessage message = parseJsonToMessage(json);
