@@ -61,12 +61,6 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
             }
         }
 
-        if (!p.isAllIn()) {
-            p.setChipCount(p.getChipCount()-returnAmount+p.getCurrentBid());
-        }
-
-        p.setCurrentBid(returnAmount);
-
         return returnAmount; // should be the amount specified by the player*/
     }
 
@@ -85,6 +79,6 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer playerBid) {
-        Game.getInstance().playerDone();
+        Game.getInstance().playerBid(playerBid, false);
     }
 }
