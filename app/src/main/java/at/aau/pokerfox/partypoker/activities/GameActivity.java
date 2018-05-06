@@ -24,12 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.peak.salut.SalutDevice;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
@@ -62,6 +65,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
+    private int bigBlind, playerPot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +74,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.layout_table);
 
-        //Dialog Created by Andreas
-        Button btnShowCheater = (Button) findViewById(R.id.btn_cheating);
+        if (PartyPokerApplication.isHost()) {
+            Bundle bundle = getIntent().getExtras();
+            bigBlind = bundle.getInt(HostGameActivity.BUNDLE_BIG_BLIND);
+            playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
+        }
+
+        Button btnShowCheater = findViewById(R.id.btn_cheating);
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +123,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         });
 
-        if (true) {  // if is host
+        if (PartyPokerApplication.isHost()) {  // if is host
             startGame();
         }
       
@@ -129,37 +138,51 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void startGame() {
         players = new ArrayList<Player>();
 
-        Player player1 = new Player("Player1");
-        players.add(player1);
+        Player myself = new Player("host");
+        players.add(myself);
 
-        Player player2 = new Player("Player2");
-        players.add(player2);
+        for (SalutDevice device : PartyPokerApplication.getConnectedDevices()) {
+            Player p = new Player(device.instanceName);
+            players.add(p);
+        }
 
-        Player player3 = new Player("Player3");
-        players.add(player3);
+//        Player player1 = new Player("Player1");
+//        players.add(player1);
+//
+//        Player player2 = new Player("Player2");
+//        players.add(player2);
+//
+//        Player player3 = new Player("Player3");
+//        players.add(player3);
+//
+//        Player player4 = new Player("Player4");
+//        players.add(player4);
+//
+//        Player player5 = new Player("Player5");
+//        players.add(player5);
+//
+//        Player player6 = new Player("Player6");
+//        players.add(player6);
 
-        Player player4 = new Player("Player4");
-        players.add(player4);
+//        Game.init(10, 10, 1000, 6, this);
+//        Game.addPlayer(player6);
+//        Game.addPlayer(player5);
+//        Game.addPlayer(player4);
+//        Game.addPlayer(player3);
+//        Game.addPlayer(player2);
+//        Game.addPlayer(player1);
 
-        Player player5 = new Player("Player5");
-        players.add(player5);
-
-        Player player6 = new Player("Player6");
-        players.add(player6);
-
-        Game.init(10, 10, 1000, 6, this);
-        Game.addPlayer(player6);
-        Game.addPlayer(player5);
-        Game.addPlayer(player4);
-        Game.addPlayer(player3);
-        Game.addPlayer(player2);
-        Game.addPlayer(player1);
+        Game.init(bigBlind, bigBlind, playerPot, players.size(), this);
 
         updateViews();
         setPlayerNames();
 
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
+
+        for (Player p : players) {
+            Game.addPlayer(p);
+        }
     }
 
     private void updateViews() {
@@ -167,14 +190,14 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         view1.setText(String.valueOf(players.get(0).getChipCount()));
         TextView view2 = (TextView)findViewById(R.id.txt_chipsop1);
         view2.setText(String.valueOf(players.get(1).getChipCount()));
-        TextView view3 = (TextView)findViewById(R.id.txt_chipsop2);
-        view3.setText(String.valueOf(players.get(2).getChipCount()));
-        TextView view4 = (TextView)findViewById(R.id.txt_chipsop3);
-        view4.setText(String.valueOf(players.get(3).getChipCount()));
-        TextView view5 = (TextView)findViewById(R.id.txt_chipsop4);
-        view5.setText(String.valueOf(players.get(4).getChipCount()));
-        TextView view6 = (TextView)findViewById(R.id.txt_chipsop5);
-        view6.setText(String.valueOf(players.get(5).getChipCount()));
+//        TextView view3 = (TextView)findViewById(R.id.txt_chipsop2);
+//        view3.setText(String.valueOf(players.get(2).getChipCount()));
+//        TextView view4 = (TextView)findViewById(R.id.txt_chipsop3);
+//        view4.setText(String.valueOf(players.get(3).getChipCount()));
+//        TextView view5 = (TextView)findViewById(R.id.txt_chipsop4);
+//        view5.setText(String.valueOf(players.get(4).getChipCount()));
+//        TextView view6 = (TextView)findViewById(R.id.txt_chipsop5);
+//        view6.setText(String.valueOf(players.get(5).getChipCount()));
         TextView view7 = (TextView)findViewById(R.id.txt_pot);
         view7.setText(String.valueOf(Game.getInstance().getPotSize()));
     }
@@ -184,14 +207,14 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         viewPlayer1.setText(players.get(0).getName());
         TextView viewPlayer2 = (TextView)findViewById(R.id.txtOpponent1);
         viewPlayer2.setText(players.get(1).getName());
-        TextView viewPlayer3 = (TextView)findViewById(R.id.txtOpponent2);
-        viewPlayer3.setText(players.get(2).getName());
-        TextView viewPlayer4 = (TextView)findViewById(R.id.txtOpponent3);
-        viewPlayer4.setText(players.get(3).getName());
-        TextView viewPlayer5 = (TextView)findViewById(R.id.txtOpponent4);
-        viewPlayer5.setText(players.get(4).getName());
-        TextView viewPlayer6 = (TextView)findViewById(R.id.txtOpponent5);
-        viewPlayer6.setText(players.get(5).getName());
+//        TextView viewPlayer3 = (TextView)findViewById(R.id.txtOpponent2);
+//        viewPlayer3.setText(players.get(2).getName());
+//        TextView viewPlayer4 = (TextView)findViewById(R.id.txtOpponent3);
+//        viewPlayer4.setText(players.get(3).getName());
+//        TextView viewPlayer5 = (TextView)findViewById(R.id.txtOpponent4);
+//        viewPlayer5.setText(players.get(4).getName());
+//        TextView viewPlayer6 = (TextView)findViewById(R.id.txtOpponent5);
+//        viewPlayer6.setText(players.get(5).getName());
     }
 
     @Override
@@ -428,10 +451,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void getCards (int [] CardIDs) {
-        for(int i : CardIDs) {
-            final ImageView cardView = findViewById(i);
-            cardView.setImageDrawable(getDrawable(Card.getCards()));
-        }
+//        for(int i : CardIDs) {
+//            final ImageView cardView = findViewById(i);
+//            cardView.setImageDrawable(getDrawable(Card.getCards()));
+//        }
     }
 }
 

@@ -11,14 +11,26 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.peak.salut.Callbacks.SalutCallback;
+import com.peak.salut.Callbacks.SalutDeviceCallback;
+import com.peak.salut.Salut;
+import com.peak.salut.SalutDataReceiver;
+import com.peak.salut.SalutDevice;
+import com.peak.salut.SalutServiceData;
+
+import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 
 public class HostGameActivity extends AppCompatActivity {
     public static final String TAG = ".activities.HostGameActivity";
+    public static final String BUNDLE_BIG_BLIND = "BUNDLE_BIG_BLIND";
+    public static final String BUNDLE_PLAYER_POT = "BUNDLE_PLAYER_POT";
 
     private String tableName = "";
+    private Salut network;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,28 +39,81 @@ public class HostGameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_hostgame);
 
+        final String playerName = getIntent().getExtras().getString(MainActivity.BUNDLE_PLAYER_NAME);
+
         final EditText txt_tablename = findViewById(R.id.txt_table);
         CheckBox cbx_cheaton = findViewById(R.id.box_cheatOn);
-        EditText txt_bigblind = findViewById(R.id.txt_bigblind);
-        EditText txt_playerpot= findViewById(R.id.txt_playerpot);
-        Button btn_create = findViewById(R.id.btn_create);
+        final EditText txt_bigblind = findViewById(R.id.txt_bigblind);
+        final EditText txt_playerpot= findViewById(R.id.txt_playerpot);
+        final Button btn_create = findViewById(R.id.btn_create);
+        final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
+        final Button btnStartGame = findViewById(R.id.btn_start_game);
 
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MediaPlayer click = MediaPlayer.create(HostGameActivity.this,R.raw.click);
-                click.start();
+//                MediaPlayer click = MediaPlayer.create(HostGameActivity.this,R.raw.click);
+//                click.start();
+//                btn_create.setEnabled(false);
 
-                if (isNullOrEmpty(tableName)) {
-                   Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();
-               }
-                Intent intent = new Intent("GameActivity");
-                startActivity(intent);
+//                if (isNullOrEmpty(tableName)) {
+//                   Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();
+//                } else {
+
+                PartyPokerApplication.resetConnectedDevices();
+                Salut appNetwork = PartyPokerApplication.getNetwork();
+
+//                if (appNetwork != null) appNetwork.stopNetworkService(true);
+
+                    SalutDataReceiver dataReceiver = new SalutDataReceiver(HostGameActivity.this, PartyPokerApplication
+                            .getMessageHandler());
+                    SalutServiceData serviceData = new SalutServiceData(PartyPokerApplication.SALUT_SERVICE_NAME,
+                            PartyPokerApplication.SALUT_PORT, playerName);
+                    Salut network = new Salut(dataReceiver, serviceData, new SalutCallback() {
+                        @Override
+                        public void call() {
+                            Toast.makeText(HostGameActivity.this, "Sorry, this device is not supported", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+
+                    PartyPokerApplication.setNetwork(network);
+                    PartyPokerApplication.setSalutDataReceiver(dataReceiver);
+                    PartyPokerApplication.setSalutServiceData(serviceData);
+
+                    HostGameActivity.this.network = network;
+
+
+                    network.startNetworkService(new SalutDeviceCallback() {
+                        @Override
+                        public void call(SalutDevice salutDevice) {
+                            PartyPokerApplication.addConnectedDevice(salutDevice);
+                            txtConnectedPlayers.setText("Connected players: " + PartyPokerApplication
+                                    .getConnectedDevices().size());
+
+                            if (!btnStartGame.isEnabled()) {
+                                btnStartGame.setEnabled(true);
+                            }
+                        }
+                    });
+//                }
             }
 
         });
 
+        btnStartGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("GameActivity");
 
+                Bundle bundle = new Bundle();
+                bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txt_bigblind.getText().toString()));
+                bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txt_playerpot.getText().toString()));
+
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private static boolean isNullOrEmpty(String s) {
@@ -58,5 +123,27 @@ public class HostGameActivity extends AppCompatActivity {
             isNullOrEmpty = true;
 
         return isNullOrEmpty;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(network != null) {
+            if( network.isRunningAsHost) {
+                try {
+                    network.stopNetworkService(true);
+
+                } catch (Exception e) {
+
+                }
+            } else {
+                try {
+                    network.unregisterClient(true);
+                } catch (Exception e) {
+
+                }
+            }
+        }
     }
 }
