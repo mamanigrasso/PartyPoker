@@ -108,6 +108,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ImageView ivPlayer5Dealer;
     private ImageView ivPlayer6Dealer;
 
+    private TextView tvPlayer1Status;
+    private TextView tvPlayer2Status;
+    private TextView tvPlayer3Status;
+    private TextView tvPlayer4Status;
+    private TextView tvPlayer5Status;
+    private TextView tvPlayer6Status;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,6 +201,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Player player6 = new Player("Player6");
         players.add(player6);
 
+        setPlayerNames();
+
         Game.init(10, 10, 1000, 6, this);
         Game.addPlayer(player6);
         Game.addPlayer(player5);
@@ -269,14 +278,14 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void createPlayerRoleViews() {
-        ivPlayer1BigBlind = findViewById(R.id.img_bigblind);
+        ivPlayer1BigBlind = findViewById(R.id.img_bigblindopself);
         ivPlayer2BigBlind = findViewById(R.id.img_bigblindop1);
         ivPlayer3BigBlind = findViewById(R.id.img_bigblindop2);
         ivPlayer4BigBlind = findViewById(R.id.img_bigblindop3);
         ivPlayer5BigBlind = findViewById(R.id.img_bigblindop4);
         ivPlayer6BigBlind = findViewById(R.id.img_bigblindop5);
 
-        ivPlayer1SmallBlind = findViewById(R.id.img_smallblind);
+        ivPlayer1SmallBlind = findViewById(R.id.img_smallblindself);
         ivPlayer2SmallBlind = findViewById(R.id.img_smallblindop1);
         ivPlayer3SmallBlind = findViewById(R.id.img_smallblindop2);
         ivPlayer4SmallBlind = findViewById(R.id.img_smallblindop3);
@@ -314,12 +323,31 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         ivPlayer6Dealer.setVisibility(players.get(5).isDealer() ? View.VISIBLE : View.INVISIBLE);
     }
 
+    private void createPlayerStatusViews() {
+        tvPlayer1Status = findViewById(R.id.text_checkself);
+        tvPlayer2Status = findViewById(R.id.text_checkop1);
+        tvPlayer3Status = findViewById(R.id.text_checkop2);
+        tvPlayer4Status = findViewById(R.id.text_checkop3);
+        tvPlayer5Status = findViewById(R.id.text_checkop4);
+        tvPlayer6Status = findViewById(R.id.text_checkop5);
+    }
+
+    private void updatePlayerStatusViews() {
+        tvPlayer1Status.setText(String.valueOf(players.get(0).getStatus()));
+        tvPlayer2Status.setText(String.valueOf(players.get(1).getStatus()));
+        tvPlayer3Status.setText(String.valueOf(players.get(2).getStatus()));
+        tvPlayer4Status.setText(String.valueOf(players.get(3).getStatus()));
+        tvPlayer5Status.setText(String.valueOf(players.get(4).getStatus()));
+        tvPlayer6Status.setText(String.valueOf(players.get(5).getStatus()));
+    }
+
     private void createAllViews() {
         createTablePotView();
         createPlayerNameViews();
         createPlayerChipsViews();
         createPlayerBidViews();
         createPlayerRoleViews();
+        createPlayerStatusViews();
     }
 
     private void updateViews() {
@@ -327,6 +355,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         updatePlayerChipsViews();
         updatePlayerBidViews();
         updatePlayerRoleViews();
+        updatePlayerStatusViews();
     }
 
     @Override
@@ -357,10 +386,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void buttonCheckPressed(View v) {
-        Button buttonCheck = (Button)findViewById(R.id.btn_check);
 
-        if (buttonCheck.getText().toString().compareTo("CHECK") == 0)
-            Game.getInstance().playerBid(0, false);
+        Game.getInstance().playerBid(Game.getInstance().getMaxBid(), false);
     }
 
     public void buttonFoldPressed(View v) {
@@ -369,10 +396,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void buttonRaisePressed(View v) {
-        Game.getInstance().playerBid(100, false);
+
+        Game.getInstance().playerBid(120, false);
     }
 
-    @Override
+    /*@Override
     protected void onResume()  {
 
         super.onResume();
@@ -382,13 +410,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         getPlayerCards();
         getRiverCard();
         registerForPokerBroadcasts(this.receiver);
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(this.receiver);
-    }
+    }*/
 
     public void turnForXPlayers(boolean player1, boolean player2, boolean player3, boolean player4, boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
         // TODO: googlen ob nicht elegantere Variante in JAva möglich mit dynamischen arrays
