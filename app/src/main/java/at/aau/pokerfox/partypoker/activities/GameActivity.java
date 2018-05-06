@@ -67,7 +67,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     int bigBlind;
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
-    private int bigBlind, playerPot;
+    private int playerPot;
     private TextView tvTablePot;
 
     private TextView tvPlayer1Name;
@@ -236,39 +236,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             Game.addPlayer(p);
         }
     }
-
-
-    private void updateViews() {
-        TextView view1 = (TextView)findViewById(R.id.txt_chipsplayer);
-        view1.setText(String.valueOf(players.get(0).getChipCount()));
-        TextView view2 = (TextView)findViewById(R.id.txt_chipsop1);
-        view2.setText(String.valueOf(players.get(1).getChipCount()));
-//        TextView view3 = (TextView)findViewById(R.id.txt_chipsop2);
-//        view3.setText(String.valueOf(players.get(2).getChipCount()));
-//        TextView view4 = (TextView)findViewById(R.id.txt_chipsop3);
-//        view4.setText(String.valueOf(players.get(3).getChipCount()));
-//        TextView view5 = (TextView)findViewById(R.id.txt_chipsop4);
-//        view5.setText(String.valueOf(players.get(4).getChipCount()));
-//        TextView view6 = (TextView)findViewById(R.id.txt_chipsop5);
-//        view6.setText(String.valueOf(players.get(5).getChipCount()));
-        TextView view7 = (TextView)findViewById(R.id.txt_pot);
-        view7.setText(String.valueOf(Game.getInstance().getPotSize()));
-    }
-
-    private void setPlayerNames() {
-        TextView viewPlayer1 = (TextView)findViewById(R.id.txtPlayer);
-        viewPlayer1.setText(players.get(0).getName());
-        TextView viewPlayer2 = (TextView)findViewById(R.id.txtOpponent1);
-        viewPlayer2.setText(players.get(1).getName());
-//        TextView viewPlayer3 = (TextView)findViewById(R.id.txtOpponent2);
-//        viewPlayer3.setText(players.get(2).getName());
-//        TextView viewPlayer4 = (TextView)findViewById(R.id.txtOpponent3);
-//        viewPlayer4.setText(players.get(3).getName());
-//        TextView viewPlayer5 = (TextView)findViewById(R.id.txtOpponent4);
-//        viewPlayer5.setText(players.get(4).getName());
-//        TextView viewPlayer6 = (TextView)findViewById(R.id.txtOpponent5);
-//        viewPlayer6.setText(players.get(5).getName());
-    }
   
     private void createTablePotView() {
         tvTablePot = findViewById(R.id.txt_pot);
@@ -281,19 +248,19 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void createPlayerNameViews() {
         tvPlayer1Name = findViewById(R.id.txtPlayer);
         tvPlayer2Name = findViewById(R.id.txtOpponent1);
-        tvPlayer3Name = findViewById(R.id.txtOpponent2);
-        tvPlayer4Name = findViewById(R.id.txtOpponent3);
-        tvPlayer5Name = findViewById(R.id.txtOpponent4);
-        tvPlayer6Name = findViewById(R.id.txtOpponent5);
+//        tvPlayer3Name = findViewById(R.id.txtOpponent2);
+//        tvPlayer4Name = findViewById(R.id.txtOpponent3);
+//        tvPlayer5Name = findViewById(R.id.txtOpponent4);
+//        tvPlayer6Name = findViewById(R.id.txtOpponent5);
     }
 
     private void setPlayerNames() {
         tvPlayer1Name.setText(players.get(0).getName());
         tvPlayer2Name.setText(players.get(1).getName());
-        tvPlayer3Name.setText(players.get(2).getName());
-        tvPlayer4Name.setText(players.get(3).getName());
-        tvPlayer5Name.setText(players.get(4).getName());
-        tvPlayer6Name.setText(players.get(5).getName());
+//        tvPlayer3Name.setText(players.get(2).getName());
+//        tvPlayer4Name.setText(players.get(3).getName());
+//        tvPlayer5Name.setText(players.get(4).getName());
+//        tvPlayer6Name.setText(players.get(5).getName());
     }
 
     private void createPlayerChipsViews() {
@@ -308,10 +275,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerChipsViews() {
         tvPlayer1Chips.setText(String.valueOf(players.get(0).getChipCount()));
         tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
-        tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));
-        tvPlayer4Chips.setText(String.valueOf(players.get(3).getChipCount()));
-        tvPlayer5Chips.setText(String.valueOf(players.get(4).getChipCount()));
-        tvPlayer6Chips.setText(String.valueOf(players.get(5).getChipCount()));
+//        tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));
+//        tvPlayer4Chips.setText(String.valueOf(players.get(3).getChipCount()));
+//        tvPlayer5Chips.setText(String.valueOf(players.get(4).getChipCount()));
+//        tvPlayer6Chips.setText(String.valueOf(players.get(5).getChipCount()));
     }
 
     private void createPlayerBidViews() {
