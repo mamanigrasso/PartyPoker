@@ -7,7 +7,7 @@ import java.util.Observer;
 
 public class Game extends Observable{
     private static final Game _instance = new Game();
-    private static LinkedList<Player> allPlayers;
+    private static LinkedList<Player> allPlayers = new LinkedList<>();
     private static int potSize;
     private static int smallBlind;
     private static int roundsBetweenBlindIncrease;

@@ -195,9 +195,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Player myself = new Player("host");
         players.add(myself);
 
+        Game.init(bigBlind, bigBlind, playerPot, players.size(), this);
+
         for (SalutDevice device : PartyPokerApplication.getConnectedDevices()) {
             Player p = new Player(device.instanceName);
             players.add(p);
+            Game.addPlayer(p);
         }
 
 //        Player player1 = new Player("Player1");
@@ -226,15 +229,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 //        Game.addPlayer(player2);
 //        Game.addPlayer(player1);
 
-        Game.init(bigBlind, bigBlind, playerPot, players.size(), this);
+
         setPlayerNames();
 
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
-
-        for (Player p : players) {
-            Game.addPlayer(p);
-        }
     }
   
     private void createTablePotView() {
@@ -293,10 +292,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerBidViews() {
         tvPlayer1Bid.setText(String.valueOf(players.get(0).getCurrentBid()));
         tvPlayer2Bid.setText(String.valueOf(players.get(1).getCurrentBid()));
-        tvPlayer3Bid.setText(String.valueOf(players.get(2).getCurrentBid()));
-        tvPlayer4Bid.setText(String.valueOf(players.get(3).getCurrentBid()));
-        tvPlayer5Bid.setText(String.valueOf(players.get(4).getCurrentBid()));
-        tvPlayer6Bid.setText(String.valueOf(players.get(5).getCurrentBid()));
+//        tvPlayer3Bid.setText(String.valueOf(players.get(2).getCurrentBid()));
+//        tvPlayer4Bid.setText(String.valueOf(players.get(3).getCurrentBid()));
+//        tvPlayer5Bid.setText(String.valueOf(players.get(4).getCurrentBid()));
+//        tvPlayer6Bid.setText(String.valueOf(players.get(5).getCurrentBid()));
     }
 
     private void createPlayerRoleViews() {
@@ -325,24 +324,24 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerRoleViews() {
         ivPlayer1BigBlind.setVisibility(players.get(0).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
         ivPlayer2BigBlind.setVisibility(players.get(1).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer3BigBlind.setVisibility(players.get(2).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer4BigBlind.setVisibility(players.get(3).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer5BigBlind.setVisibility(players.get(4).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer6BigBlind.setVisibility(players.get(5).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer3BigBlind.setVisibility(players.get(2).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer4BigBlind.setVisibility(players.get(3).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer5BigBlind.setVisibility(players.get(4).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer6BigBlind.setVisibility(players.get(5).isBigBlind() ? View.VISIBLE : View.INVISIBLE);
 
         ivPlayer1SmallBlind.setVisibility(players.get(0).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
         ivPlayer2SmallBlind.setVisibility(players.get(1).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer3SmallBlind.setVisibility(players.get(2).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer4SmallBlind.setVisibility(players.get(3).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer5SmallBlind.setVisibility(players.get(4).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer6SmallBlind.setVisibility(players.get(5).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer3SmallBlind.setVisibility(players.get(2).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer4SmallBlind.setVisibility(players.get(3).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer5SmallBlind.setVisibility(players.get(4).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer6SmallBlind.setVisibility(players.get(5).isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
 
         ivPlayer1Dealer.setVisibility(players.get(0).isDealer() ? View.VISIBLE : View.INVISIBLE);
         ivPlayer2Dealer.setVisibility(players.get(1).isDealer() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer3Dealer.setVisibility(players.get(2).isDealer() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer4Dealer.setVisibility(players.get(3).isDealer() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer5Dealer.setVisibility(players.get(4).isDealer() ? View.VISIBLE : View.INVISIBLE);
-        ivPlayer6Dealer.setVisibility(players.get(5).isDealer() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer3Dealer.setVisibility(players.get(2).isDealer() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer4Dealer.setVisibility(players.get(3).isDealer() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer5Dealer.setVisibility(players.get(4).isDealer() ? View.VISIBLE : View.INVISIBLE);
+//        ivPlayer6Dealer.setVisibility(players.get(5).isDealer() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void createPlayerStatusViews() {
@@ -357,10 +356,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerStatusViews() {
         tvPlayer1Status.setText(String.valueOf(players.get(0).getStatus()));
         tvPlayer2Status.setText(String.valueOf(players.get(1).getStatus()));
-        tvPlayer3Status.setText(String.valueOf(players.get(2).getStatus()));
-        tvPlayer4Status.setText(String.valueOf(players.get(3).getStatus()));
-        tvPlayer5Status.setText(String.valueOf(players.get(4).getStatus()));
-        tvPlayer6Status.setText(String.valueOf(players.get(5).getStatus()));
+//        tvPlayer3Status.setText(String.valueOf(players.get(2).getStatus()));
+//        tvPlayer4Status.setText(String.valueOf(players.get(3).getStatus()));
+//        tvPlayer5Status.setText(String.valueOf(players.get(4).getStatus()));
+//        tvPlayer6Status.setText(String.valueOf(players.get(5).getStatus()));
     }
 
     private void createAllViews() {
