@@ -134,15 +134,12 @@ public class Game extends Observable{
 
         if (activePlayers.size() > 1) {   // there is still more than one player active, so we need to check hands to figure out the winner(s)
             ArrayList<Player> winners = determineWinner(activePlayers, communityCards);
-            System.out.println("------------------- Winner is unknown currently -> determineWinner needs to be implemented!  -------------------");
-
-            winners.add(allPlayers.getFirst());	// simulate any player as winner
 
             kickOutLosersAndCheckFinalWinner(winners);
 
             int win = potSize/winners.size();	// in case of split pot
 
-            for (Player player: winners) {
+            for (Player player : winners) {
                 player.payOutPot(win);
             }
         }
@@ -528,7 +525,28 @@ public class Game extends Observable{
      * @return - the player(s) who has(have) the best hand
      */
     private static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
-        return new ArrayList<Player>();
+        ArrayList<Player> winners = new ArrayList<Player>();
+
+        Hand currHand = null, bestHand = null;
+
+        for (Player player : players) {
+            currHand = new Hand(new Card[] { cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4), player.getCard1(), player.getCard2()});
+
+            if (bestHand == null)
+                bestHand = currHand;
+
+            if (currHand.compareTo(bestHand) > 0) {
+                winners.clear();
+                winners.add(player);
+                bestHand = currHand;
+            }
+
+            if (currHand.compareTo(bestHand) == 0) {
+                winners.add(player);
+            }
+        }
+
+        return winners;
     }
 
     /**
