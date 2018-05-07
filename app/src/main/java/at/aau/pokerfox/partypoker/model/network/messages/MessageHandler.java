@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDataCallback;
+import com.peak.salut.Salut;
+import com.peak.salut.SalutDevice;
 
 import java.io.IOException;
 
@@ -22,8 +26,19 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
 public class MessageHandler implements SalutDataCallback {
 
-    private void sendMessage(AbstractMessage message) {
+    public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
+        Salut network = PartyPokerApplication.getNetwork();
+        network.sendToDevice(destinationDevice, message, new InnerSalutCallback(message));
+    }
 
+    public void sendMessageToAllClients(@NonNull final AbstractMessage message) {
+        Salut network = PartyPokerApplication.getNetwork();
+        network.sendToAllDevices(message, new InnerSalutCallback(message));
+    }
+
+    public void sendMessageToHost(@NonNull final AbstractMessage message) {
+        Salut network = PartyPokerApplication.getNetwork();
+        network.sendToHost(message, new InnerSalutCallback(message));
     }
 
     private void handleMessage(String json) {
@@ -46,7 +61,7 @@ public class MessageHandler implements SalutDataCallback {
             InitGameMessage gameMessage = (InitGameMessage) message;
             extras.putParcelableArrayList(BroadcastKeys.PLAYERS, gameMessage.Players);
             extras.putBoolean(BroadcastKeys.CHEAT_ON, gameMessage.IsCheatingAllowed);
-            extras.putInt(BroadcastKeys.BIG_BLIND, gameMessage.BigBlind);
+            extras.putInt(BroadcastKeys.BIG_BLIND, gameMessage.SmallBlind);
             extras.putInt(BroadcastKeys.PLAYER_POT, gameMessage.PlayerPot);
 
             sendBroadcast(Broadcasts.INIT_GAME_MESSAGE, extras);
@@ -92,6 +107,20 @@ public class MessageHandler implements SalutDataCallback {
         }
 
         handleMessage(o.toString());
+    }
+
+    private class InnerSalutCallback implements SalutCallback {
+        AbstractMessage message;
+
+        public InnerSalutCallback(AbstractMessage message) {
+            this.message = message;
+        }
+
+        @Override
+        public void call() {
+            Toast.makeText(PartyPokerApplication.getAppContext(), "Sending of " + message.toString() + " " +
+                    "went wrong.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private static void sendBroadcast(@NonNull String action, @Nullable Bundle extras) {

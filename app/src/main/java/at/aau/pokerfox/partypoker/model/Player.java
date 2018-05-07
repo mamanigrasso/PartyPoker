@@ -9,6 +9,8 @@ import java.util.Observer;
 
 import android.os.AsyncTask;
 
+import com.peak.salut.SalutDevice;
+
 public class Player implements Parcelable {
     private String name;
     private boolean isAllIn = false;
@@ -22,6 +24,7 @@ public class Player implements Parcelable {
     private boolean cheatStatus = false;
     private boolean checkStatus = false;
     private String status = "";
+    private SalutDevice device;
 
     public Player(String name) {
         this.name = name;
@@ -213,5 +216,13 @@ public class Player implements Parcelable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setDevice(SalutDevice device) {
+        this.device = device;
+    }
+
+    public SalutDevice getDevice() {
+        return device;
     }
 }

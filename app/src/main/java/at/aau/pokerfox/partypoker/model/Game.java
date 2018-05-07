@@ -5,6 +5,12 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import at.aau.pokerfox.partypoker.PartyPokerApplication;
+import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
+
 public class Game extends Observable{
     private static final Game _instance = new Game();
     private static LinkedList<Player> allPlayers = new LinkedList<>();
@@ -28,7 +34,23 @@ public class Game extends Observable{
 
         prepareRound();
         assignBlinds();
+
+        InitGameMessage initGameMessage = new InitGameMessage();
+        initGameMessage.SmallBlind = smallBlind;
+        initGameMessage.IsCheatingAllowed = false;
+        initGameMessage.PlayerPot = startChipCount;
+        initGameMessage.Players = new ArrayList<>();
+        initGameMessage.Players.addAll(allPlayers);
+        PartyPokerApplication.getMessageHandler().sendMessageToAllClients(initGameMessage);
+
         dealOutCards();
+
+        UpdateTableMessage updateTableMessage = new UpdateTableMessage();
+        updateTableMessage.CommunityCards = new ArrayList<>();
+        updateTableMessage.NewPotSize = 0;
+        updateTableMessage.Players = new ArrayList<>();
+        updateTableMessage.Players.addAll(allPlayers);
+        PartyPokerApplication.getMessageHandler().sendMessageToAllClients(updateTableMessage);
 
         nextStep();
     }
@@ -144,6 +166,9 @@ public class Game extends Observable{
 
             for (Player player: winners) {
                 player.payOutPot(win);
+                WonAmountMessage wonAmountMessage = new WonAmountMessage();
+                wonAmountMessage.Amount = win;
+                PartyPokerApplication.getMessageHandler().sendMessageToDevice(wonAmountMessage, player.getDevice());
             }
         }
 
@@ -361,7 +386,12 @@ public class Game extends Observable{
         for (int i=1; i<=2; i++) {  // every player should get two cards totally (but one by one)
             for (int j = 0; j< allPlayers.size(); j++) {   // first player after dealer gets the first card
                 Player player = getNextPlayer();
-                player.takeCard(CardDeck.issueNextCardFromDeck());
+                Card nextCard = CardDeck.issueNextCardFromDeck();
+                player.takeCard(nextCard);
+
+                NewCardMessage message = new NewCardMessage();
+                message.NewHandCard = nextCard;
+                PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
             }
         }
     }
