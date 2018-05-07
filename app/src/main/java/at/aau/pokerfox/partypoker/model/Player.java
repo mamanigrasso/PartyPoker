@@ -214,4 +214,12 @@ public class Player implements Parcelable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Card getCard1() {
+        return cards.get(0);
+    }
+
+    public Card getCard2() {
+        return cards.get(1);
+    }
 }
