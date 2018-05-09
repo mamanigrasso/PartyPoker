@@ -85,9 +85,9 @@ public class Card implements Parcelable {
         this.rank = in.readInt();
     }
 
-    //to get the id of the card use: "R.drawable.clubs_4" for example.
+    //to get the id of one specific card use: "R.drawable.clubs_4" for example.
     public static int getCards () {
 
-        return R.drawable.clubs_4;
+        return CardDeck.getRandomId(CardDeck.addDrawableIds());
     }
 }
