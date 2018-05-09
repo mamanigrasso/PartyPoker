@@ -4,6 +4,8 @@ package at.aau.pokerfox.partypoker.model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import at.aau.pokerfox.partypoker.R;
+
 public class CardDeck {
 
     private static ArrayList<Card> cards;

@@ -87,6 +87,7 @@ public class Card implements Parcelable {
 
     //to get the id of the card use: "R.drawable.clubs_4" for example.
     public static int getCards () {
-        return 0;
+
+        return R.drawable.clubs_4;
     }
 }
