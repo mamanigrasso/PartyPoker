@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PartyPoker.iml" filepath="$PROJECT_DIR$/PartyPoker.iml" />
+
       <module fileurl="file://D:\Uni\Manuel\Desktop\Uni\TimoS\Andreas\Documents\GitHub\PartyPoker\PartyPoker.iml" filepath="D:\Uni\Manuel\Desktop\Uni\TimoS\Andreas\Documents\GitHub\PartyPoker\PartyPoker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\Uni\Manuel\Desktop\Uni\TimoS\Andreas\Documents\GitHub\PartyPoker\app\app.iml" filepath="D:\Uni\Manuel\Desktop\Uni\TimoS\Andreas\Documents\GitHub\PartyPoker\app\app.iml" />
+
     </modules>
   </component>
 </project>

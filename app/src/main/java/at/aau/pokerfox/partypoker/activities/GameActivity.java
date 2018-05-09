@@ -213,9 +213,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 //        players.add(player3);
 //
 //        Player player4 = new Player("Player4");
-//        players.add(player4);
+//        players.add(player4);xc
 //
-//        Player player5 = new Player("Player5");
+//        Player player5 = new Player("Player5");c
 //        players.add(player5);
 //
 //        Player player6 = new Player("Player6");
@@ -428,8 +428,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
        // turnMiddleCards();
        // turnOwnCards();
         //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-        getPlayerCards();
-        getRiverCard();
+        drawPlayerCards();
         registerForPokerBroadcasts(this.receiver);
     }*/
 
@@ -633,31 +632,31 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
       
 //getting the needed Cards from the Class "Card" and link the image with the GUI
-    public void getPlayerCards () {
+    public void drawPlayerCards () {
         int [] playerCards = {R.id.playerCard1, R.id.playerCard2};
-        getCards(playerCards);
+        drawCards(playerCards);
     }
 
-    public void getfirstThreeCommunityCards() {
+    public void drawfirstThreeCommunityCards() {
         int [] firstThreeCommunityCards = {R.id.flop1, R.id.flop2, R.id.flop3};
-        getCards(firstThreeCommunityCards);
+        drawCards(firstThreeCommunityCards);
     }
 
-    public void getTurnCard() {
+    public void drawTurnCard() {
         int[] getTurn={R.id.turn};
-        getCards(getTurn);
+        drawCards(getTurn);
     }
 
-    public void getRiverCard() {
+    public void drawRiverCard() {
         int[] getRiver ={R.id.river};
-        getCards(getRiver);
+        drawCards(getRiver);
     }
 
-    public void getCards (int [] CardIDs) {
-//        for(int i : CardIDs) {
-//            final ImageView cardView = findViewById(i);
-//            cardView.setImageDrawable(getDrawable(Card.getCards()));
-//        }
+    public void drawCards (int [] CardIDs) {
+      for(int i : CardIDs) {
+            final ImageView cardView = findViewById(i);
+       cardView.setImageDrawable(getDrawable(Card.getCards()));
+    }
     }
 }
 
