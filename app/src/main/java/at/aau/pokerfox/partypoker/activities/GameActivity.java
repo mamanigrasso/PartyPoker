@@ -59,9 +59,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     //should contain the activePlayerNames so the "getActivePlayer"-method of the GameClass
     //then player.name to find out the NameOfThePlayer -->this names push to this String[]
-    private String[] playerNames = {
-            "Marco", "Mathias","Timo","Michael","Manuel","Andreas"
-    };
+    private String[] playerNames=new String[6];
+            //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
     boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
     int bigBlind;
@@ -137,6 +136,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addingPlayerNamesToArray(players);
                 AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
                 createDialog.setTitle("Choose the Cheater! You have 5 seconds");
@@ -657,6 +657,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             final ImageView cardView = findViewById(i);
        cardView.setImageDrawable(getDrawable(Card.getCards()));
     }
+    }
+
+    private void addingPlayerNamesToArray (ArrayList<Player> players) {
+        for(int i=0; i<players.size(); i++) {
+            playerNames[i]=players.get(i).getName();
+        }
     }
 }
 
