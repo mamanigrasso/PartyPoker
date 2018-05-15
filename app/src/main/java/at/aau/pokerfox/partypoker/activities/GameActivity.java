@@ -35,6 +35,7 @@ import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
+import at.aau.pokerfox.partypoker.model.Cheat;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
 import at.aau.pokerfox.partypoker.model.Player;
@@ -62,7 +63,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private String[] playerNames=new String[6];
             //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
-    boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+    //boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+    private boolean isCheatingAllowed = true; //initGameMessage - METHOD
+    private Cheat cheat;
     int bigBlind;
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
@@ -131,7 +134,28 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
         }
 
+
+
+        createAllViews();
+
+        if (PartyPokerApplication.isHost()) {  // if is host
+            startGame();
+        }
+      
+        this.receiver = new PokerBroadcastReceiver();
+
+
+
+
+
+
         Button btnShowCheater = findViewById(R.id.btn_cheating);
+        if(!isCheatingAllowed) {
+            btnShowCheater.setEnabled(false);
+        } else if (isCheatingAllowed) {
+            btnShowCheater.setEnabled(true);
+            cheat = new Cheat();
+        }
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,8 +166,18 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 createDialog.setTitle("Choose the Cheater! You have 5 seconds");
                 createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                        boolean wasCheatingFlag = false;
+                        for(int i = 0; i<players.size(); i++) {
+                            if (playerNames[indexPosition].equals(players.get(i).getName())&&players.get(i).getCheatStatus()==true) {
+                                cheat.ditHeCheat(players,players.get(0),players.get(i),players.get(i).getChipCount()/5);
+                                // Penalty=1/5 of the ChipCount of the opposite choosen player
+                                if (players.get(i).getCheatStatus()==true) {
+                                    wasCheatingFlag=true;
+                                }
+                            }
+                        }
                         dialogInterface.dismiss();
-                        if (wasCheating==true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                        if (wasCheatingFlag==true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
                             Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
@@ -151,10 +185,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                         }
                     }
                 });
+
                 createDialog.setNegativeButton("Cancel", null);
-
                 createDialog.setCancelable(true);
-
 
                 final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
 
@@ -174,14 +207,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             }
 
         });
-
-        createAllViews();
-
-        if (PartyPokerApplication.isHost()) {  // if is host
-            startGame();
-        }
-      
-        this.receiver = new PokerBroadcastReceiver();
     }
 
     @Override
