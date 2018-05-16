@@ -22,6 +22,7 @@ public class CheatTesting {
     private ArrayList<Player> honests;
 
     private int chipCounts = 1000;
+    private int toLowChipCount = 150;
 
     Player andy = new Player("Andy");
     Player michael = new Player ("Michael");
@@ -66,6 +67,9 @@ public class CheatTesting {
 
         allPlayers = null;
         letsCheat = null;
+        chipCounts=0;
+        toLowChipCount=0;
+
     }
 
     @Test
@@ -102,6 +106,31 @@ public class CheatTesting {
 
     }
 
+    @Test
+    public void ditHeCheatTestWasCheatingTrueNotEnoughChips() {
+
+        int penalty = chipCounts/5;
+        michael.setChipCount(toLowChipCount);
+
+        letsCheat.ditHeCheat(allPlayers, andy, michael, penalty);
+
+        assertEquals((long)chipCounts+150,(long)andy.getChipCount());
+        assertEquals(0,(long)michael.getChipCount());
+
+    }
+
+    @Test
+    public void ditHeCheatTestWasCheatingFalseNotEnoughChips() {
+
+        int penalty = chipCounts/5;
+        andy.setChipCount(toLowChipCount);
+
+        letsCheat.ditHeCheat(allPlayers, andy, timo, penalty);
+
+        assertEquals(0,(long)andy.getChipCount());
+        assertEquals(chipCounts+150,(long)timo.getChipCount());
+
+    }
 
     private void setChipCounts (int chips) {
         for(int i = 0 ; i <allPlayers.size(); i++) {
