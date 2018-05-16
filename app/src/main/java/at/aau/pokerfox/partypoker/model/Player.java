@@ -93,6 +93,7 @@ public class Player implements Parcelable {
     }
 
     public void activate() {
+        cards.clear();
         hasFolded = false;
         isAllIn = false;
         isSmallBlind = false;
@@ -141,6 +142,7 @@ public class Player implements Parcelable {
     }
 
     public void setFolded() {
+        cards.clear();
         hasFolded = true;
     }
   
@@ -216,10 +218,16 @@ public class Player implements Parcelable {
     }
 
     public Card getCard1() {
-        return cards.get(0);
+        if (cards.size() > 0)
+            return cards.get(0);
+
+        return null;
     }
 
     public Card getCard2() {
-        return cards.get(1);
+        if (cards.size() > 1)
+            return cards.get(1);
+
+        return null;
     }
 }
