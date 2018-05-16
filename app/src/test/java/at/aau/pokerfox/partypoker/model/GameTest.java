@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class GameTest {
 
-    private static final Game _instance = new Game();
+    /*private static final Game _instance = new Game();
     private static LinkedList<Player> allPlayers = new LinkedList<>();
     private static int potSize;
     private static int smallBlind;
@@ -28,8 +29,10 @@ public class GameTest {
     private static ArrayList<Card> communityCards;
     private static int maxBid = 0;
     private static Player currentPlayer;
+    private static int stepID = 1;*/
+
     private static ModActInterface modActInterface;
-    private static int stepID = 1;
+
 
     Player andy = new Player("Andy");
     Player michael = new Player ("Michael");
@@ -38,6 +41,7 @@ public class GameTest {
     Player manuel = new Player("Manuel");
     Player marco = new Player ("Marco");
     Player timo = new Player ("Timo");
+    Player player1 = new Player ("Player 1");
 
 
     @Before
@@ -66,7 +70,22 @@ public class GameTest {
     }
 
     @Test
-    public void playerFolded() throws Exception {
+    public void playerFoldedTest() throws Exception {
+    }
+
+
+
+    @Test
+    public void nextStepTest() throws Exception {  //runs threw the game logic until somebody folded
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+
+        Game.getInstance().startGame();
+        Game.getInstance().nextStep();
+        //Game.addPlayer(player1);
+        //Game.addPlayer(michael);
+        //Game.getInstance().nextStep();
+        //Game.getInstance().playerFolded();
     }
 
     @Test
