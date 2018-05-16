@@ -7,4 +7,6 @@ package at.aau.pokerfox.partypoker.model;
 public interface ModActInterface {
     public void showPlayerActions(boolean bCheck);
     public void hidePlayerActions();
+    public void update();
+    public void showAllPlayerCards();
 }

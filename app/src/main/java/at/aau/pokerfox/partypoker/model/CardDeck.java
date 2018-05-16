@@ -15,11 +15,8 @@ public class CardDeck {
 
 
     public static Card issueNextCardFromDeck() {
-        return new Card((int) (1 + Math.random() * 3), (int) (4 + Math.random() * 10));
+        return cards.remove(0);
     }
-
-
-
 
     public static void randomizeDeck() {
 
