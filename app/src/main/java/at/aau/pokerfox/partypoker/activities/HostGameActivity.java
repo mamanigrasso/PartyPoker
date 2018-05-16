@@ -49,9 +49,14 @@ public class HostGameActivity extends AppCompatActivity {
         final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
         final Button btnStartGame = findViewById(R.id.btn_start_game);
 
+        if (!btnStartGame.isEnabled()) {
+            btnStartGame.setEnabled(true);
+        }
+
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 //                MediaPlayer click = MediaPlayer.create(HostGameActivity.this,R.raw.click);
 //                click.start();
 //                btn_create.setEnabled(false);
@@ -104,6 +109,7 @@ public class HostGameActivity extends AppCompatActivity {
         btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(HostGameActivity.this, "test", Toast.LENGTH_LONG);
                 Intent intent = new Intent("GameActivity");
 
                 Bundle bundle = new Bundle();

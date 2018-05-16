@@ -24,7 +24,6 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
                     System.out.println(p.getName() + " bet: " + returnAmount);
                 } else {
                     returnAmount = p.getChipCount() + p.getCurrentBid();
-                    p.setAllIn();
                     System.out.println(p.getName() + " bet: " + returnAmount);
                 }
             } else {
@@ -34,7 +33,6 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
                 } else {
                     if (p.getChipCount() > 0) {
                         returnAmount = p.getChipCount() + p.getCurrentBid();
-                        p.setAllIn();
                         System.out.println(p.getName() + " raised: " + returnAmount);
                     } else
                         returnAmount = 0;
@@ -44,8 +42,9 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
 
         else if (Math.random()/2 > Math.random()) {
             returnAmount = p.getCurrentBid();
-            p.setFolded();
             System.out.println(p.getName() + " folded");
+
+            return -1;
         } else {
             if (amount == 0)
                 System.out.println(p.getName() + " checked");
@@ -54,7 +53,6 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
                     returnAmount = amount;
                 else {
                     returnAmount = p.getChipCount() + p.getCurrentBid();
-                    p.setAllIn();
                 }
                 System.out.println(p.getName() + " called: " + returnAmount);
 
@@ -67,7 +65,7 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
     @Override
     protected Integer doInBackground(Integer... integers) {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             int bid = askForAction(integers[0]);
             return bid;
         } catch (InterruptedException e) {
@@ -79,6 +77,9 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer playerBid) {
-        Game.getInstance().playerBid(playerBid, false);
+        if (playerBid == -1)
+            Game.getInstance().playerFolded();
+        else
+            Game.getInstance().playerBid(playerBid);
     }
 }
