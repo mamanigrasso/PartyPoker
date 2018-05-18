@@ -46,7 +46,6 @@ public class Game extends Observable {
                     startRound();
                 }
             } else {
-                addPlayerBidsToPot();
                 maxBid = 0;
                 showCommunityCards(stepID++); // either flop, turn or river
                 getDealer(); // move dealer to head of queue
@@ -77,7 +76,7 @@ public class Game extends Observable {
                 playersToAct--;
         }
 
-        return playersToAct == 0;
+        return playersToAct <= 0;
     }
 
     public void playerDone() {
@@ -142,11 +141,12 @@ public class Game extends Observable {
         if (kickOutLosersAndCheckFinalWinner(winners)) // do we have a final winner?
             return true;
 
-        int win = potSize / winners.size(); // in case of split pot
+        int winAmount = potSize / winners.size(); // in case of split pot
 
-        for (Player player : winners) {
-            System.out.println("***** " + player.getName() + " won and got " + win + " chips! *****");
-            player.payOutPot(win);
+        for (Player winner : winners) {
+            String winningHand = getWinningHandString(winner);
+            System.out.println("***** " + winner.getName() + " won with " + winningHand + " and got " + winAmount + " chips! *****");
+            winner.payOutPot(winAmount);
         }
 
         int chipCountSum = 0;
@@ -159,6 +159,22 @@ public class Game extends Observable {
         System.out.println("Totally they have " + chipCountSum + " chips!");
 
         return false;
+    }
+
+    private String getWinningHandString(Player winner) {
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        if (communityCards.size() == 5) {	// if all community cards are shown
+            cards.addAll(communityCards);
+            cards.add(winner.getCard1());
+            cards.add(winner.getCard2());
+
+            Card[] cardArray = new Card[cards.size()];
+            cards.toArray(cardArray);
+
+            return new Hand(cardArray).display();
+        } else
+            return winner.getCard1().toString() + " and " + winner.getCard2().toString();
     }
 
     public int getMaxBid() {
