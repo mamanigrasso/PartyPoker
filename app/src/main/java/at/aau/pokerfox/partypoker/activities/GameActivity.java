@@ -39,16 +39,17 @@ import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
 import at.aau.pokerfox.partypoker.model.Player;
 import at.aau.pokerfox.partypoker.model.Card;
-import at.aau.pokerfox.partypoker.model.network.messages.BroadcastKeys;
-import at.aau.pokerfox.partypoker.model.network.messages.Broadcasts;
+import at.aau.pokerfox.partypoker.model.network.BroadcastKeys;
+import at.aau.pokerfox.partypoker.model.network.Broadcasts;
+import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
 
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.ACTION_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.INIT_GAME_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.NEW_CARD_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.PLAYER_ROLES_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.UPDATE_TABLE_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.WON_AMOUNT_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.messages.Broadcasts.YOUR_TURN_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.ACTION_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.INIT_GAME_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.NEW_CARD_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.PLAYER_ROLES_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.UPDATE_TABLE_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.WON_AMOUNT_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESSAGE;
 
 /**
  * Created by TimoS on 04.04.2018.
@@ -68,6 +69,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
     private int playerPot;
+    private int minAmountToRaise;
+    private int potSize = 0;
+
     private TextView tvTablePot;
 
     private TextView tvPlayer1Name;
@@ -118,6 +122,22 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private TextView tvPlayer4Status;
     private TextView tvPlayer5Status;
     private TextView tvPlayer6Status;
+
+    private ImageView ivPlayer1Card1;
+    private ImageView ivPlayer1Card2;
+    private ImageView ivPlayer2Card1;
+    private ImageView ivPlayer2Card2;
+    private ImageView ivPlayer3Card1;
+    private ImageView ivPlayer3Card2;
+    private ImageView ivPlayer4Card1;
+    private ImageView ivPlayer4Card2;
+    private ImageView ivPlayer5Card1;
+    private ImageView ivPlayer5Card2;
+    private ImageView ivPlayer6Card1;
+    private ImageView ivPlayer6Card2;
+
+
+    private SeekBar sbRaisedAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,12 +196,17 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         });
 
         createAllViews();
+        hideAllViews();
 
         if (PartyPokerApplication.isHost()) {  // if is host
             startGame();
         }
       
         this.receiver = new PokerBroadcastReceiver();
+
+        this.sbRaisedAmount = findViewById(R.id.seekBar2);
+
+        hidePlayerActions();
     }
 
     @Override
@@ -190,18 +215,24 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void startGame() {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
 
         Player myself = new Player("host");
         players.add(myself);
 
-        Game.init(bigBlind, bigBlind, playerPot, players.size(), this);
+        //TODO: find out real player count
+        Game.init(bigBlind, bigBlind, playerPot, 2, this);
+
+        Game.addPlayer(myself);
 
         for (SalutDevice device : PartyPokerApplication.getConnectedDevices()) {
             Player p = new Player(device.instanceName);
+            p.setDevice(device);
             players.add(p);
             Game.addPlayer(p);
         }
+
+        Game.getInstance().initGame();
 
 //        Player player1 = new Player("Player1");
 //        players.add(player1);
@@ -234,6 +265,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
+        updateViews();
     }
   
     private void createTablePotView() {
@@ -241,16 +273,16 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void updateTablePot() {
-        tvTablePot.setText(String.valueOf(Game.getInstance().getPotSize()));
+        tvTablePot.setText(String.valueOf(potSize));
     }
 
     private void createPlayerNameViews() {
         tvPlayer1Name = findViewById(R.id.txtPlayer);
         tvPlayer2Name = findViewById(R.id.txtOpponent1);
-//        tvPlayer3Name = findViewById(R.id.txtOpponent2);
-//        tvPlayer4Name = findViewById(R.id.txtOpponent3);
-//        tvPlayer5Name = findViewById(R.id.txtOpponent4);
-//        tvPlayer6Name = findViewById(R.id.txtOpponent5);
+        tvPlayer3Name = findViewById(R.id.txtOpponent2);
+        tvPlayer4Name = findViewById(R.id.txtOpponent3);
+        tvPlayer5Name = findViewById(R.id.txtOpponent4);
+        tvPlayer6Name = findViewById(R.id.txtOpponent5);
     }
 
     private void setPlayerNames() {
@@ -353,6 +385,26 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         tvPlayer6Status = findViewById(R.id.text_checkop5);
     }
 
+    private void createPlayerCards() {
+        ivPlayer1Card1 = findViewById(R.id.playerCard1);
+        ivPlayer1Card2 = findViewById(R.id.playerCard2);
+
+        ivPlayer2Card1 = findViewById(R.id.opponent1Card1);
+        ivPlayer2Card2 = findViewById(R.id.opponent1Card2);
+
+        ivPlayer3Card1 = findViewById(R.id.opponent2Card1);
+        ivPlayer3Card2 = findViewById(R.id.opponent2Card2);
+
+        ivPlayer4Card1 = findViewById(R.id.opponent3Card1);
+        ivPlayer4Card2 = findViewById(R.id.opponent3Card2);
+
+        ivPlayer5Card1 = findViewById(R.id.opponent4Card1);
+        ivPlayer5Card2 = findViewById(R.id.opponent4Card2);
+
+        ivPlayer6Card1 = findViewById(R.id.opponent5Card1);
+        ivPlayer6Card2 = findViewById(R.id.opponent5Card2);
+    }
+
     private void updatePlayerStatusViews() {
         tvPlayer1Status.setText(String.valueOf(players.get(0).getStatus()));
         tvPlayer2Status.setText(String.valueOf(players.get(1).getStatus()));
@@ -369,6 +421,41 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         createPlayerBidViews();
         createPlayerRoleViews();
         createPlayerStatusViews();
+        createPlayerCards();
+    }
+
+    private void hideAllViews() {
+        tvPlayer3Bid.setVisibility(View.INVISIBLE);
+        tvPlayer3Chips.setVisibility(View.INVISIBLE);
+        tvPlayer3Name.setVisibility(View.INVISIBLE);
+        tvPlayer3Status.setVisibility(View.INVISIBLE);
+
+        tvPlayer4Bid.setVisibility(View.INVISIBLE);
+        tvPlayer4Chips.setVisibility(View.INVISIBLE);
+        tvPlayer4Name.setVisibility(View.INVISIBLE);
+        tvPlayer4Status.setVisibility(View.INVISIBLE);
+
+        tvPlayer5Bid.setVisibility(View.INVISIBLE);
+        tvPlayer5Chips.setVisibility(View.INVISIBLE);
+        tvPlayer5Name.setVisibility(View.INVISIBLE);
+        tvPlayer5Status.setVisibility(View.INVISIBLE);
+
+        tvPlayer6Bid.setVisibility(View.INVISIBLE);
+        tvPlayer6Chips.setVisibility(View.INVISIBLE);
+        tvPlayer6Name.setVisibility(View.INVISIBLE);
+        tvPlayer6Status.setVisibility(View.INVISIBLE);
+
+        ivPlayer3Card1.setVisibility(View.INVISIBLE);
+        ivPlayer3Card2.setVisibility(View.INVISIBLE);
+
+        ivPlayer4Card1.setVisibility(View.INVISIBLE);
+        ivPlayer4Card2.setVisibility(View.INVISIBLE);
+
+        ivPlayer5Card1.setVisibility(View.INVISIBLE);
+        ivPlayer5Card2.setVisibility(View.INVISIBLE);
+
+        ivPlayer6Card1.setVisibility(View.INVISIBLE);
+        ivPlayer6Card2.setVisibility(View.INVISIBLE);
     }
 
     private void updateViews() {
@@ -406,38 +493,50 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             buttonCheck.setText("CALL");
     }
 
-    public void buttonCheckPressed(View v) {
+    private void prepareAndSendActionMessage(int amount, boolean hasFolded, boolean isAllIn) {
+        hidePlayerActions();
+        ActionMessage message = new ActionMessage();
+        message.Amount = amount;
+        message.HasFolded = hasFolded;
+        message.IsAllIn = isAllIn;
+        showPlayerActions(false);
+        PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+    }
 
-        Game.getInstance().playerBid(Game.getInstance().getMaxBid(), false);
+    public void buttonCheckPressed(View v) {
+        //TODO: find out if player is all in
+        boolean isAllIn = false;
+        prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
     }
 
     public void buttonFoldPressed(View v) {
-
-        Game.getInstance().playerFolded();
+        prepareAndSendActionMessage(0, true, false);
     }
 
     public void buttonRaisePressed(View v) {
-
-        Game.getInstance().playerBid(120, false);
+        int amount = this.sbRaisedAmount.getProgress();
+        //TODO: find out if player is all in
+        boolean isAllIn = false;
+        prepareAndSendActionMessage(amount, false, isAllIn);
     }
 
-    /*@Override
+    @Override
     protected void onResume()  {
 
         super.onResume();
        // turnMiddleCards();
        // turnOwnCards();
         //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-        getPlayerCards();
-        getRiverCard();
+//        getPlayerCards();
+//        getRiverCard();
         registerForPokerBroadcasts(this.receiver);
-    }*/
+    }
 
-    /*@Override
+    @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(this.receiver);
-    }*/
+    }
 
     public void turnForXPlayers(boolean player1, boolean player2, boolean player3, boolean player4, boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
         // TODO: googlen ob nicht elegantere Variante in JAva möglich mit dynamischen arrays
@@ -579,7 +678,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void handleUpdateTableMessage(Bundle bundle) {
         ArrayList<Card> communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
-        int newPotSize = bundle.getInt(BroadcastKeys.NEW_POT);
+        potSize = bundle.getInt(BroadcastKeys.NEW_POT);
 
         updateTablePot();
         this.players = players;
@@ -587,10 +686,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void handleYourTurnMessage(Bundle bundle) {
-        int minAmountToRaise = bundle.getInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE);
-
-        SeekBar sbRaiseAmount = findViewById(R.id.seekBar2);
-        //sbRaiseAmount.setMin(minAmountToRaise);
+        this.minAmountToRaise = bundle.getInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE);
 
         if (minAmountToRaise == 0)
             showPlayerActions(true);

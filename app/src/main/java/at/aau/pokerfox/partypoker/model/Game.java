@@ -10,6 +10,7 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
 public class Game extends Observable{
     private static final Game _instance = new Game();
@@ -29,12 +30,17 @@ public class Game extends Observable{
     private static ModActInterface modActInterface;
     private static int stepID = 1;
 
-    public void startRound() {
-        System.out.println("Round " + roundCount);
+    private Game() {}
 
-        prepareRound();
-        assignBlinds();
+    public static Game getInstance() {
 
+        if (!PartyPokerApplication.isHost())
+            throw new IllegalStateException("You're not the host, you fool! You cannot call me!");
+
+        return _instance;
+    }
+
+    public void initGame() {
         InitGameMessage initGameMessage = new InitGameMessage();
         initGameMessage.SmallBlind = smallBlind;
         initGameMessage.IsCheatingAllowed = false;
@@ -42,6 +48,13 @@ public class Game extends Observable{
         initGameMessage.Players = new ArrayList<>();
         initGameMessage.Players.addAll(allPlayers);
         PartyPokerApplication.getMessageHandler().sendMessageToAllClients(initGameMessage);
+    }
+
+    public void startRound() {
+        System.out.println("Round " + roundCount);
+
+        prepareRound();
+        assignBlinds();
 
         dealOutCards();
 
@@ -81,7 +94,7 @@ public class Game extends Observable{
             currentPlayer = getNextPlayer();
 
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
-                if (currentPlayer.getName().compareTo("Player1") == 0) {
+                if (currentPlayer.getName().compareTo(allPlayers.get(0).getName()) == 0) {
                     if (maxBid == 0)
                         modActInterface.showPlayerActions(true);
                     else
@@ -89,7 +102,10 @@ public class Game extends Observable{
                 }
                 else {
                     modActInterface.hidePlayerActions();
-                    currentPlayer.getNewPlayerAction().execute(maxBid);
+//                    currentPlayer.getNewPlayerAction().execute(maxBid);
+                    YourTurnMessage message = new YourTurnMessage();
+                    message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
+                    PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
                 }
             }
             else {
@@ -113,6 +129,10 @@ public class Game extends Observable{
         setChanged();
         notifyObservers();
         nextStep();
+    }
+
+    public int getMinAmountToRaise() {
+        return smallBlind;
     }
 
     public void playerBid(int amount, boolean isAllIn) {
@@ -273,10 +293,6 @@ public class Game extends Observable{
         modActInterface = modAct;
     }
 
-    public static Game getInstance() {
-        return _instance;
-    }
-
     /**
      *
      * @param player - the player instance to add
@@ -300,7 +316,7 @@ public class Game extends Observable{
     public static boolean removePlayer(Player player) {
         if (allPlayers.size() > 1) {
             if (player.isDealer())
-                getNextPlayer().setDealer(true);
+                getNextPlayer().setIsDealer(true);
             allPlayers.remove(player);
             return true;
         }
@@ -361,10 +377,10 @@ public class Game extends Observable{
      */
     private static Player assignDealer() {
         Player oldDealer = getDealer();
-        oldDealer.setDealer(false);
+        oldDealer.setIsDealer(false);
 
         Player newDealer = getNextPlayer();
-        newDealer.setDealer(true);
+        newDealer.setIsDealer(true);
 
         System.out.println(newDealer.getName() + " is dealer.");
 
@@ -453,14 +469,17 @@ public class Game extends Observable{
                 if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
                     if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
 
-                        if (player.getName().compareTo("Player1") == 0)
+                        if (player.getName().compareTo(currentPlayer.getName()) == 0)
                             if (amount == 0)
                                 modActInterface.showPlayerActions(true);
                             else
                                 modActInterface.showPlayerActions(false);
                         else {
                             modActInterface.hidePlayerActions();
-                            player.getNewPlayerAction().execute(amount);
+//                            player.getNewPlayerAction().execute(amount);
+                            YourTurnMessage message = new YourTurnMessage();
+                            message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
+                            PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
                         }
 
                         Sleep();
@@ -587,5 +606,16 @@ public class Game extends Observable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isCurrentPlayerAllIn(int raisedAmount) {
+        int chipCount = currentPlayer.getChipCount();
+
+        if (raisedAmount >= chipCount) {
+            currentPlayer.setAllIn();
+            return true;
+        }
+
+        return false;
     }
 }

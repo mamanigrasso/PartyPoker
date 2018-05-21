@@ -9,22 +9,41 @@ import java.util.Observer;
 
 import android.os.AsyncTask;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.peak.salut.SalutDevice;
 
+
+@JsonObject
 public class Player implements Parcelable {
+    @JsonField
     private String name;
+    @JsonField
     private boolean isAllIn = false;
+    @JsonField
     private boolean hasFolded = false;
+    @JsonField
     private boolean isDealer = false;
+    @JsonField
     private boolean isSmallBlind = false;
+    @JsonField
     private boolean isBigBlind = false;
+    @JsonField
     private int chipCount;
+    @JsonField
     private int currentBid;
-    private ArrayList<Card> cards = new ArrayList<Card>();;
+    @JsonField
+    private ArrayList<Card> cards = new ArrayList<Card>();
+    @JsonField
     private boolean cheatStatus = false;
+    @JsonField
     private boolean checkStatus = false;
+    @JsonField
     private String status = "";
+    @JsonField
     private SalutDevice device;
+
+    public Player() {}
 
     public Player(String name) {
         this.name = name;
@@ -82,8 +101,16 @@ public class Player implements Parcelable {
         return isDealer;
     }
 
-    public void setDealer(boolean isDealer) {
+    public void setIsDealer(boolean isDealer) {
         this.isDealer = isDealer;
+    }
+
+    public boolean getIsAllIn() {
+        return isAllIn;
+    }
+
+    public boolean getIsDealer() {
+        return isDealer;
     }
 
     public void payOutPot(int pot) {
@@ -224,5 +251,49 @@ public class Player implements Parcelable {
 
     public SalutDevice getDevice() {
         return device;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isHasFolded() {
+        return hasFolded;
+    }
+
+    public void setHasFolded(boolean hasFolded) {
+        this.hasFolded = hasFolded;
+    }
+
+    public void setSmallBlind(boolean smallBlind) {
+        isSmallBlind = smallBlind;
+    }
+
+    public void setBigBlind(boolean bigBlind) {
+        isBigBlind = bigBlind;
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
+    public boolean isCheatStatus() {
+        return cheatStatus;
+    }
+
+    public void setCheatStatus(boolean cheatStatus) {
+        this.cheatStatus = cheatStatus;
+    }
+
+    public boolean isCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setIsAllIn(boolean allIn) {
+        this.isAllIn = allIn;
     }
 }

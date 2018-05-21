@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker.model.network.messages;
+package at.aau.pokerfox.partypoker.model.network;
 
 public class BroadcastKeys {
     public static final String AMOUNT = "AMOUNT";
