@@ -2,17 +2,27 @@ package at.aau.pokerfox.partypoker.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import at.aau.pokerfox.partypoker.R;
 
+@JsonObject
 public class Card implements Parcelable {
 
     private static String[] suits = { "hearts", "spades", "diamonds", "clubs" };
     private static String[] ranks  = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
             "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
 
+    @JsonField
     private int suit;
+
+    @JsonField
     private int rank;
     private int drawableID;
+
+    public Card() {}
 
     public Card(int suit, int rank) {
         this.suit = suit;

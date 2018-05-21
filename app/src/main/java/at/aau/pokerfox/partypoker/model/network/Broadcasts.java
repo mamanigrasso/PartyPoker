@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker.model.network.messages;
+package at.aau.pokerfox.partypoker.model.network;
 
 public class Broadcasts {
     public static final String ACTION_MESSAGE = "ACTION_MESSAGE";

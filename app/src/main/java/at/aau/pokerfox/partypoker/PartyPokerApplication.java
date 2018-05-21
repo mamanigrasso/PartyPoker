@@ -11,7 +11,7 @@ import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
 
-import at.aau.pokerfox.partypoker.model.network.messages.MessageHandler;
+import at.aau.pokerfox.partypoker.model.network.MessageHandler;
 
 public class PartyPokerApplication extends Application {
 
