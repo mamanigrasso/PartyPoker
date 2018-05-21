@@ -99,12 +99,12 @@ public class Game extends Observable {
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
                 if (currentPlayer.getName().compareTo(allPlayers.get(0).getName()) == 0) {    //change this to if (currentPlayer.isHost())
                     if (maxBid == 0)
-                        modActInterface.showPlayerActions(true);
+                        maInterface.showPlayerActions(true);
                     else
-                        modActInterface.showPlayerActions(false);
+                        maInterface.showPlayerActions(false);
                 }
                 else {
-                    modActInterface.hidePlayerActions();
+                    maInterface.hidePlayerActions();
 //                    currentPlayer.getNewPlayerAction().execute(maxBid);
                     YourTurnMessage message = new YourTurnMessage();
                     message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
@@ -198,16 +198,16 @@ public class Game extends Observable {
 
 
             for (Player player: winners) {
-                player.payOutPot(win);
+                player.payOutPot(winAmount);
                 WonAmountMessage wonAmountMessage = new WonAmountMessage();
-                wonAmountMessage.Amount = win;
+                wonAmountMessage.Amount = winAmount;
                 PartyPokerApplication.getMessageHandler().sendMessageToDevice(wonAmountMessage, player.getDevice());
             }
         //for (Player winner : winners) {
         //    String winningHand = getWinningHandString(winner);
         //    System.out.println("***** " + winner.getName() + " won with " + winningHand + " and got " + winAmount + " chips! *****");
         //    winner.payOutPot(winAmount);
-        }
+//        }
 
         int chipCountSum = 0;
 
@@ -216,7 +216,7 @@ public class Game extends Observable {
             chipCountSum += player.getChipCount();
         }
 
-        System.out.println("Totally they have " + chipCountSum + " chips!");
+//        System.out.println("Totally they have " + chipCountSum + " chips!");
 
         return false;
     }
@@ -459,11 +459,11 @@ public class Game extends Observable {
 
                         if (player.getName().compareTo(currentPlayer.getName()) == 0)
                             if (amount == 0)
-                                modActInterface.showPlayerActions(true);
+                                maInterface.showPlayerActions(true);
                             else
-                                modActInterface.showPlayerActions(false);
+                                maInterface.showPlayerActions(false);
                         else {
-                            modActInterface.hidePlayerActions();
+                            maInterface.hidePlayerActions();
 //                            player.getNewPlayerAction().execute(amount);
                             YourTurnMessage message = new YourTurnMessage();
                             message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
