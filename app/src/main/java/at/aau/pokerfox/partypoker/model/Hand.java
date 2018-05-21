@@ -178,7 +178,7 @@ public class Hand {
         }
     }
 
-    void display()
+    public String display()
     {
         String s;
         switch( value[0] )
@@ -216,8 +216,8 @@ public class Hand {
             default:
                 s="error in Hand.display: value[0] contains invalid value";
         }
-        s = "                " + s;
-        System.out.println(s);
+
+        return s;
     }
 
     void displayAll()

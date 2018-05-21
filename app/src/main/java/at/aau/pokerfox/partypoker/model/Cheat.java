@@ -33,10 +33,11 @@ public class Cheat {
 
                 if (cheater.getCheatStatus() == false) {
 
-                    cheater.raiseChipCount(penalty);
                     if (user.getChipCount() >= penalty) {
                         user.reduceChipCount(penalty);
+                        cheater.raiseChipCount(penalty);
                     } else {
+                        cheater.raiseChipCount(user.getChipCount());
                         user.setChipCount(0);
                     }
                     break;
@@ -45,10 +46,11 @@ public class Cheat {
 
                     if (cheater.getChipCount() >= penalty) {
                         cheater.reduceChipCount(penalty);
+                        user.raiseChipCount(penalty);
                     } else {
+                        user.raiseChipCount(cheater.getChipCount());
                         cheater.setChipCount(0);
                     }
-                    user.raiseChipCount(penalty);
                     break;
                 }
             }

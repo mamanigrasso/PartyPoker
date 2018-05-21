@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
@@ -12,7 +13,7 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage
 import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
-public class Game extends Observable{
+public class Game extends Observable {
     private static final Game _instance = new Game();
     private static LinkedList<Player> allPlayers = new LinkedList<>();
     private static int potSize;
@@ -27,8 +28,8 @@ public class Game extends Observable{
     private static ArrayList<Card> communityCards;
     private static int maxBid = 0;
     private static Player currentPlayer;
-    private static ModActInterface modActInterface;
     private static int stepID = 1;
+    private static ModActInterface maInterface;
 
     private Game() {}
 
@@ -51,7 +52,7 @@ public class Game extends Observable{
     }
 
     public void startRound() {
-        System.out.println("Round " + roundCount);
+        System.out.println("***** Round " + roundCount + " *****");
 
         prepareRound();
         assignBlinds();
@@ -69,18 +70,21 @@ public class Game extends Observable{
     }
 
     public void nextStep() {
-        if (areAllPlayersAligned()) {    // all players have either folded or have called max bid
-            if (isThereAWinner())   // have all players folded except one?
+        Sleep();
+        maInterface.update();
+        if (areAllPlayersAligned()) {	// are all players aligned on current maxBid (or folded?)
+            addPlayerBidsToPot();
+
+            if (isThereAWinner()) {	// if all players have folded except one, we have a winner for this round -> so we start a new round
                 startRound();
-            else if (stepID == 3){
-                roundDoneCheckWinner();
-                startRound();
-            }
-            else {
-                addPlayerBidsToPot();
+            } else if (stepID == 3) {
+                if (!roundDoneCheckWinner()) {	// if we have no final winner yet, start a new round, otherwise stop
+                    startRound();
+                }
+            } else {
                 maxBid = 0;
-                showCommunityCards(stepID++);    // either flop, turn or river
-                getDealer();    // move dealer to head of queue
+                showCommunityCards(stepID++); // either flop, turn or river
+                getDealer(); // move dealer to head of queue
 
                 for (Player player : allPlayers) { // all players need to be asked again now
                     player.setCheckStatus(false);
@@ -89,12 +93,11 @@ public class Game extends Observable{
 
                 nextStep();
             }
-        }
-        else {  // not all players aligned yet
+        } else { // not all players aligned yet, so ask next player for action
             currentPlayer = getNextPlayer();
 
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
-                if (currentPlayer.getName().compareTo(allPlayers.get(0).getName()) == 0) {
+                if (currentPlayer.getName().compareTo(allPlayers.get(0).getName()) == 0) {    //change this to if (currentPlayer.isHost())
                     if (maxBid == 0)
                         modActInterface.showPlayerActions(true);
                     else
@@ -122,7 +125,7 @@ public class Game extends Observable{
                 playersToAct--;
         }
 
-        return playersToAct == 0;
+        return playersToAct <= 0;
     }
 
     public void playerDone() {
@@ -134,13 +137,13 @@ public class Game extends Observable{
     public int getMinAmountToRaise() {
         return smallBlind;
     }
-
-    public void playerBid(int amount, boolean isAllIn) {
+  
+    public void playerBid(int amount) {
         if (amount == 0)
             currentPlayer.setStatus("Checked");
         else if (amount == maxBid)
             currentPlayer.setStatus("Called");
-        else if (amount > maxBid) {   // player raised, we have a new max to bid
+        else if (amount > maxBid) { // player raised, we have a new max to bid
             maxBid = amount;
             currentPlayer.setStatus("Raised");
 
@@ -152,37 +155,47 @@ public class Game extends Observable{
             }
         }
 
-        if (isAllIn)
+        if (currentPlayer.getChipCount() == amount)
             currentPlayer.setAllIn();
         else
             currentPlayer.setChipCount(currentPlayer.getChipCount() - maxBid + currentPlayer.getCurrentBid());
 
         currentPlayer.setCheckStatus(true);
-        currentPlayer.setCurrentBid(maxBid);
+        currentPlayer.setCurrentBid(amount);
 
         playerDone();
     }
 
     public void playerFolded() {
         currentPlayer.setStatus("Folded");
-
         currentPlayer.setFolded();
 
         playerDone();
     }
 
-    private void roundDoneCheckWinner() {
+    private boolean roundDoneCheckWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
+        ArrayList<Player> winners = new ArrayList<Player>();
 
-        if (activePlayers.size() > 1) {   // there is still more than one player active, so we need to check hands to figure out the winner(s)
-            ArrayList<Player> winners = determineWinner(activePlayers, communityCards);
-            System.out.println("------------------- Winner is unknown currently -> determineWinner needs to be implemented!  -------------------");
+        maInterface.showAllPlayerCards();
 
-            winners.add(allPlayers.getFirst());	// simulate any player as winner
+        if (activePlayers.size() > 1) { // there is still more than one player active, so we need to check hands to figure out the winner(s)
+            winners = determineWinner(activePlayers, communityCards);
+        } else if (activePlayers.size() == 1) {
+            winners.add(activePlayers.get(0));
+        } else {	// actually impossible!
+            throw new IllegalStateException("No active player anymore!!");
+        }
 
-            kickOutLosersAndCheckFinalWinner(winners);
+        return handleWinner(winners);
+    }
 
-            int win = potSize/winners.size();	// in case of split pot
+    private boolean handleWinner(ArrayList<Player> winners) {
+        if (kickOutLosersAndCheckFinalWinner(winners)) // do we have a final winner?
+            return true;
+
+            int winAmount = potSize / winners.size(); // in case of split pot
+
 
             for (Player player: winners) {
                 player.payOutPot(win);
@@ -190,6 +203,10 @@ public class Game extends Observable{
                 wonAmountMessage.Amount = win;
                 PartyPokerApplication.getMessageHandler().sendMessageToDevice(wonAmountMessage, player.getDevice());
             }
+        //for (Player winner : winners) {
+        //    String winningHand = getWinningHandString(winner);
+        //    System.out.println("***** " + winner.getName() + " won with " + winningHand + " and got " + winAmount + " chips! *****");
+        //    winner.payOutPot(winAmount);
         }
 
         int chipCountSum = 0;
@@ -198,77 +215,30 @@ public class Game extends Observable{
             System.out.println("Chip count of " + player.getName() + ": " + player.getChipCount());
             chipCountSum += player.getChipCount();
         }
+
+        System.out.println("Totally they have " + chipCountSum + " chips!");
+
+        return false;
+    }
+
+    private String getWinningHandString(Player winner) {
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        if (communityCards.size() == 5) {	// if all community cards are shown
+            cards.addAll(communityCards);
+            cards.add(winner.getCard1());
+            cards.add(winner.getCard2());
+
+            Card[] cardArray = new Card[cards.size()];
+            cards.toArray(cardArray);
+
+            return new Hand(cardArray).display();
+        } else
+            return winner.getCard1().toString() + " and " + winner.getCard2().toString();
     }
 
     public int getMaxBid() {
         return maxBid;
-    }
-
-    public void startGame() {
-
-        while (allPlayers.size() > 1) {
-
-            System.out.println("__________________________________________ ROUND " + roundCount + "  __________________________________________");
-
-            prepareRound();
-            Sleep();
-            assignBlinds();
-            Sleep();
-            dealOutCards();
-            Sleep();
-            bidRound(smallBlind*2); // start bid round with big blind to call
-            Sleep();
-            System.out.println("Current pot size: " + potSize);
-
-            if (!isThereAWinner()) {
-                for (int i=FLOP; i<=RIVER; i++) {
-                    if (i == FLOP)
-                        System.out.println("_____________ FLOP _____________");
-                    if (i == TURN)
-                        System.out.println("_____________ TURN _____________");
-                    if (i == RIVER)
-                        System.out.println("_____________ RIVER _____________");
-
-                    showCommunityCards(i);	// either flop, turn or river
-                    Sleep();
-                    getDealer();	// move dealer to head of queue
-                    bidRound(0);   // start bid round with first player after dealer
-                    Sleep();
-
-                    System.out.println("Current pot size: " + potSize);
-
-                    if (isThereAWinner())
-                        break;
-                }
-            }
-
-            ArrayList<Player> activePlayers = getActivePlayers();
-
-            if (activePlayers.size() > 1) {   // there is still more than one player active, so we need to check hands to figure out the winner(s)
-                ArrayList<Player> winners = determineWinner(activePlayers, communityCards);
-                System.out.println("------------------- Winner is unknown currently -> determineWinner needs to be implemented!  -------------------");
-
-                winners.add(allPlayers.getFirst());	// simulate any player as winner
-
-                kickOutLosersAndCheckFinalWinner(winners);
-
-                int win = potSize/winners.size();	// in case of split pot
-
-                for (Player player: winners) {
-                    player.payOutPot(win);
-                }
-            }
-
-            int chipCountSum = 0;
-
-            for (Player player : allPlayers) {
-                System.out.println("Chip count of " + player.getName() + ": " + player.getChipCount());
-                chipCountSum += player.getChipCount();
-            }
-
-            System.out.println("Totally they have " + chipCountSum + " chips!");
-            Sleep();
-        }
     }
 
     public void addMyObserver(Observer o) {
@@ -277,12 +247,17 @@ public class Game extends Observable{
 
     /**
      * Initializes the Game instance.
-     * @param blind - small blind amount to start with
-     * @param blindIncrease - specifies number of rounds between blind increase
-     * @param chipCount - chip count every player gets at beginning
-     * @param players - maximum number of allPlayers allowed
+     *
+     * @param blind
+     *            - small blind amount to start with
+     * @param blindIncrease
+     *            - specifies number of rounds between blind increase
+     * @param chipCount
+     *            - chip count every player gets at beginning
+     * @param players
+     *            - maximum number of allPlayers allowed
      */
-    public static void init(int blind, int blindIncrease, int chipCount, int players, ModActInterface modAct) {
+    public static void init(int blind, int blindIncrease, int chipCount, int players, ModActInterface maInt) {
         potSize = 0;
         smallBlind = blind;
         roundsBetweenBlindIncrease = blindIncrease;
@@ -290,12 +265,13 @@ public class Game extends Observable{
         maxPlayers = players;
         allPlayers = new LinkedList<Player>();
         communityCards = new ArrayList<Card>();
-        modActInterface = modAct;
+        maInterface = maInt;
     }
 
     /**
      *
-     * @param player - the player instance to add
+     * @param player
+     *            - the player instance to add
      * @return true if successful, otherwise false (table full)
      */
     public static boolean addPlayer(Player player) {
@@ -310,7 +286,8 @@ public class Game extends Observable{
 
     /**
      *
-     * @param player - the player instance to be removed
+     * @param player
+     *            - the player instance to be removed
      * @return true if successful, otherwise false (only one player left)
      */
     public static boolean removePlayer(Player player) {
@@ -335,16 +312,18 @@ public class Game extends Observable{
         potSize = 0;
         stepID = 0;
         maxBid = 0;
+        communityCards.clear();
         preparePlayers();
         assignDealer();
         prepareCardDeck();
-        if (roundCount%roundsBetweenBlindIncrease == 0)
+        if (roundCount % roundsBetweenBlindIncrease == 0)
             smallBlind *= 2;
         roundCount++;
     }
 
     /**
-     * preparePlayers - removes players cards, resets their blind values and activates all players which still have some chips
+     * preparePlayers - removes players cards, resets their blind values and
+     * activates all players which still have some chips
      */
     private static void preparePlayers() {
         for (Player player : allPlayers) {
@@ -357,10 +336,11 @@ public class Game extends Observable{
 
     /**
      * getDealer - moves dealer to head of queue
+     *
      * @return - returns current dealer
      */
     private static Player getDealer() {
-        for (int i=0; i<allPlayers.size(); i++) {
+        for (int i = 0; i < allPlayers.size(); i++) {
             Player player = getNextPlayer();
 
             if (player.isDealer()) {
@@ -372,7 +352,9 @@ public class Game extends Observable{
     }
 
     /**
-     * assignDealer - moves the dealer button to the next player after current dealer
+     * assignDealer - moves the dealer button to the next player after current
+     * dealer
+     *
      * @return - the new dealer
      */
     private static Player assignDealer() {
@@ -382,7 +364,7 @@ public class Game extends Observable{
         Player newDealer = getNextPlayer();
         newDealer.setIsDealer(true);
 
-        System.out.println(newDealer.getName() + " is dealer.");
+        System.out.println(newDealer.getName() + " is dealer now.");
 
         return newDealer;
     }
@@ -396,11 +378,12 @@ public class Game extends Observable{
     }
 
     /**
-     * dealOutCards - take one card from card deck and give to first player after dealer, then take next card...
+     * dealOutCards - take one card from card deck and give to first player
+     * after dealer, then take next card...
      */
     private static void dealOutCards() {
-        for (int i=1; i<=2; i++) {  // every player should get two cards totally (but one by one)
-            for (int j = 0; j< allPlayers.size(); j++) {   // first player after dealer gets the first card
+        for (int i = 1; i <= 2; i++) { // every player should get two cards totally (but one by one)
+            for (int j = 0; j < allPlayers.size(); j++) { // first player after dealer gets the first card
                 Player player = getNextPlayer();
                 Card nextCard = CardDeck.issueNextCardFromDeck();
                 player.takeCard(nextCard);
@@ -408,12 +391,15 @@ public class Game extends Observable{
                 NewCardMessage message = new NewCardMessage();
                 message.NewHandCard = nextCard;
                 PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
+                maInterface.update();
             }
         }
     }
 
     /**
-     * getNextPlayer - returns the first player in the queue and moves this player to end of queue
+     * getNextPlayer - returns the first player in the queue and moves this
+     * player to end of queue
+     *
      * @return - the next player in the queue
      */
     private static Player getNextPlayer() {
@@ -423,22 +409,24 @@ public class Game extends Observable{
     }
 
     /**
-     * assignBlinds - assign small blind to first player after dealer, then big blind
+     * assignBlinds - assign small blind to first player after dealer, then big
+     * blind
      */
     private static void assignBlinds() {
         Player player = getNextPlayer();
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
-        player.setChipCount(player.getChipCount()-smallBlind);
+        player.setCurrentBid(smallBlind);
+        player.setChipCount(player.getChipCount() - smallBlind);
         player.setIsSmallBlind(true);
 
         player = getNextPlayer();
         System.out.println(player.getName() + " is big blind.");
-        player.giveBlind(smallBlind*2);
-        player.setChipCount(player.getChipCount()-smallBlind*2);
+        player.giveBlind(smallBlind * 2);
+        player.setCurrentBid(smallBlind*2);
+        player.setChipCount(player.getChipCount() - smallBlind * 2);
         player.setIsBigBlind(true);
-
-        maxBid = smallBlind*2;
+        maxBid = smallBlind * 2;
     }
 
     /**
@@ -522,26 +510,32 @@ public class Game extends Observable{
     }
 
     /**
-     * addPlayerBidsToPot - after each round the bids of each player are added to the total pot
+     * addPlayerBidsToPot - after each round the bids of each player are added
+     * to the total pot
      */
     private static void addPlayerBidsToPot() {
         for (Player player : allPlayers) {
             potSize += player.getCurrentBid();
             player.resetCurrentBid();
         }
+
+        maInterface.update();
+        System.out.println("Current pot size: " + potSize);
+        Sleep();
     }
 
     /**
      *
-     * @param step - the current step the dealer does (flop, turn or river)
+     * @param step
+     *            - the current step the dealer does (flop, turn or river)
      */
     private static void showCommunityCards(int step) {
-        CardDeck.issueNextCardFromDeck();   // remove one card before dealing
+        CardDeck.issueNextCardFromDeck(); // remove one card before dealing
         Card card;
 
         switch (step) {
             case FLOP:
-                for (int i=0; i<3; i++) {
+                for (int i = 0; i < 3; i++) {
                     card = CardDeck.issueNextCardFromDeck();
                     System.out.println("Community card added: " + card);
                     communityCards.add(card);
@@ -558,12 +552,11 @@ public class Game extends Observable{
         }
     }
 
-    private static boolean isThereAWinner() {
-        ArrayList<Player>activePlayers = getActivePlayers();
+    private boolean isThereAWinner() {
+        ArrayList<Player> activePlayers = getActivePlayers();
 
-        if (activePlayers.size() == 1) {    // we have a winner for this round!
-            activePlayers.get(0).payOutPot(potSize);
-            System.out.println("------------------- Winner is " + activePlayers.get(0).getName() + ". He totally got " + potSize + " chips!! -------------------");
+        if (activePlayers.size() == 1) {	// we have a winner for this round!
+            handleWinner(activePlayers);
             return true;
         }
 
@@ -572,22 +565,45 @@ public class Game extends Observable{
 
     /**
      *
-     * @param players - a list of players which still have their hand
-     * @param cards - the five community cards all players get
+     * @param players
+     *            - a list of players which still have their hand
+     * @param cards
+     *            - the five community cards all players get
      * @return - the player(s) who has(have) the best hand
      */
     private static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
-        return new ArrayList<Player>();
+        ArrayList<Player> winners = new ArrayList<Player>();
+
+        Hand currHand = null, bestHand = null;
+
+        for (Player player : players) {
+            currHand = new Hand(new Card[] { cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4),
+                    player.getCard1(), player.getCard2() });
+
+            if (bestHand == null)
+                bestHand = currHand;
+
+            if (currHand.compareTo(bestHand) > 0) {
+                winners.clear();
+                winners.add(player);
+                bestHand = currHand;
+            } else if (currHand.compareTo(bestHand) == 0) {
+                winners.add(player);
+            }
+        }
+
+        return winners;
     }
 
     /**
      *
-     * @param winners - the list of winners
+     * @param winners
+     *            - the list of winners
      */
-    private static void kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
+    private static boolean kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
         int playerCount = allPlayers.size();
 
-        for (int i=0; i<playerCount; i++) {
+        for (int i = 0; i < playerCount; i++) {
             Player player = getNextPlayer();
 
             if (player.isAllIn() && !winners.contains(player)) {
@@ -596,13 +612,21 @@ public class Game extends Observable{
             }
         }
 
-        if (allPlayers.size() == 1)
-            System.out.println("We have a Winner! Congrats to " + allPlayers.get(0).getName() + "!!!");
+        if (allPlayers.size() == 1) {
+            System.out.println("***************** We have a final Winner! Congrats to " + allPlayers.get(0).getName() + "!!! *****************");
+            return true;
+        }
+
+        return false;
+    }
+
+    public ArrayList<Card> getCommunityCards() {
+        return communityCards;
     }
 
     private static void Sleep() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
