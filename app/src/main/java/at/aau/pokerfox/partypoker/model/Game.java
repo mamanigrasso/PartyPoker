@@ -571,7 +571,7 @@ public class Game extends Observable {
      *            - the five community cards all players get
      * @return - the player(s) who has(have) the best hand
      */
-    private static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
+    static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
         ArrayList<Player> winners = new ArrayList<Player>();
 
         Hand currHand = null, bestHand = null;
