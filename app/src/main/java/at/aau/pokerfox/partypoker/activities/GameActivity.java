@@ -19,6 +19,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -59,12 +60,11 @@ import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESS
 public class GameActivity extends AppCompatActivity implements Observer,ModActInterface {
 
 
-    //should contain the activePlayerNames so the "getActivePlayer"-method of the GameClass
-    //then player.name to find out the NameOfThePlayer -->this names push to this String[]
+
     private String[] playerNames=new String[6];
             //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
-    //boolean wasCheating = true; //findsOutIf the Player was cheating with player.cheatStatus
+
     private boolean isCheatingAllowed = true; //initGameMessage - METHOD
     private Cheat cheat;
     int bigBlind;
@@ -166,72 +166,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         if (PartyPokerApplication.isHost()) {  // if is host
             startGame();
         }
-      
+
+
+
         this.receiver = new PokerBroadcastReceiver();
 
 
 
-
-
-
-        Button btnShowCheater = findViewById(R.id.btn_cheating);
-        if(!isCheatingAllowed) {
-            btnShowCheater.setEnabled(false);
-        } else if (isCheatingAllowed) {
-            btnShowCheater.setEnabled(true);
-            cheat = new Cheat();
-        }
-
-        btnShowCheater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addingPlayerNamesToArray(players);
-                AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
-
-                createDialog.setTitle("Choose the Cheater! You have 5 seconds");
-                createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int indexPosition) {
-                        boolean wasCheatingFlag = false;
-                        for(int i = 0; i<players.size(); i++) {
-                            if (playerNames[indexPosition].equals(players.get(i).getName())&&players.get(i).getCheatStatus()==true) {
-                                cheat.ditHeCheat(players,players.get(0),players.get(i),players.get(i).getChipCount()/5);
-                                // Penalty=1/5 of the ChipCount of the opposite choosen player
-                                if (players.get(i).getCheatStatus()==true) {
-                                    wasCheatingFlag=true;
-                                }
-                            }
-                        }
-                        dialogInterface.dismiss();
-                        if (wasCheatingFlag==true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
-                            Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                });
-
-                createDialog.setNegativeButton("Cancel", null);
-                createDialog.setCancelable(true);
-
-                final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
-
-                chooseTheCheater.show();
-
-                final Timer timeoutDialog = new Timer();
-
-                //Timer to close after 5 seconds
-                timeoutDialog.schedule(new TimerTask() {
-
-                    public void run() {
-                        chooseTheCheater.dismiss(); //timeout after 5 seconds
-                        timeoutDialog.cancel(); //timer is canceled now
-                    }
-                }, 5000);
-
-            }
-
-        });
 
         createAllViews();
         hideAllViews();
@@ -239,6 +180,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         if (PartyPokerApplication.isHost()) {  // if is host
             startGame();
         }
+
+        showTheCheater();
       
         this.receiver = new PokerBroadcastReceiver();
 
@@ -290,6 +233,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         Game.getInstance().initGame();
         Game.init(10, 10, 1000, 6, this);
+
         Game.addPlayer(player6);
         Game.addPlayer(player5);
         Game.addPlayer(player4);
@@ -297,6 +241,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Game.addPlayer(player2);
         Game.addPlayer(player1);
 
+        player1.setChipCount(650);
+        player2.setChipCount(700);
+        player2.setCheatStaus(true);
         setPlayerNames();
 
         Game.getInstance().addObserver(this);
@@ -340,6 +287,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void updatePlayerChipsViews() {
+        createPlayerChipsViews();
         tvPlayer1Chips.setText(String.valueOf(players.get(0).getChipCount()));
         tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
         tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));
@@ -936,11 +884,96 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
 
-    private void addingPlayerNamesToArray (ArrayList<Player> players) {
+    private void addingPlayerNamesToArray () {
         for(int i=0; i<players.size(); i++) {
             playerNames[i]=players.get(i).getName();
         }
     }
+
+    public void showTheCheater () {
+        Button btnShowCheater = findViewById(R.id.btn_cheating);
+       // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
+
+        if(!isCheatingAllowed) {
+       //if(!cheatOn.isChecked()){
+            btnShowCheater.setEnabled(false);
+        } else if (isCheatingAllowed) {
+        //} else if (cheatOn.isChecked()) {
+            btnShowCheater.setEnabled(true);
+            cheat = new Cheat();
+        }
+
+        btnShowCheater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                addingPlayerNamesToArray();
+
+               
+                    AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+
+                    createDialog.setTitle("Choose the Cheater! You have 5 seconds");
+                    createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                            boolean wasCheatingFlag = false;
+                            for (int i = 0; i < players.size(); i++) {
+
+                                if (playerNames[indexPosition].equals(players.get(i).getName())) {
+                                    cheat.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
+                                    // Penalty=1/5 of the ChipCount of the opposite choosen player
+
+                                    updatePlayerChipsViews();
+                                /*tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
+                                tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
+                                tvPlayer3Chips = findViewById(R.id.text_checkop2);
+                                tvPlayer1Chips.setText(String.valueOf(players.get(0).getChipCount()));
+                                tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
+                                tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));*/
+
+                                    if (players.get(indexPosition).getCheatStatus() == true) {
+                                        wasCheatingFlag = true;
+                                    }
+                                    break;
+                                }
+                            }
+                            dialogInterface.dismiss();
+                            if (wasCheatingFlag == true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                                Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+
+                    });
+
+                    createDialog.setNegativeButton("Cancel", null);
+                    createDialog.setCancelable(true);
+
+                    final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
+
+
+
+                    chooseTheCheater.show();
+
+
+                    final Timer timeoutDialog = new Timer();
+
+                    //Timer to close after 5 seconds
+                    timeoutDialog.schedule(new TimerTask() {
+
+                        public void run() {
+                            chooseTheCheater.dismiss(); //timeout after 5 seconds
+                            timeoutDialog.cancel(); //timer is canceled now
+                        }
+                    }, 5000);
+
+                }
+
+
+        });
+    }
+
 }
 
 

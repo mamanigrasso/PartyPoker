@@ -80,7 +80,7 @@ public class GameTest {
         Game.addPlayer(andy);
         Game.addPlayer(michael);
 
-        Game.getInstance().startGame();
+       // Game.getInstance().startGame();
         Game.getInstance().nextStep();
         //Game.addPlayer(player1);
         //Game.addPlayer(michael);
