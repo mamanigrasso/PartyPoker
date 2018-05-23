@@ -241,9 +241,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Game.addPlayer(player2);
         Game.addPlayer(player1);
 
-        player1.setChipCount(650);
-        player2.setChipCount(700);
-        player2.setCheatStaus(true);
+       // player1.setChipCount(650);
+        // player2.setChipCount(700);
+       // player2.setCheatStaus(true);
+
         setPlayerNames();
 
         Game.getInstance().addObserver(this);
@@ -909,7 +910,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
                 addingPlayerNamesToArray();
 
-               
+
                     AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
                     createDialog.setTitle("Choose the Cheater! You have 5 seconds");
