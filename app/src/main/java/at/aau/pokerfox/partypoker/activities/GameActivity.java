@@ -188,6 +188,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
 
         showTheCheater();
+        initialiseCheatButtons();
+        hideCheatButtons();
+        setCheatButtonsVisible();
       
         this.receiver = new PokerBroadcastReceiver();
 
@@ -981,8 +984,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         });
     }
 
-    public void chooseOneCardFromDeck () {
-        Button btnShowCheater = findViewById(R.id.btn_cheating);
+    /*public void chooseOneCardFromDeck () {
+        btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
 
         if(!isCheatingAllowed) {
@@ -993,7 +1001,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             btnShowCheater.setEnabled(true);
             cheat = new Cheat();
         }
-    }
+    }*/
 
     public void initialiseCheatButtons () {
         btnCheat = findViewById(R.id.btn_cheat);
