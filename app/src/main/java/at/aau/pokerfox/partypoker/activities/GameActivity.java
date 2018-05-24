@@ -146,6 +146,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ImageView ivTableCard4;
     private ImageView ivTableCard5;
 
+    private Button btnCheat;
+    private Button btnShowTableCard;
+    private Button btnProbability;
+    private Button btnChooseOneCardFromDeck;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -973,6 +979,64 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
 
         });
+    }
+
+    public void chooseOneCardFromDeck () {
+        Button btnShowCheater = findViewById(R.id.btn_cheating);
+        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
+
+        if(!isCheatingAllowed) {
+            //if(!cheatOn.isChecked()){
+            btnShowCheater.setEnabled(false);
+        } else if (isCheatingAllowed) {
+            //} else if (cheatOn.isChecked()) {
+            btnShowCheater.setEnabled(true);
+            cheat = new Cheat();
+        }
+    }
+
+    public void initialiseCheatButtons () {
+        btnCheat = findViewById(R.id.btn_cheat);
+        btnShowTableCard = findViewById(R.id.btn_eye);
+        btnProbability = findViewById(R.id.btn_wahr);
+        btnChooseOneCardFromDeck = findViewById(R.id.btn_dead);
+    }
+
+
+    //Hides All Cheat Buttons if Cheating is not allowed
+
+    public void hideCheatButtons() {
+        if(!isCheatingAllowed) {
+
+            btnCheat.setVisibility(View.GONE);
+            btnShowTableCard.setVisibility(View.GONE);
+            btnProbability.setVisibility(View.GONE);
+            btnChooseOneCardFromDeck.setVisibility(View.GONE);
+        }
+    }
+
+    //Shows The Cheat Buttons if Cheating is allowed
+    public void setCheatButtonsVisible () {
+        if(isCheatingAllowed) {
+
+            btnShowTableCard.setVisibility(View.GONE);
+            btnProbability.setVisibility(View.GONE);
+            btnChooseOneCardFromDeck.setVisibility(View.GONE);
+
+            btnCheat.setVisibility(View.VISIBLE);
+            btnCheat.setOnClickListener(new View.OnClickListener() {
+
+                // onClick on the "Cheat"-Button the cheat-option can be chose
+                @Override
+                public void onClick(View view) {
+
+                    btnShowTableCard.setVisibility(View.VISIBLE);
+                    btnProbability.setVisibility(View.VISIBLE);
+                    btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
+                }
+            });
+
+        }
     }
 
 }
