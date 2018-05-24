@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -17,10 +19,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +40,7 @@ import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
+import at.aau.pokerfox.partypoker.model.CardDeck;
 import at.aau.pokerfox.partypoker.model.Cheat;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
@@ -984,14 +989,47 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         });
     }
 
-    /*public void chooseOneCardFromDeck () {
+    public void chooseOneCardFromDeck () {
         btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                handlePlayerCardsDialog();
+                handleDeckCardsDialog();
             }
         });
-        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
+    }
+
+
+    public void handlePlayerCardsDialog(){
+
+        CardDeck deck = new CardDeck();
+        String[] cardnames = new String [52];
+        ArrayList<Drawable> cardDrawableList = new ArrayList<>();
+        ArrayList<Card>
+
+        //Filling up with the CardNames
+        for (int i = 0; i<52; i++) {
+            cardnames[i]= getResources().getResourceName(CardDeck.addDrawableIds().get(i)); //hopefully works
+        }
+
+        //Filling up with the DrawableObjects
+        for (int i = 0; i<52; i++) {
+            cardDrawableList.add(getDrawable(CardDeck.addDrawableIds().get(i)));
+        }
+
+
+        /*for(int i = 0; i < 52; i++){
+            countryList.add(new Country(countrynames[i], countrycodes[i], imgs.getDrawable(i)));
+        }*/
+
+}
+
+
+    public void handleDeckCardsDialog(){}
+
+
+
+    /*// CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
 
         if(!isCheatingAllowed) {
             //if(!cheatOn.isChecked()){
