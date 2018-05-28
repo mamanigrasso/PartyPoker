@@ -1,6 +1,9 @@
 package at.aau.pokerfox.partypoker.model;
 
 import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,9 +25,9 @@ public class CardListAdapter extends ArrayAdapter<DrawableCard> {
         protected ImageView image;
     }
 
-    public CardListAdapter(Activity context, ArrayList <DrawableCard> list) {
-        super(context, R.layout.activity_countrycode_row, list);
-        contextActivity = context;
+    public CardListAdapter(Activity contextActivity, ArrayList <DrawableCard> list) {
+        super(contextActivity, R.layout.activity_cardimages_row, list); //is not an inner class
+        this.contextActivity = contextActivity;
         this.list = list;
     }
 
@@ -33,19 +36,19 @@ public class CardListAdapter extends ArrayAdapter<DrawableCard> {
         View view = null;
 
         if (convertView == null) {
-            LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.activity_countrycode_row, null);
+            LayoutInflater inflator = contextActivity.getLayoutInflater();
+            view = inflator.inflate(R.layout.activity_cardimages_row, null);
             final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.name = (TextView) view.findViewById(R.id.name);
-            viewHolder.flag = (ImageView) view.findViewById(R.id.flag);
+            viewHolder.cardName = (TextView) view.findViewById(R.id.cardName);
+            viewHolder.image = (ImageView) view.findViewById(R.id.adapterImage);
             view.setTag(viewHolder);
         } else {
             view = convertView;
         }
 
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.name.setText(list.get(position).getName());
-        holder.flag.setImageDrawable(list.get(position).getFlag());
+        holder.cardName.setText(list.get(position).getName());
+        holder.image.setImageDrawable(list.get(position).getImage());
         return view;
     }
 }

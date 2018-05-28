@@ -3,6 +3,7 @@ package at.aau.pokerfox.partypoker.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import android.widget.ImageView;
@@ -35,6 +38,7 @@ import java.util.TimerTask;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 import at.aau.pokerfox.partypoker.model.CardDeck;
+import at.aau.pokerfox.partypoker.model.CardListAdapter;
 import at.aau.pokerfox.partypoker.model.DrawableCard;
 import at.aau.pokerfox.partypoker.model.ShowTheCheater;
 import at.aau.pokerfox.partypoker.model.Game;
@@ -985,22 +989,67 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void chooseOneCardFromDeck () {
+        final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
         btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handlePlayerCardsDialog();
-                handleDeckCardsDialog();
+                startActivityForResult(deadMansIntent, 1);
+               // handleDeckCardsDialog();
             }
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
 
-    public void handlePlayerCardsDialog(){
+            /*
+            int deadMansCardId = Integer.parseInt(CardId);
+            for(int i = 0; i <52; i++) {
+                if (deadMansCardId==CardDeck.addDrawableIds().get(i)) {
+                    //Dann ersetze die vorher gewählte Handkarte mit der nun ausgewählten
+                }
+            }*/
 
-        CardDeck deck = new CardDeck();
+            Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void handlePlayerCardsDialog() {
+
+
+        /*
         String[] cardnames = new String [52];
         ArrayList<Drawable> cardDrawableList = new ArrayList<>();
         ArrayList<DrawableCard> cardList = new ArrayList<>();
+
+        fillUpCardList(cardList);
+
+        ArrayAdapter<DrawableCard> adapter = new CardListAdapter(this, cardList);
+        setListAdapter(adapter);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Country c = countryList.get(position);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(RESULT_CONTRYCODE, c.getCode());
+                setResult(RESULT_OK, returnIntent);
+                imgs.recycle(); //recycle images
+                finish();
+            }
+        });*/
+    }
+
+
+
+   /* public void fillUpCardList( ArrayList<DrawableCard> cardList) {
+
+        String [] cardnames = new String [52];
+        ArrayList<Drawable> cardDrawableList = new ArrayList<>();
+       cardList = new ArrayList<>();
 
         //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
@@ -1017,7 +1066,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             cardList.add(new DrawableCard(cardnames[i], cardDrawableList.get(i)));
         }
 
-}
+} */
 
 
 
@@ -1037,6 +1086,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             showTheCheater = new ShowTheCheater();
         }
     }*/
+
+
 
     public void initialiseCheatButtons () {
         btnCheat = findViewById(R.id.btn_cheat);

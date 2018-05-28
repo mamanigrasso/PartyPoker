@@ -8,14 +8,14 @@ import android.graphics.drawable.Drawable;
 
 public class DrawableCard {
     private String cardName;
-    //private String code;
+    private String cardID;
     private Drawable image;
 
 
-    public DrawableCard(String cardName, Drawable image){
+    public DrawableCard(String cardName, String cardID, Drawable image){
 
         this.cardName = cardName;
-        //this.code = code;
+        this.cardID = cardID;
         this.image = image;
     }
 
@@ -28,8 +28,8 @@ public class DrawableCard {
         return image;
     }
 
-    /*public String getCode() {
-        return code;
-    }*/
+    public String getCardID() {
+        return cardID;
+    }
 }
 
