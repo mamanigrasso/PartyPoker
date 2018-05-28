@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,18 +18,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.peak.salut.SalutDevice;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -41,7 +35,8 @@ import java.util.TimerTask;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 import at.aau.pokerfox.partypoker.model.CardDeck;
-import at.aau.pokerfox.partypoker.model.Cheat;
+import at.aau.pokerfox.partypoker.model.DrawableCard;
+import at.aau.pokerfox.partypoker.model.ShowTheCheater;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
 import at.aau.pokerfox.partypoker.model.Player;
@@ -71,7 +66,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
 
     private boolean isCheatingAllowed = true; //initGameMessage - METHOD
-    private Cheat cheat;
+    private ShowTheCheater showTheCheater;
     int bigBlind;
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
@@ -915,7 +910,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         } else if (isCheatingAllowed) {
         //} else if (cheatOn.isChecked()) {
             btnShowCheater.setEnabled(true);
-            cheat = new Cheat();
+            showTheCheater = new ShowTheCheater();
         }
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
@@ -934,7 +929,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                             for (int i = 0; i < players.size(); i++) {
 
                                 if (playerNames[indexPosition].equals(players.get(i).getName())) {
-                                    cheat.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
+                                    showTheCheater.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
                                     // Penalty=1/5 of the ChipCount of the opposite choosen player
 
                                     updatePlayerChipsViews();
@@ -1005,7 +1000,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         CardDeck deck = new CardDeck();
         String[] cardnames = new String [52];
         ArrayList<Drawable> cardDrawableList = new ArrayList<>();
-        ArrayList<Card>
+        ArrayList<DrawableCard> cardList = new ArrayList<>();
 
         //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
@@ -1018,11 +1013,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
 
 
-        /*for(int i = 0; i < 52; i++){
-            countryList.add(new Country(countrynames[i], countrycodes[i], imgs.getDrawable(i)));
-        }*/
+        for(int i = 0; i < 52; i++){
+            cardList.add(new DrawableCard(cardnames[i], cardDrawableList.get(i)));
+        }
 
 }
+
+
 
 
     public void handleDeckCardsDialog(){}
@@ -1037,7 +1034,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         } else if (isCheatingAllowed) {
             //} else if (cheatOn.isChecked()) {
             btnShowCheater.setEnabled(true);
-            cheat = new Cheat();
+            showTheCheater = new ShowTheCheater();
         }
     }*/
 
@@ -1049,7 +1046,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
 
-    //Hides All Cheat Buttons if Cheating is not allowed
+    //Hides All ShowTheCheater Buttons if Cheating is not allowed
 
     public void hideCheatButtons() {
         if(!isCheatingAllowed) {
@@ -1061,7 +1058,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
     }
 
-    //Shows The Cheat Buttons if Cheating is allowed
+    //Shows The ShowTheCheater Buttons if Cheating is allowed
     public void setCheatButtonsVisible () {
         if(isCheatingAllowed) {
 
@@ -1072,7 +1069,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             btnCheat.setVisibility(View.VISIBLE);
             btnCheat.setOnClickListener(new View.OnClickListener() {
 
-                // onClick on the "Cheat"-Button the cheat-option can be chose
+                // onClick on the "ShowTheCheater"-Button the showTheCheater-option can be chose
                 @Override
                 public void onClick(View view) {
 
