@@ -170,7 +170,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
 
 
-
         createAllViews();
 
         if (PartyPokerApplication.isHost()) {  // if is host
@@ -195,6 +194,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         initialiseCheatButtons();
         hideCheatButtons();
         setCheatButtonsVisible();
+        chooseOneCardFromDeck();
       
         this.receiver = new PokerBroadcastReceiver();
 
