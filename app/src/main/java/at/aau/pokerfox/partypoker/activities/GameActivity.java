@@ -991,21 +991,35 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void chooseOneCardFromDeck () {
+
         final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
+
+
+
         btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivityForResult(deadMansIntent, 1);
-                // handleDeckCardsDialog();
+
+
+
             }
         });
+
+
+
+
+
+
+
     }
 
         @Override
         public void onActivityResult ( int requestCode, int resultCode, Intent data){
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-                String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
+                final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
 
             /*
             int deadMansCardId = Integer.parseInt(CardId);
@@ -1015,7 +1029,40 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 }
             }*/
 
-                Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
+                btnShowTableCard.setVisibility(View.GONE);
+                btnProbability.setVisibility(View.GONE);
+                btnChooseOneCardFromDeck.setVisibility(View.GONE);
+
+                final int deadMansID = Integer.parseInt(CardId);
+                final ImageView playersCardLeft = findViewById(R.id.playerCard1);
+                final ImageView playersCardRight = findViewById(R.id.playerCard2);
+                Toast.makeText(GameActivity.this, "Click on the Card of your hand you want to change", Toast.LENGTH_SHORT).show();
+
+                playersCardLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        playersCardLeft.setImageDrawable(getDrawable(deadMansID));
+                        playersCardRight.setClickable(false);
+
+                    }
+                });
+
+
+
+                playersCardRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        playersCardRight.setImageDrawable(getDrawable(deadMansID));
+                        playersCardLeft.setClickable(false);
+                    }
+                });
+
+
+
+
+               // Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
             }
         }
 
