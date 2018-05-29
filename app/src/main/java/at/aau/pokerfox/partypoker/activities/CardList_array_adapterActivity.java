@@ -68,7 +68,7 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
         //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
-            cardnames[i]= getResources().getResourceName(CardDeck.addDrawableIds().get(i)); //hopefully works
+            cardnames[i]= getResources().getResourceEntryName(CardDeck.addDrawableIds().get(i)); //hopefully works
         }
 
         //Fillig up with the CardIDs

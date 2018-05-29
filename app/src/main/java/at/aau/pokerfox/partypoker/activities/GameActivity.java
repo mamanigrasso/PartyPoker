@@ -203,6 +203,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         hidePlayerActions();
     }
 
+
+
     @Override
     public void update(Observable observable, Object o) {
         updateViews();
@@ -616,9 +618,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
     }
   
-    @Override
+   @Override
     public void update() {
-        updateViews();
+       updateViews();
     }
 
     @Override
@@ -669,7 +671,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
        // turnMiddleCards();
        // turnOwnCards();
         //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-        drawPlayerCards();
+        //drawPlayerCards();
         registerForPokerBroadcasts(this.receiver);
     }
 
@@ -994,16 +996,16 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             @Override
             public void onClick(View view) {
                 startActivityForResult(deadMansIntent, 1);
-               // handleDeckCardsDialog();
+                // handleDeckCardsDialog();
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
+        @Override
+        public void onActivityResult ( int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+                String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
 
             /*
             int deadMansCardId = Integer.parseInt(CardId);
@@ -1013,9 +1015,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 }
             }*/
 
-            Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
+            }
         }
-    }
+
+
+
 
 
     public void handlePlayerCardsDialog() {
