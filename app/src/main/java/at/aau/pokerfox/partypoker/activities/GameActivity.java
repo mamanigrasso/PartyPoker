@@ -3,11 +3,13 @@ package at.aau.pokerfox.partypoker.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -17,16 +19,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.peak.salut.SalutDevice;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -36,7 +37,10 @@ import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
-import at.aau.pokerfox.partypoker.model.Cheat;
+import at.aau.pokerfox.partypoker.model.CardDeck;
+import at.aau.pokerfox.partypoker.model.CardListAdapter;
+import at.aau.pokerfox.partypoker.model.DrawableCard;
+import at.aau.pokerfox.partypoker.model.ShowTheCheater;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
 import at.aau.pokerfox.partypoker.model.Player;
@@ -66,7 +70,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
 
     private boolean isCheatingAllowed = true; //initGameMessage - METHOD
-    private Cheat cheat;
+    private ShowTheCheater showTheCheater;
     int bigBlind;
     private ArrayList<Player> players;
     private PokerBroadcastReceiver receiver;
@@ -146,6 +150,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ImageView ivTableCard4;
     private ImageView ivTableCard5;
 
+    private Button btnCheat;
+    private Button btnShowTableCard;
+    private Button btnProbability;
+    private Button btnChooseOneCardFromDeck;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +168,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             bigBlind = bundle.getInt(HostGameActivity.BUNDLE_BIG_BLIND);
             playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
         }
-
 
 
         createAllViews();
@@ -182,6 +191,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
 
         showTheCheater();
+        initialiseCheatButtons();
+        hideCheatButtons();
+        setCheatButtonsVisible();
+        chooseOneCardFromDeck();
       
         this.receiver = new PokerBroadcastReceiver();
 
@@ -189,6 +202,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         hidePlayerActions();
     }
+
+
 
     @Override
     public void update(Observable observable, Object o) {
@@ -603,9 +618,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
     }
   
-    @Override
+   @Override
     public void update() {
-        updateViews();
+       updateViews();
     }
 
     @Override
@@ -656,7 +671,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
        // turnMiddleCards();
        // turnOwnCards();
         //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-        drawPlayerCards();
+        //drawPlayerCards();
         registerForPokerBroadcasts(this.receiver);
     }
 
@@ -891,6 +906,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
     }
 
+    //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
+    //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
         Button btnShowCheater = findViewById(R.id.btn_cheating);
        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
@@ -901,7 +918,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         } else if (isCheatingAllowed) {
         //} else if (cheatOn.isChecked()) {
             btnShowCheater.setEnabled(true);
-            cheat = new Cheat();
+            showTheCheater = new ShowTheCheater();
         }
 
         btnShowCheater.setOnClickListener(new View.OnClickListener() {
@@ -920,7 +937,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                             for (int i = 0; i < players.size(); i++) {
 
                                 if (playerNames[indexPosition].equals(players.get(i).getName())) {
-                                    cheat.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
+                                    showTheCheater.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
                                     // Penalty=1/5 of the ChipCount of the opposite choosen player
 
                                     updatePlayerChipsViews();
@@ -945,15 +962,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
                             }
                         }
-
                     });
 
                     createDialog.setNegativeButton("Cancel", null);
                     createDialog.setCancelable(true);
 
                     final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
-
-
 
                     chooseTheCheater.show();
 
@@ -973,6 +987,111 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
 
         });
+    }
+
+    //Cheat-Funktion - "DeadMansHand"
+    //You can choose any card of the deck and change it with one on your hand
+    public void chooseOneCardFromDeck () {
+
+        final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
+
+
+        btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivityForResult(deadMansIntent, 1);
+            }
+        });
+
+    }
+
+
+    //Belongs to Cheat-Funktion "DeadMansHand"
+    //if you get the result of the "CardList_array_adapterActivity" you choose the card on your hand you want to change then it changes
+        @Override
+        public void onActivityResult ( int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+                final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
+
+
+                btnShowTableCard.setVisibility(View.GONE);
+                btnProbability.setVisibility(View.GONE);
+                btnChooseOneCardFromDeck.setVisibility(View.GONE);
+
+                final int deadMansID = Integer.parseInt(CardId);
+                final ImageView playersCardLeft = findViewById(R.id.playerCard1);
+                final ImageView playersCardRight = findViewById(R.id.playerCard2);
+                Toast.makeText(GameActivity.this, "Click on the Card of your hand you want to change", Toast.LENGTH_SHORT).show();
+
+                playersCardLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        playersCardLeft.setImageDrawable(getDrawable(deadMansID));
+                        playersCardRight.setClickable(false);
+
+                    }
+                });
+
+                playersCardRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        playersCardRight.setImageDrawable(getDrawable(deadMansID));
+                        playersCardLeft.setClickable(false);
+                    }
+                });
+            }
+        }
+
+
+
+
+
+    public void initialiseCheatButtons () {
+        btnCheat = findViewById(R.id.btn_cheat);
+        btnShowTableCard = findViewById(R.id.btn_eye);
+        btnProbability = findViewById(R.id.btn_wahr);
+        btnChooseOneCardFromDeck = findViewById(R.id.btn_dead);
+    }
+
+
+    //Hides All ShowTheCheater Buttons if Cheating is not allowed
+
+    public void hideCheatButtons() {
+        if(!isCheatingAllowed) {
+
+            btnCheat.setVisibility(View.GONE);
+            btnShowTableCard.setVisibility(View.GONE);
+            btnProbability.setVisibility(View.GONE);
+            btnChooseOneCardFromDeck.setVisibility(View.GONE);
+        }
+    }
+
+    //Shows The ShowTheCheater Buttons if Cheating is allowed
+    public void setCheatButtonsVisible () {
+        if(isCheatingAllowed) {
+
+            btnShowTableCard.setVisibility(View.GONE);
+            btnProbability.setVisibility(View.GONE);
+            btnChooseOneCardFromDeck.setVisibility(View.GONE);
+
+            btnCheat.setVisibility(View.VISIBLE);
+            btnCheat.setOnClickListener(new View.OnClickListener() {
+
+                // onClick on the "ShowTheCheater"-Button the showTheCheater-option can be chose
+                @Override
+                public void onClick(View view) {
+
+                    btnShowTableCard.setVisibility(View.VISIBLE);
+                    btnProbability.setVisibility(View.VISIBLE);
+                    btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
+                }
+            });
+
+        }
     }
 
 }
