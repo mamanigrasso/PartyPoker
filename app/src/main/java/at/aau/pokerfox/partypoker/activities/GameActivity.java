@@ -906,6 +906,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
     }
 
+    //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
+    //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
         Button btnShowCheater = findViewById(R.id.btn_cheating);
        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
@@ -960,15 +962,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
                             }
                         }
-
                     });
 
                     createDialog.setNegativeButton("Cancel", null);
                     createDialog.setCancelable(true);
 
                     final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
-
-
 
                     chooseTheCheater.show();
 
@@ -990,10 +989,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         });
     }
 
+    //Cheat-Funktion - "DeadMansHand"
+    //You can choose any card of the deck and change it with one on your hand
     public void chooseOneCardFromDeck () {
 
         final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
-
 
 
         btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
@@ -1001,33 +1001,20 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             public void onClick(View view) {
 
                 startActivityForResult(deadMansIntent, 1);
-
-
-
             }
         });
 
-
-
-
-
-
-
     }
 
+
+    //Belongs to Cheat-Funktion "DeadMansHand"
+    //if you get the result of the "CardList_array_adapterActivity" you choose the card on your hand you want to change then it changes
         @Override
         public void onActivityResult ( int requestCode, int resultCode, Intent data){
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
                 final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
 
-            /*
-            int deadMansCardId = Integer.parseInt(CardId);
-            for(int i = 0; i <52; i++) {
-                if (deadMansCardId==CardDeck.addDrawableIds().get(i)) {
-                    //Dann ersetze die vorher gewählte Handkarte mit der nun ausgewählten
-                }
-            }*/
 
                 btnShowTableCard.setVisibility(View.GONE);
                 btnProbability.setVisibility(View.GONE);
@@ -1048,8 +1035,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                     }
                 });
 
-
-
                 playersCardRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1058,86 +1043,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                         playersCardLeft.setClickable(false);
                     }
                 });
-
-
-
-
-               // Toast.makeText(this, "You selected Card has the ID: " + CardId, Toast.LENGTH_LONG).show();
             }
         }
 
 
-
-
-
-    public void handlePlayerCardsDialog() {
-
-
-        /*
-        String[] cardnames = new String [52];
-        ArrayList<Drawable> cardDrawableList = new ArrayList<>();
-        ArrayList<DrawableCard> cardList = new ArrayList<>();
-
-        fillUpCardList(cardList);
-
-        ArrayAdapter<DrawableCard> adapter = new CardListAdapter(this, cardList);
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Country c = countryList.get(position);
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra(RESULT_CONTRYCODE, c.getCode());
-                setResult(RESULT_OK, returnIntent);
-                imgs.recycle(); //recycle images
-                finish();
-            }
-        });*/
-    }
-
-
-
-   /* public void fillUpCardList( ArrayList<DrawableCard> cardList) {
-
-        String [] cardnames = new String [52];
-        ArrayList<Drawable> cardDrawableList = new ArrayList<>();
-       cardList = new ArrayList<>();
-
-        //Filling up with the CardNames
-        for (int i = 0; i<52; i++) {
-            cardnames[i]= getResources().getResourceName(CardDeck.addDrawableIds().get(i)); //hopefully works
-        }
-
-        //Filling up with the DrawableObjects
-        for (int i = 0; i<52; i++) {
-            cardDrawableList.add(getDrawable(CardDeck.addDrawableIds().get(i)));
-        }
-
-
-        for(int i = 0; i < 52; i++){
-            cardList.add(new DrawableCard(cardnames[i], cardDrawableList.get(i)));
-        }
-
-} */
-
-
-
-
-    public void handleDeckCardsDialog(){}
-
-
-
-    /*// CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
-
-        if(!isCheatingAllowed) {
-            //if(!cheatOn.isChecked()){
-            btnShowCheater.setEnabled(false);
-        } else if (isCheatingAllowed) {
-            //} else if (cheatOn.isChecked()) {
-            btnShowCheater.setEnabled(true);
-            showTheCheater = new ShowTheCheater();
-        }
-    }*/
 
 
 

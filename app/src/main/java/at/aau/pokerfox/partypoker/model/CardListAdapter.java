@@ -16,6 +16,10 @@ import at.aau.pokerfox.partypoker.R;
  * Created by Andreas on 28.05.2018.
  */
 
+//This class is responsible for the rendering of the ArrayAdapter we use in the CheatFunktion "DeadMansHand"
+//We use the layout-Activity "activity_cardimages_row.xml" to define layout of the Adapter, then we use a ViewHolder
+    //The ViewHolder enables to reuse the last row in the List (convertview can be reused). --> Adapter loads faster
+
 public class CardListAdapter extends ArrayAdapter<DrawableCard> {
     private final ArrayList<DrawableCard> list;
     private final Activity contextActivity;

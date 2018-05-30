@@ -22,9 +22,17 @@ import at.aau.pokerfox.partypoker.model.DrawableCard;
  * Created by Andreas on 28.05.2018.
  */
 
+
+//This class on the one hand creates a new ArrayAdapter based on the "CardListAdapter-class"
+    //On the other hand it fills up an ArrayList named "cardList" which contains allDrawableCards that we have in our Deck
+    //Now the adapter uses this list for the creation of the adapter
+
+//In the end this class gives the result back which is being catched by the method "onActivityResult" at the GameActivity.class
+
+
 public class CardList_array_adapterActivity  extends ListActivity {
 
-    //public static String RESULT_CONTRYCODE = "countrycode";
+
     public static String resultCardID = "deadMansCardID";
     public String[] cardnames;
     public String[] cardIDs;
@@ -35,11 +43,6 @@ public class CardList_array_adapterActivity  extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //next 3 lines ?
-       /* requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_cardimages_row);*/
 
         fillUpCardList();
         ArrayAdapter<DrawableCard> adapter = new CardListAdapter(this, cardList);
@@ -53,7 +56,6 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
                 returnIntent.putExtra(resultCardID,d.getCardID());
                 setResult(RESULT_OK, returnIntent);
-                //imgs.recycle(); //recycle images
                 finish();
             }
         });
