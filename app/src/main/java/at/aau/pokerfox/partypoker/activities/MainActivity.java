@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
 //                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
 //                click1.start();
-
+                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
+                click.start();
                 discoverAndJoinService();
             }
         });
