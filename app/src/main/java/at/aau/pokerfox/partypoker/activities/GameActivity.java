@@ -82,7 +82,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private int playerPot;
     private int minAmountToRaise;
     private int potSize = 0;
-
+    private boolean eyePossible = false;
     private TextView tvTablePot;
 
     private TextView tvPlayer1Name;
@@ -270,6 +270,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
+        eyePossible = false;
         updateViews();
     }
   
@@ -664,6 +665,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         prepareAndSendActionMessage(0, true, false);
     }
 
+    public void buttonEyePressed(View v) {
+        //prepareAndSendActionMessage(0, true, false);
+        if (eyePossible) {
+            turnForXPlayers(false, false, false, false, false, false, false, false, false, true);
+        }
+    }
+
     public void buttonRaisePressed(View v) {
         int amount = this.sbRaisedAmount.getProgress();
         //TODO: find out if player is all in
@@ -757,6 +765,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 turnCards(myIds, drawableIds);
             }
             if (turn) {
+                eyePossible = true;
                 int[] myIds = {R.id.turn};
                 int[] drawableIds = {Game.getInstance().getCommunityCards().get(3).getDrawableID()};
                 turnCards(myIds, drawableIds);
