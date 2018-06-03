@@ -30,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.peak.salut.SalutDevice;
 
+
+import java.lang.reflect.Array;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -692,75 +694,119 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         // TODO: googlen ob nicht elegantere Variante in JAva möglich mit dynamischen arrays
         if (player1) {
             int[] myIds = {R.id.playerCard1, R.id.playerCard2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(0).getCard1().getDrawableID(),
+                    players.get(0).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (player1) {
             int[] myIds = {R.id.opponent1Card1, R.id.opponent1Card2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(1).getCard1().getDrawableID(),
+                    players.get(1).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (player2) {
             int[] myIds = {R.id.opponent2Card1, R.id.opponent2Card2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(2).getCard1().getDrawableID(),
+                    players.get(2).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (player3) {
             int[] myIds = {R.id.opponent3Card1, R.id.opponent3Card2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(3).getCard1().getDrawableID(),
+                    players.get(3).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (player4) {
             int[] myIds = {R.id.opponent4Card1, R.id.opponent4Card2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(4).getCard1().getDrawableID(),
+                    players.get(4).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (player5) {
             int[] myIds = {R.id.opponent5Card1, R.id.opponent5Card2};
-            turnCards(myIds);
+            int[] drawableIds = {
+                    players.get(5).getCard1().getDrawableID(),
+                    players.get(5).getCard2().getDrawableID()
+            };
+            turnCards(myIds, drawableIds);
         }
         if (flop1) {
             int[] myIds = {R.id.flop1};
-            turnCards(myIds);
+            int[] drawableIds = {Game.getInstance().getCommunityCards().get(0).getDrawableID()};
+            turnCards(myIds, drawableIds);
         }
             if (flop2) {
                 int[] myIds = {R.id.flop2};
-                turnCards(myIds);
+                int[] drawableIds = {Game.getInstance().getCommunityCards().get(1).getDrawableID()};
+                turnCards(myIds, drawableIds);
+
             }
             if (flop3) {
                 int[] myIds = {R.id.flop3};
-                turnCards(myIds);
+                int[] drawableIds = {Game.getInstance().getCommunityCards().get(2).getDrawableID()};
+                turnCards(myIds, drawableIds);
             }
             if (turn) {
                 int[] myIds = {R.id.turn};
-                turnCards(myIds);
+                int[] drawableIds = {Game.getInstance().getCommunityCards().get(3).getDrawableID()};
+                turnCards(myIds, drawableIds);
             }
             if (river) {
                 int[] myIds = {R.id.river};
-                turnCards(myIds);
+                int[] drawableIds = {Game.getInstance().getCommunityCards().get(4).getDrawableID()};
+                turnCards(myIds, drawableIds);
             }
 
         // .. beliebig erweitern
     }
     public void turnMiddleCards() {
         int[] myIds = {R.id.flop1, R.id.flop2, R.id.flop3, R.id.turn, R.id.river};
-        turnCards(myIds);
+        int[] drawableIds = {
+                Game.getInstance().getCommunityCards().get(0).getDrawableID(),
+                Game.getInstance().getCommunityCards().get(1).getDrawableID(),
+                Game.getInstance().getCommunityCards().get(2).getDrawableID(),
+                Game.getInstance().getCommunityCards().get(3).getDrawableID(),
+                Game.getInstance().getCommunityCards().get(4).getDrawableID()
+        };
+        turnCards(myIds, drawableIds);
     }
 
     public void turnOwnCards() {
         int[] myIds = {R.id.playerCard1, R.id.playerCard2};
-        turnCards(myIds);
+        int[] drawableIds = {
+                players.get(0).getCard1().getDrawableID(),
+                players.get(0).getCard2().getDrawableID()
+        };
+        turnCards(myIds, drawableIds);
     }
 
-    public void turnCards(int[] viewIds) {
-        if (viewIds == null)
+    public void turnCards(int[] viewIds, int[] cards) {
+        if (viewIds == null || cards == null || viewIds.length != cards.length)
             return;
+        int drawableCnt = 0;
         for (int viewId : viewIds) {
         final ImageView myView = findViewById(viewId);
         final ObjectAnimator oa1 = ObjectAnimator.ofFloat(myView, "scaleX", 1f, 0f);
         final ObjectAnimator oa2 = ObjectAnimator.ofFloat(myView, "scaleX", 0f, 1f);
+        final int actDrawableID = cards[drawableCnt];
+        drawableCnt ++;
         oa1.setInterpolator(new DecelerateInterpolator());
         oa2.setInterpolator(new AccelerateDecelerateInterpolator());
         oa1.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                myView.setImageResource(R.drawable.chips);
+                myView.setImageResource(actDrawableID);
 
                 oa2.start();
             }
