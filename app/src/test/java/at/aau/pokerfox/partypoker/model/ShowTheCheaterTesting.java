@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 /**
  * Created by Andreas on 15.05.2018.
  */
-public class CheatTesting {
+public class ShowTheCheaterTesting {
 
-    Cheat letsCheat;
+    ShowTheCheater letsShowTheCheater;
 
 
     private ArrayList<Player> allPlayers;
@@ -44,7 +44,7 @@ public class CheatTesting {
         cheaters = new ArrayList<>();
         honests = new ArrayList<>();
         allPlayers = new ArrayList<>();
-        letsCheat = new Cheat();
+        letsShowTheCheater = new ShowTheCheater();
 
         cheaters.add(andy);
         cheaters.add(michael);
@@ -66,7 +66,7 @@ public class CheatTesting {
         honests = null;
 
         allPlayers = null;
-        letsCheat = null;
+        letsShowTheCheater = null;
         chipCounts=0;
         toLowChipCount=0;
 
@@ -76,7 +76,7 @@ public class CheatTesting {
     public void ditHeCheatTestWasCheatingTrue() {
 
         int penalty = chipCounts/5;
-        letsCheat.ditHeCheat(allPlayers, timo, andy, penalty);
+        letsShowTheCheater.ditHeCheat(allPlayers, timo, andy, penalty);
 
         assertEquals((long)chipCounts-penalty,(long)andy.getChipCount());
         assertEquals((long)chipCounts+penalty,(long)timo.getChipCount());
@@ -88,7 +88,7 @@ public class CheatTesting {
 
         int penalty = chipCounts/5;
 
-        letsCheat.ditHeCheat(allPlayers, andy, timo, penalty);
+        letsShowTheCheater.ditHeCheat(allPlayers, andy, timo, penalty);
 
         assertEquals((long)chipCounts-penalty,(long)andy.getChipCount());
         assertEquals((long)chipCounts+penalty,(long)timo.getChipCount());
@@ -100,7 +100,7 @@ public class CheatTesting {
 
         int penalty = chipCounts/5;
 
-        letsCheat.ditHeCheat(allPlayers, andy, andy, penalty);
+        letsShowTheCheater.ditHeCheat(allPlayers, andy, andy, penalty);
         //Nothing happens because on the one hand you get Chips and on the other hand you lose chips.
         assertEquals((long)chipCounts,(long)andy.getChipCount());
 
@@ -112,7 +112,7 @@ public class CheatTesting {
         int penalty = chipCounts/5;
         michael.setChipCount(toLowChipCount);
 
-        letsCheat.ditHeCheat(allPlayers, andy, michael, penalty);
+        letsShowTheCheater.ditHeCheat(allPlayers, andy, michael, penalty);
 
         assertEquals((long)chipCounts+150,(long)andy.getChipCount());
         assertEquals(0,(long)michael.getChipCount());
@@ -125,7 +125,7 @@ public class CheatTesting {
         int penalty = chipCounts/5;
         andy.setChipCount(toLowChipCount);
 
-        letsCheat.ditHeCheat(allPlayers, andy, timo, penalty);
+        letsShowTheCheater.ditHeCheat(allPlayers, andy, timo, penalty);
 
         assertEquals(0,(long)andy.getChipCount());
         assertEquals(chipCounts+150,(long)timo.getChipCount());
