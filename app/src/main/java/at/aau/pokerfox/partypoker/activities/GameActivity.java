@@ -62,7 +62,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     private final int MAX_PLAYER_COUNT = 6;
     private String[] playerNames=new String[MAX_PLAYER_COUNT];
-            //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
+    //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
     private boolean isCheatingAllowed = true; //initGameMessage - METHOD
     private ShowTheCheater showTheCheater;
@@ -75,7 +75,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private int potSize = 0;
     private String myDeviceName = null;
     private boolean eyePossible = false;
-  
+
     private TextView tvTablePot;
 
     private TextView tvPlayer1Name;
@@ -228,7 +228,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         eyePossible = false;
         updateViews();
     }
-  
+
     private void createTablePotView() {
         tvTablePot = findViewById(R.id.txt_pot);
     }
@@ -524,7 +524,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         createPlayerCardViews();
         createTableCardViews();
     }
-  
+
     private void hideAllUnusedViews() {
         for (int i=players.size(); i < MAX_PLAYER_COUNT; i++) {
             tvPlayerNames.get(i).setVisibility(View.INVISIBLE);
@@ -590,10 +590,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         boolean isAllIn = false;
         prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
     }
-  
-   @Override
+
+    @Override
     public void update() {
-       updateViews();
+        updateViews();
     }
 
     @Override
@@ -625,8 +625,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     protected void onResume()  {
 
         super.onResume();
-       // turnMiddleCards();
-       // turnOwnCards();
+        // turnMiddleCards();
+        // turnOwnCards();
         //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
         //drawPlayerCards();
         registerForPokerBroadcasts(this.receiver);
@@ -693,28 +693,28 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             int[] drawableIds = {Game.getInstance().getCommunityCards().get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
-            if (flop2) {
-                int[] myIds = {R.id.flop2};
-                int[] drawableIds = {Game.getInstance().getCommunityCards().get(1).getDrawableID()};
-                turnCards(myIds, drawableIds);
+        if (flop2) {
+            int[] myIds = {R.id.flop2};
+            int[] drawableIds = {Game.getInstance().getCommunityCards().get(1).getDrawableID()};
+            turnCards(myIds, drawableIds);
 
-            }
-            if (flop3) {
-                int[] myIds = {R.id.flop3};
-                int[] drawableIds = {Game.getInstance().getCommunityCards().get(2).getDrawableID()};
-                turnCards(myIds, drawableIds);
-            }
-            if (turn) {
-                eyePossible = true;
-                int[] myIds = {R.id.turn};
-                int[] drawableIds = {Game.getInstance().getCommunityCards().get(3).getDrawableID()};
-                turnCards(myIds, drawableIds);
-            }
-            if (river) {
-                int[] myIds = {R.id.river};
-                int[] drawableIds = {Game.getInstance().getCommunityCards().get(4).getDrawableID()};
-                turnCards(myIds, drawableIds);
-            }
+        }
+        if (flop3) {
+            int[] myIds = {R.id.flop3};
+            int[] drawableIds = {Game.getInstance().getCommunityCards().get(2).getDrawableID()};
+            turnCards(myIds, drawableIds);
+        }
+        if (turn) {
+            eyePossible = true;
+            int[] myIds = {R.id.turn};
+            int[] drawableIds = {Game.getInstance().getCommunityCards().get(3).getDrawableID()};
+            turnCards(myIds, drawableIds);
+        }
+        if (river) {
+            int[] myIds = {R.id.river};
+            int[] drawableIds = {Game.getInstance().getCommunityCards().get(4).getDrawableID()};
+            turnCards(myIds, drawableIds);
+        }
 
         // .. beliebig erweitern
     }
@@ -744,26 +744,26 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             return;
         int drawableCnt = 0;
         for (int viewId : viewIds) {
-        final ImageView myView = findViewById(viewId);
-        final ObjectAnimator oa1 = ObjectAnimator.ofFloat(myView, "scaleX", 1f, 0f);
-        final ObjectAnimator oa2 = ObjectAnimator.ofFloat(myView, "scaleX", 0f, 1f);
-        final int actDrawableID = cards[drawableCnt];
-        drawableCnt ++;
-        oa1.setInterpolator(new DecelerateInterpolator());
-        oa2.setInterpolator(new AccelerateDecelerateInterpolator());
-        oa1.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                myView.setImageResource(actDrawableID);
+            final ImageView myView = findViewById(viewId);
+            final ObjectAnimator oa1 = ObjectAnimator.ofFloat(myView, "scaleX", 1f, 0f);
+            final ObjectAnimator oa2 = ObjectAnimator.ofFloat(myView, "scaleX", 0f, 1f);
+            final int actDrawableID = cards[drawableCnt];
+            drawableCnt ++;
+            oa1.setInterpolator(new DecelerateInterpolator());
+            oa2.setInterpolator(new AccelerateDecelerateInterpolator());
+            oa1.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    myView.setImageResource(actDrawableID);
 
-                oa2.start();
-            }
-        });
-        oa1.start();
+                    oa2.start();
+                }
+            });
+            oa1.start();
         }
     }
-  
+
     private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
         IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
@@ -874,8 +874,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             }
         }
     }
-      
-//getting the needed Cards from the Class "Card" and link the image with the GUI
+
+    //getting the needed Cards from the Class "Card" and link the image with the GUI
     public void drawPlayerCards () {
         int [] playerCards = {R.id.playerCard1, R.id.playerCard2};
         drawCards(playerCards);
@@ -897,10 +897,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void drawCards (int [] CardIDs) {
-      for(int i : CardIDs) {
+        for(int i : CardIDs) {
             final ImageView cardView = findViewById(i);
-       cardView.setImageDrawable(getDrawable(Card.getCards()));
-    }
+            cardView.setImageDrawable(getDrawable(Card.getCards()));
+        }
     }
 
 
@@ -914,13 +914,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
         Button btnShowCheater = findViewById(R.id.btn_cheating);
-       // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
+        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
 
         if(!isCheatingAllowed) {
-       //if(!cheatOn.isChecked()){
+            //if(!cheatOn.isChecked()){
             btnShowCheater.setEnabled(false);
         } else if (isCheatingAllowed) {
-        //} else if (cheatOn.isChecked()) {
+            //} else if (cheatOn.isChecked()) {
             btnShowCheater.setEnabled(true);
             showTheCheater = new ShowTheCheater();
         }
@@ -932,19 +932,19 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 addingPlayerNamesToArray();
 
 
-                    AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+                AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
-                    createDialog.setTitle("Choose the Cheater! You have 5 seconds");
-                    createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogInterface, int indexPosition) {
-                            boolean wasCheatingFlag = false;
-                            for (int i = 0; i < players.size(); i++) {
+                createDialog.setTitle("Choose the Cheater! You have 5 seconds");
+                createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                        boolean wasCheatingFlag = false;
+                        for (int i = 0; i < players.size(); i++) {
 
-                                if (playerNames[indexPosition].equals(players.get(i).getName())) {
-                                    showTheCheater.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
-                                    // Penalty=1/5 of the ChipCount of the opposite choosen player
+                            if (playerNames[indexPosition].equals(players.get(i).getName())) {
+                                showTheCheater.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
+                                // Penalty=1/5 of the ChipCount of the opposite choosen player
 
-                                    updatePlayerChipsViews();
+                                updatePlayerChipsViews();
                                 /*tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
                                 tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
                                 tvPlayer3Chips = findViewById(R.id.text_checkop2);
@@ -952,42 +952,42 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                                 tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
                                 tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));*/
 
-                                    if (players.get(indexPosition).getCheatStatus() == true) {
-                                        wasCheatingFlag = true;
-                                    }
-                                    break;
+                                if (players.get(indexPosition).getCheatStatus() == true) {
+                                    wasCheatingFlag = true;
                                 }
-                            }
-                            dialogInterface.dismiss();
-                            if (wasCheatingFlag == true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
-                                Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
-
+                                break;
                             }
                         }
-                    });
+                        dialogInterface.dismiss();
+                        if (wasCheatingFlag == true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                            Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
 
-                    createDialog.setNegativeButton("Cancel", null);
-                    createDialog.setCancelable(true);
-
-                    final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
-
-                    chooseTheCheater.show();
-
-
-                    final Timer timeoutDialog = new Timer();
-
-                    //Timer to close after 5 seconds
-                    timeoutDialog.schedule(new TimerTask() {
-
-                        public void run() {
-                            chooseTheCheater.dismiss(); //timeout after 5 seconds
-                            timeoutDialog.cancel(); //timer is canceled now
                         }
-                    }, 5000);
+                    }
+                });
 
-                }
+                createDialog.setNegativeButton("Cancel", null);
+                createDialog.setCancelable(true);
+
+                final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
+
+                chooseTheCheater.show();
+
+
+                final Timer timeoutDialog = new Timer();
+
+                //Timer to close after 5 seconds
+                timeoutDialog.schedule(new TimerTask() {
+
+                    public void run() {
+                        chooseTheCheater.dismiss(); //timeout after 5 seconds
+                        timeoutDialog.cancel(); //timer is canceled now
+                    }
+                }, 5000);
+
+            }
 
 
         });
@@ -1013,42 +1013,42 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     //Belongs to Cheat-Funktion "DeadMansHand"
     //if you get the result of the "CardList_array_adapterActivity" you choose the card on your hand you want to change then it changes
-        @Override
-        public void onActivityResult ( int requestCode, int resultCode, Intent data){
-            super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-                final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
+    @Override
+    public void onActivityResult ( int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
 
 
-                btnShowTableCard.setVisibility(View.GONE);
-                btnProbability.setVisibility(View.GONE);
-                btnChooseOneCardFromDeck.setVisibility(View.GONE);
+            btnShowTableCard.setVisibility(View.GONE);
+            btnProbability.setVisibility(View.GONE);
+            btnChooseOneCardFromDeck.setVisibility(View.GONE);
 
-                final int deadMansID = Integer.parseInt(CardId);
-                final ImageView playersCardLeft = findViewById(R.id.playerCard1);
-                final ImageView playersCardRight = findViewById(R.id.playerCard2);
-                Toast.makeText(GameActivity.this, "Click on the Card of your hand you want to change", Toast.LENGTH_SHORT).show();
+            final int deadMansID = Integer.parseInt(CardId);
+            final ImageView playersCardLeft = findViewById(R.id.playerCard1);
+            final ImageView playersCardRight = findViewById(R.id.playerCard2);
+            Toast.makeText(GameActivity.this, "Click on the Card of your hand you want to change", Toast.LENGTH_SHORT).show();
 
-                playersCardLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            playersCardLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                        playersCardLeft.setImageDrawable(getDrawable(deadMansID));
-                        playersCardRight.setClickable(false);
+                    playersCardLeft.setImageDrawable(getDrawable(deadMansID));
+                    playersCardRight.setClickable(false);
 
-                    }
-                });
+                }
+            });
 
-                playersCardRight.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            playersCardRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                        playersCardRight.setImageDrawable(getDrawable(deadMansID));
-                        playersCardLeft.setClickable(false);
-                    }
-                });
-            }
+                    playersCardRight.setImageDrawable(getDrawable(deadMansID));
+                    playersCardLeft.setClickable(false);
+                }
+            });
         }
+    }
 
 
 
