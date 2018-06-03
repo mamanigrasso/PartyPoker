@@ -20,6 +20,8 @@ public class Card implements Parcelable {
 
     @JsonField
     private int rank;
+
+    @JsonField
     private int drawableID;
 
     public Card() {}
@@ -149,6 +151,7 @@ public class Card implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.suit);
         parcel.writeInt(this.rank);
+        parcel.writeInt(this.drawableID);
     }
 
     public static final Parcelable.Creator<Card> CREATOR
@@ -165,6 +168,7 @@ public class Card implements Parcelable {
     private Card(Parcel in) {
         this.suit = in.readInt();
         this.rank = in.readInt();
+        this.drawableID = in.readInt();
     }
 
     //to get the id of one specific card use: "R.drawable.clubs_4" for example.
@@ -175,5 +179,9 @@ public class Card implements Parcelable {
 
     public int getDrawableID() {
         return drawableID;
+    }
+
+    public void setDrawableID(int id) {
+        this.drawableID = id;
     }
 }

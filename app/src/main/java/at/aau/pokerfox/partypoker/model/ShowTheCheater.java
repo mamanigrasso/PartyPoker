@@ -6,9 +6,9 @@ import java.util.ArrayList;
  * Created by Andreas on 18.04.2018.
  */
 
-public class Cheat {
+public class ShowTheCheater {
 
-    public Cheat() {
+    public ShowTheCheater() {
     }
 
     /**

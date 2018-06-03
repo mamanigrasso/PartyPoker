@@ -102,6 +102,8 @@ public class CardDeck {
         return drawableIdList;
     }
 
+
+
     public static int getRandomId(ArrayList<Integer> idList) {
         if (idList.isEmpty()) {
             throw new IllegalArgumentException(
