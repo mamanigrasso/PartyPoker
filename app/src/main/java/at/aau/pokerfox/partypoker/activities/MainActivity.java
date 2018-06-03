@@ -33,6 +33,7 @@ import at.aau.pokerfox.partypoker.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_NAME = "BUNDLE_PLAYER_NAME";
+    public static final String BUNDLE_DEVICE_NAME = "BUNDLE_DEVICE_NAME";
 
     private String playerName = "";
     private Salut network;
@@ -205,8 +206,12 @@ public class MainActivity extends AppCompatActivity {
                 public void call() {
                     Toast.makeText(MainActivity.this, "You registered successfully!",
                             Toast.LENGTH_LONG).show();
-                Intent intent = new Intent("GameActivity");
-                startActivity(intent);
+                    Intent intent = new Intent("GameActivity");
+                    String deviceName = network.thisDevice.deviceName;
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BUNDLE_DEVICE_NAME, deviceName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             }, new SalutCallback() {
                 @Override

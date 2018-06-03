@@ -77,7 +77,7 @@ public class Game extends Observable {
 
             if (isThereAWinner()) {	// if all players have folded except one, we have a winner for this round -> so we start a new round
                 startRound();
-            } else if (stepID == 3) {
+            } else if (stepID == 3) {   // last step of this round finished
                 if (!roundDoneCheckWinner()) {	// if we have no final winner yet, start a new round, otherwise stop
                     startRound();
                 }
