@@ -97,7 +97,7 @@ public class Game extends Observable {
             currentPlayer = getNextPlayer();
 
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
-                if (currentPlayer.getName().compareTo(allPlayers.get(0).getName()) == 0) {    //change this to if (currentPlayer.isHost())
+                if (currentPlayer.isHost()) {    //change this to if (currentPlayer.isHost())
                     if (maxBid == 0)
                         maInterface.showPlayerActions(true);
                     else
@@ -388,10 +388,13 @@ public class Game extends Observable {
                 Card nextCard = CardDeck.issueNextCardFromDeck();
                 player.takeCard(nextCard);
 
-                NewCardMessage message = new NewCardMessage();
-                message.NewHandCard = nextCard;
-                PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
-                maInterface.update();
+                if (!player.isHost()) {
+                    NewCardMessage message = new NewCardMessage();
+                    message.NewHandCard = nextCard;
+                    PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
+                } else {
+                    maInterface.update();
+                }
             }
         }
     }
@@ -433,70 +436,70 @@ public class Game extends Observable {
      *
      * @param amount - the amount the bid round should start with
      */
-    private static void bidRound(int amount) {
-        int maxBid = amount;
-        boolean isRaised = true;
-
-        int activePlayerCount = allPlayers.size();	// all players who have not yet folded
-        int allInPlayerCount = 0; // all players who are all in
-
-        for (Player player : allPlayers) {
-            if (player.hasFolded())
-                activePlayerCount--;
-            if (player.isAllIn())
-                allInPlayerCount++;
-        }
-
-        while (isRaised) {
-            isRaised = false;   // assume nobody raises, otherwise set flag to true and repeat loop
-
-            for (int j = 0; j<allPlayers.size(); j++) {
-
-                Player player = getNextPlayer();
-
-                if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
-                    if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
-
-                        if (player.getName().compareTo(currentPlayer.getName()) == 0)
-                            if (amount == 0)
-                                maInterface.showPlayerActions(true);
-                            else
-                                maInterface.showPlayerActions(false);
-                        else {
-                            maInterface.hidePlayerActions();
-//                            player.getNewPlayerAction().execute(amount);
-                            YourTurnMessage message = new YourTurnMessage();
-                            message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
-                            PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
-                        }
-
-                        Sleep();
-
-                        if (player.hasFolded()) {	// player has folded
-                            activePlayerCount--;
-
-                            if (activePlayerCount == 1)	{ // all other players have folded, so we have a winner!
-                                addPlayerBidsToPot();
-                                return;
-                            }
-                        }
-
-                        if (player.isAllIn())	// player is all-in
-                            allInPlayerCount++;
-
-                        if (player.getCurrentBid() > maxBid) {   // player has raised
-                            isRaised = true;
-                            maxBid = player.getCurrentBid(); // current players bid is the new minimum for all other players
-                            break;  // restart for loop (all players need to be asked again now)
-                        }
-                    } else
-                        System.out.println("Only one player left - no need to ask anymore!");
-                }
-            }
-        }
-
-        addPlayerBidsToPot();	// bid round finished, now add up all player bids to pot
-    }
+//    private static void bidRound(int amount) {
+//        int maxBid = amount;
+//        boolean isRaised = true;
+//
+//        int activePlayerCount = allPlayers.size();	// all players who have not yet folded
+//        int allInPlayerCount = 0; // all players who are all in
+//
+//        for (Player player : allPlayers) {
+//            if (player.hasFolded())
+//                activePlayerCount--;
+//            if (player.isAllIn())
+//                allInPlayerCount++;
+//        }
+//
+//        while (isRaised) {
+//            isRaised = false;   // assume nobody raises, otherwise set flag to true and repeat loop
+//
+//            for (int j = 0; j<allPlayers.size(); j++) {
+//
+//                Player player = getNextPlayer();
+//
+//                if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
+//                    if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
+//
+//                        if (player.getName().compareTo(currentPlayer.getName()) == 0)
+//                            if (amount == 0)
+//                                maInterface.showPlayerActions(true);
+//                            else
+//                                maInterface.showPlayerActions(false);
+//                        else {
+//                            maInterface.hidePlayerActions();
+////                            player.getNewPlayerAction().execute(amount);
+//                            YourTurnMessage message = new YourTurnMessage();
+//                            message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
+//                            PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
+//                        }
+//
+//                        Sleep();
+//
+//                        if (player.hasFolded()) {	// player has folded
+//                            activePlayerCount--;
+//
+//                            if (activePlayerCount == 1)	{ // all other players have folded, so we have a winner!
+//                                addPlayerBidsToPot();
+//                                return;
+//                            }
+//                        }
+//
+//                        if (player.isAllIn())	// player is all-in
+//                            allInPlayerCount++;
+//
+//                        if (player.getCurrentBid() > maxBid) {   // player has raised
+//                            isRaised = true;
+//                            maxBid = player.getCurrentBid(); // current players bid is the new minimum for all other players
+//                            break;  // restart for loop (all players need to be asked again now)
+//                        }
+//                    } else
+//                        System.out.println("Only one player left - no need to ask anymore!");
+//                }
+//            }
+//        }
+//
+//        addPlayerBidsToPot();	// bid round finished, now add up all player bids to pot
+//    }
 
     private static ArrayList<Player> getActivePlayers() {
         ArrayList<Player> activePlayers = new ArrayList<Player>();
