@@ -178,13 +178,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
 
             prepareGame();
+
+            createAllViews();
+            hideAllUnusedViews();
+            setPlayerNames();
+            updateViews();
         }
-
-        createAllViews();
-        hideAllUnusedViews();
-        setPlayerNames();
-        updateViews();
-
         this.receiver = new PokerBroadcastReceiver();
 
         showTheCheater();
@@ -289,7 +288,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerChipsViews() {
         int i=1;
         for (Player p : players) {
-            Log.e("int", "i = " + i);
             if (p.getDeviceId().equals(myDeviceName))    // if p is this player
                 tvPlayerChips.get(0).setText(p.getChipCount() + "");
             else
@@ -532,6 +530,15 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     private void hideAllUnusedViews() {
+        for (int i=0; i < players.size(); i++) {
+            tvPlayerNames.get(i).setVisibility(View.VISIBLE);
+            tvPlayerChips.get(i).setVisibility(View.VISIBLE);
+            tvPlayerBids.get(i).setVisibility(View.VISIBLE);
+            tvPlayerStates.get(i).setVisibility(View.VISIBLE);
+            ivPlayerCards1.get(i).setVisibility(View.VISIBLE);
+            ivPlayerCards2.get(i).setVisibility(View.VISIBLE);
+        }
+
         for (int i=players.size(); i < MAX_PLAYER_COUNT; i++) {
             tvPlayerNames.get(i).setVisibility(View.INVISIBLE);
             tvPlayerChips.get(i).setVisibility(View.INVISIBLE);
@@ -564,37 +571,41 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     @Override
-    public void showPlayerActions(boolean bCheck) {
+    public void showPlayerActions(int minAmountToRaise) {
         Button buttonCheck = (Button)findViewById(R.id.btn_check);
         Button buttonFold = (Button)findViewById(R.id.btn_fold);
         Button buttonRaise = (Button)findViewById(R.id.btn_raise);
-
-        Log.e("flow test", "in showPlayerActions()");
 
         buttonFold.setVisibility(View.VISIBLE);
         buttonRaise.setVisibility(View.VISIBLE);
         buttonCheck.setVisibility(View.VISIBLE);
 
-        if (bCheck)
+        if (minAmountToRaise == 0)
             buttonCheck.setText("CHECK");
         else
-            buttonCheck.setText("CALL");
+            buttonCheck.setText("CALL(" + minAmountToRaise + ")");
     }
 
     private void prepareAndSendActionMessage(int amount, boolean hasFolded, boolean isAllIn) {
-        hidePlayerActions();
         ActionMessage message = new ActionMessage();
         message.Amount = amount;
         message.HasFolded = hasFolded;
         message.IsAllIn = isAllIn;
-        showPlayerActions(false);
         PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
     }
 
     public void buttonCheckPressed(View v) {
         //TODO: find out if player is all in
         boolean isAllIn = false;
-        prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
+
+        hidePlayerActions();
+
+        if (PartyPokerApplication.isHost()) {
+            Game.getInstance().playerBid(this.minAmountToRaise);
+        }
+        else {
+            prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
+        }
     }
 
     @Override
@@ -608,7 +619,14 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void buttonFoldPressed(View v) {
-        prepareAndSendActionMessage(0, true, false);
+        hidePlayerActions();
+
+        if (PartyPokerApplication.isHost()) {
+            Game.getInstance().playerFolded();
+        }
+        else {
+            prepareAndSendActionMessage(0, true, false);
+        }
     }
 
     public void buttonEyePressed(View v) {
@@ -622,9 +640,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         int amount = this.sbRaisedAmount.getProgress();
         //TODO: find out if player is all in
         boolean isAllIn = false;
-        prepareAndSendActionMessage(amount, false, isAllIn);
-
-        //Game.getInstance().playerBid(120);
+        hidePlayerActions();
+        if (PartyPokerApplication.isHost()) {
+            Game.getInstance().playerBid(amount);
+        }
+        else {
+            prepareAndSendActionMessage(amount, false, isAllIn);
+        }
     }
 
     @Override
@@ -800,9 +822,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         int playerPot = bundle.getInt(BroadcastKeys.PLAYER_POT);
 
         this.players = players;
-        setPlayerNames();
-
         this.bigBlind = bigBlind;
+
+        createAllViews();
+        hideAllUnusedViews();
+        setPlayerNames();
         updateViews();
     }
 
@@ -841,10 +865,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         Log.e("flow test", "in handleYourTurnMessage()");
 
-        if (minAmountToRaise == 0)
-            showPlayerActions(true);
-        else
-            showPlayerActions(false);
+        showPlayerActions(minAmountToRaise);
     }
 
     private class PokerBroadcastReceiver extends BroadcastReceiver {

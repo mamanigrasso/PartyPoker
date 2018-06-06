@@ -92,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="Connected players: "
+        android:text="Waiting for create..."
         android:textColor="@color/white"
         app:layout_constraintBaseline_toBaselineOf="@+id/btn_start_game"
         app:layout_constraintEnd_toStartOf="@+id/btn_start_game" />
