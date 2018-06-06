@@ -117,7 +117,7 @@ public class Game extends Observable {
         }
     }
 
-    private boolean areAllPlayersAligned() {
+    public boolean areAllPlayersAligned() {
         int playersToAct = allPlayers.size();
 
         for (Player p : allPlayers) {
@@ -173,11 +173,12 @@ public class Game extends Observable {
         playerDone();
     }
 
-    private boolean roundDoneCheckWinner() {
+    public boolean roundDoneCheckWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
         ArrayList<Player> winners = new ArrayList<Player>();
 
-        maInterface.showAllPlayerCards();
+        if (maInterface != null)
+            maInterface.showAllPlayerCards();
 
         if (activePlayers.size() > 1) { // there is still more than one player active, so we need to check hands to figure out the winner(s)
             winners = determineWinner(activePlayers, communityCards);
@@ -190,7 +191,7 @@ public class Game extends Observable {
         return handleWinner(winners);
     }
 
-    private boolean handleWinner(ArrayList<Player> winners) {
+    public boolean handleWinner(ArrayList<Player> winners) {
         if (kickOutLosersAndCheckFinalWinner(winners)) // do we have a final winner?
             return true;
 
@@ -221,7 +222,7 @@ public class Game extends Observable {
         return false;
     }
 
-    private String getWinningHandString(Player winner) {
+    public String getWinningHandString(Player winner) {
         ArrayList<Card> cards = new ArrayList<Card>();
 
         if (communityCards.size() == 5) {	// if all community cards are shown
@@ -308,7 +309,7 @@ public class Game extends Observable {
     /**
      * prepareRound - reset pot size, prepare players , prepare card deck, ...
      */
-    private static void prepareRound() {
+    public static void prepareRound() {
         potSize = 0;
         stepID = 0;
         maxBid = 0;
@@ -325,7 +326,7 @@ public class Game extends Observable {
      * preparePlayers - removes players cards, resets their blind values and
      * activates all players which still have some chips
      */
-    private static void preparePlayers() {
+    public static void preparePlayers() {
         for (Player player : allPlayers) {
             player.removeCards();
 
@@ -339,7 +340,7 @@ public class Game extends Observable {
      *
      * @return - returns current dealer
      */
-    private static Player getDealer() {
+    public static Player getDealer() {
         for (int i = 0; i < allPlayers.size(); i++) {
             Player player = getNextPlayer();
 
@@ -357,7 +358,7 @@ public class Game extends Observable {
      *
      * @return - the new dealer
      */
-    private static Player assignDealer() {
+    public static Player assignDealer() {
         Player oldDealer = getDealer();
         oldDealer.setIsDealer(false);
 
@@ -372,7 +373,7 @@ public class Game extends Observable {
     /**
      * prepareCardDeck - fill up card deck, shuffle cards in deck
      */
-    private static void prepareCardDeck() {
+    public static void prepareCardDeck() {
         CardDeck.fillUp();
         CardDeck.randomizeDeck();
     }
@@ -381,7 +382,7 @@ public class Game extends Observable {
      * dealOutCards - take one card from card deck and give to first player
      * after dealer, then take next card...
      */
-    private static void dealOutCards() {
+    public static void dealOutCards() {
         for (int i = 1; i <= 2; i++) { // every player should get two cards totally (but one by one)
             for (int j = 0; j < allPlayers.size(); j++) { // first player after dealer gets the first card
                 Player player = getNextPlayer();
@@ -405,7 +406,7 @@ public class Game extends Observable {
      *
      * @return - the next player in the queue
      */
-    private static Player getNextPlayer() {
+    public static Player getNextPlayer() {
         Player player = allPlayers.removeFirst();
         allPlayers.addLast(player);
         return player;
@@ -415,7 +416,7 @@ public class Game extends Observable {
      * assignBlinds - assign small blind to first player after dealer, then big
      * blind
      */
-    private static void assignBlinds() {
+    public static void assignBlinds() {
         Player player = getNextPlayer();
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
@@ -501,7 +502,7 @@ public class Game extends Observable {
 //        addPlayerBidsToPot();	// bid round finished, now add up all player bids to pot
 //    }
 
-    private static ArrayList<Player> getActivePlayers() {
+    public static ArrayList<Player> getActivePlayers() {
         ArrayList<Player> activePlayers = new ArrayList<Player>();
 
         for (Player player : allPlayers) {
@@ -516,7 +517,7 @@ public class Game extends Observable {
      * addPlayerBidsToPot - after each round the bids of each player are added
      * to the total pot
      */
-    private static void addPlayerBidsToPot() {
+    public static void addPlayerBidsToPot() {
         for (Player player : allPlayers) {
             potSize += player.getCurrentBid();
             player.resetCurrentBid();
@@ -532,7 +533,7 @@ public class Game extends Observable {
      * @param step
      *            - the current step the dealer does (flop, turn or river)
      */
-    private static void showCommunityCards(int step) {
+    public static void showCommunityCards(int step) {
         CardDeck.issueNextCardFromDeck(); // remove one card before dealing
         Card card;
 
@@ -555,7 +556,7 @@ public class Game extends Observable {
         }
     }
 
-    private boolean isThereAWinner() {
+    public boolean isThereAWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
 
         if (activePlayers.size() == 1) {	// we have a winner for this round!
@@ -574,7 +575,7 @@ public class Game extends Observable {
      *            - the five community cards all players get
      * @return - the player(s) who has(have) the best hand
      */
-    static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
+    public static ArrayList<Player> determineWinner(ArrayList<Player> players, ArrayList<Card> cards) {
         ArrayList<Player> winners = new ArrayList<Player>();
 
         Hand currHand = null, bestHand = null;
@@ -582,6 +583,8 @@ public class Game extends Observable {
         for (Player player : players) {
             currHand = new Hand(new Card[] { cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4),
                     player.getCard1(), player.getCard2() });
+
+            System.out.println(player.getName() + " has " + currHand.display());
 
             if (bestHand == null)
                 bestHand = currHand;
@@ -603,7 +606,7 @@ public class Game extends Observable {
      * @param winners
      *            - the list of winners
      */
-    private static boolean kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
+    public static boolean kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
         int playerCount = allPlayers.size();
 
         for (int i = 0; i < playerCount; i++) {
@@ -627,7 +630,7 @@ public class Game extends Observable {
         return communityCards;
     }
 
-    private static void Sleep() {
+    public static void Sleep() {
         try {
             Thread.sleep(250);
         } catch (InterruptedException e) {
@@ -644,5 +647,10 @@ public class Game extends Observable {
         }
 
         return false;
+    }
+
+    // just for testing!
+    public void addCommunityCard(Card c) {
+        communityCards.add(c);
     }
 }
