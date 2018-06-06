@@ -98,14 +98,10 @@ public class Game extends Observable {
 
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
                 if (currentPlayer.isHost()) {    //change this to if (currentPlayer.isHost())
-                    if (maxBid == 0)
-                        maInterface.showPlayerActions(true);
-                    else
-                        maInterface.showPlayerActions(false);
+                    maInterface.showPlayerActions(maxBid);
                 }
                 else {
                     maInterface.hidePlayerActions();
-//                    currentPlayer.getNewPlayerAction().execute(maxBid);
                     YourTurnMessage message = new YourTurnMessage();
                     message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
                     PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());

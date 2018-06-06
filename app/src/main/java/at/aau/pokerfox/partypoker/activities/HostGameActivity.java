@@ -90,6 +90,8 @@ public class HostGameActivity extends AppCompatActivity {
 
                     HostGameActivity.this.network = network;
 
+                    txtConnectedPlayers.setText("Connected players: ");
+
 
                     network.startNetworkService(new SalutDeviceCallback() {
                         @Override
