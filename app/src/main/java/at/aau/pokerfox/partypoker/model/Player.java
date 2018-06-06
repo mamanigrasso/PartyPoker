@@ -41,6 +41,8 @@ public class Player implements Parcelable {
     @JsonField
     private String status = "";
     @JsonField
+    private String deviceId;
+    @JsonField
     private SalutDevice device;
     @JsonField
     private boolean isHost = false;
@@ -118,6 +120,14 @@ public class Player implements Parcelable {
     public void payOutPot(int pot) {
         System.out.println(name + " just got " + pot + " chips!");
         chipCount += pot;
+    }
+
+    public void setDeviceId(String id) {
+        this.deviceId = id;
+    }
+
+    public String getDeviceId() {
+        return this.deviceId;
     }
 
     public ArrayList<Card> getPlayerHand() {
@@ -198,6 +208,7 @@ public class Player implements Parcelable {
         parcel.writeByte((byte) (this.checkStatus ? 1 : 0));
         parcel.writeString(this.status);
         parcel.writeByte((byte) (this.isHost ? 1 : 0));
+        parcel.writeString(this.deviceId);
     }
 
     public static final Parcelable.Creator<Player> CREATOR
@@ -225,6 +236,7 @@ public class Player implements Parcelable {
         this.cheatStatus = in.readByte() != 0;
         this.status = in.readString();
         this.isHost = in.readByte() != 0;
+        this.deviceId = in.readString();
     }
 
     public boolean isBigBlind() {
@@ -253,6 +265,7 @@ public class Player implements Parcelable {
 
     public void setDevice(SalutDevice device) {
         this.device = device;
+        this.deviceId = device.deviceName;
     }
 
     public SalutDevice getDevice() {
@@ -324,4 +337,6 @@ public class Player implements Parcelable {
     public void setIsHost(boolean host) {
         isHost = host;
     }
+
+
 }

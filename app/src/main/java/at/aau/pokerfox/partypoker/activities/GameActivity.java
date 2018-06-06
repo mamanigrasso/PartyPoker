@@ -66,7 +66,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     private boolean isCheatingAllowed = true; //initGameMessage - METHOD
     private ShowTheCheater showTheCheater;
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Card> communityCards = new ArrayList<>();
     private PokerBroadcastReceiver receiver;
     private int bigBlind;
@@ -172,16 +172,18 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         myDeviceName = getIntent().getExtras().getString(MainActivity.BUNDLE_DEVICE_NAME);
 
-        createAllViews();
-        hideAllUnusedViews();
-
         if (PartyPokerApplication.isHost()) {
             Bundle bundle = getIntent().getExtras();
             bigBlind = bundle.getInt(HostGameActivity.BUNDLE_BIG_BLIND);
             playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
 
-            startGame();
+            prepareGame();
         }
+
+        createAllViews();
+        hideAllUnusedViews();
+        setPlayerNames();
+        updateViews();
 
         this.receiver = new PokerBroadcastReceiver();
 
@@ -194,6 +196,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         this.sbRaisedAmount = findViewById(R.id.seekBar2);
 
         hidePlayerActions();
+
+        if (PartyPokerApplication.isHost())
+            startGame();
     }
 
     @Override
@@ -201,11 +206,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         updateViews();
     }
 
-    private void startGame() {
+    private void prepareGame() {
         players = new ArrayList<>();
 
         Player myself = new Player("host");
         myself.setIsHost(true);
+        myself.setDevice(PartyPokerApplication.getNetwork().thisDevice);
         players.add(myself);
 
         Game.init(bigBlind, bigBlind, playerPot, PartyPokerApplication.getConnectedDevices().size()+1, this);
@@ -213,20 +219,19 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         Game.addPlayer(myself);
 
         for (SalutDevice device : PartyPokerApplication.getConnectedDevices()) {
-            Player p = new Player(device.instanceName);
+            Player p = new Player(device.deviceName);
             p.setDevice(device);
             players.add(p);
             Game.addPlayer(p);
         }
 
         Game.getInstance().initGame();
+    }
 
-        setPlayerNames();
-
+    private void startGame() {
         Game.getInstance().addObserver(this);
         Game.getInstance().startRound();
         eyePossible = false;
-        updateViews();
     }
 
     private void createTablePotView() {
@@ -257,7 +262,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void setPlayerNames() {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName)    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
                 tvPlayerNames.get(0).setText(p.getName());
             else
                 tvPlayerNames.get(i++).setText(p.getName());
@@ -284,10 +289,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerChipsViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName)    // if p is this player
-                tvPlayerChips.get(0).setText(p.getChipCount());
+            Log.e("int", "i = " + i);
+            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+                tvPlayerChips.get(0).setText(p.getChipCount() + "");
             else
-                tvPlayerChips.get(i++).setText(p.getChipCount());
+                tvPlayerChips.get(i++).setText(p.getChipCount() + "");
         }
     }
 
@@ -311,10 +317,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerBidViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName)    // if p is this player
-                tvPlayerBids.get(0).setText(p.getCurrentBid());
+            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+                tvPlayerBids.get(0).setText(p.getCurrentBid() + "");
             else
-                tvPlayerBids.get(i++).setText(p.getCurrentBid());
+                tvPlayerBids.get(i++).setText(p.getCurrentBid() + "");
         }
     }
 
@@ -368,7 +374,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerRoleViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName) {   // if p is this player
+            if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
                 ivPlayerBigBlinds.get(0).setVisibility(p.isBigBlind() ? View.VISIBLE : View.INVISIBLE);
                 ivPlayerSmallBlinds.get(0).setVisibility(p.isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
                 ivPlayerDealers.get(0).setVisibility(p.isDealer() ? View.VISIBLE : View.INVISIBLE);
@@ -402,7 +408,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerStatusViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName)    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
                 tvPlayerStates.get(0).setText(p.getStatus());
             else
                 tvPlayerStates.get(i++).setText(p.getStatus());
@@ -443,7 +449,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void updatePlayerCardViews(boolean showAllOtherPlayerCards) {
         int i=1;
         for (Player p : players) {
-            if (p.getDevice().deviceName == myDeviceName) {   // if p is this player
+            if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
                 if (p.getCard1() == null)
                     ivPlayerCards1.get(0).setVisibility(View.INVISIBLE);
                 else {

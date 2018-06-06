@@ -24,6 +24,8 @@ import com.peak.salut.SalutServiceData;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 
+import static at.aau.pokerfox.partypoker.activities.MainActivity.BUNDLE_DEVICE_NAME;
+
 public class HostGameActivity extends AppCompatActivity {
     public static final String TAG = ".activities.HostGameActivity";
     public static final String BUNDLE_BIG_BLIND = "BUNDLE_BIG_BLIND";
@@ -115,7 +117,7 @@ public class HostGameActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txt_bigblind.getText().toString()));
                 bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txt_playerpot.getText().toString()));
-
+                bundle.putString(BUNDLE_DEVICE_NAME, network.thisDevice.deviceName);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
