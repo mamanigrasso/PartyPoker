@@ -1,12 +1,16 @@
 package at.aau.pokerfox.partypoker.model;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
+
+import at.aau.pokerfox.partypoker.PartyPokerApplication;
+import at.aau.pokerfox.partypoker.activities.GameActivity;
 
 import static org.junit.Assert.*;
 
@@ -31,8 +35,9 @@ public class GameTest {
     private static Player currentPlayer;
     private static int stepID = 1;*/
 
-    private static ModActInterface modActInterface;
-
+    private static ModActInterface modActInterface = null;
+    private final int SMALL_BLIND = 50;
+    private final int CHIP_COUNT = 1000;
 
     Player andy = new Player("Andy");
     Player michael = new Player ("Michael");
@@ -61,8 +66,9 @@ public class GameTest {
     public void setUp() throws Exception {
         players= new ArrayList<>();
         cards = new ArrayList<>();
+        PartyPokerApplication.setIsHost(true);
         //Game.getInstance().initGame();
-        Game.init(50,100,1000,6,modActInterface);
+        Game.init(SMALL_BLIND,100,CHIP_COUNT,6,modActInterface);
     }
 
     @After
@@ -73,6 +79,7 @@ public class GameTest {
 
     @Test
     public void startRound() throws Exception {
+
     }
 
     @Test
@@ -90,8 +97,6 @@ public class GameTest {
     @Test
     public void playerFoldedTest() throws Exception {
     }
-
-
 
     @Test
     public void nextStepTest() throws Exception {  //runs threw the game logic until somebody folded
@@ -215,59 +220,157 @@ public class GameTest {
 
     @Test
     public void determineWinnerTest() {
+        Card hearts6 = new Card(0,6);
+        Card heartsJack = new Card(0,10);
+        Card heartsAce = new Card(0,0);
+        Card spadesQueen = new Card(1,11);
+        Card diamonds10 = new Card(2,9);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(0,6));
         players.add(andy);
+
+        michael.takeCard(new Card(2, 5));
+        michael.takeCard(new Card(2, 6));
         players.add(michael);
-        //players.add(mathias);
-        //players.add(timo);
-        //players.add(marco);
-        //players.add(manuel);
 
+        cards.clear();
+        cards.add(hearts6);
+        cards.add(heartsJack);
+        cards.add(heartsAce);
+        cards.add(spadesQueen);
+        cards.add(diamonds10);
 
-        cards.add(card1);
-        cards.add(card2);
-        cards.add(card3);
-        cards.add(card4);
-        cards.add(card5);
-        cards.add(card6);
-        cards.add(card7);
-       /* cards.add(card8);
-        cards.add(card9);
-        cards.add(card10);*/
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
 
-       /* card1.setRank(0);
-        card2.setRank(1);
-        card3.setRank(2);
-        card4.setRank(3);
-        card5.setRank(4);
-        card6.setRank(5);
-        card7.setRank(6);
-        card8.setRank(7);
-        card9.setRank(8);
-        card10.setRank(9);*/
-
-        Card [] passedCards = new Card [7];
-
-        for(int i = 0 ; i<7; i++) {
-            passedCards[i]=cards.get(i);
-        }
-
-
-     //    Card [] passedCards = cards.toArray(new Card[7]);
-
-        Hand hand = new Hand(passedCards);
-
-        //andy.setCards(cards);
-
-        //cards.remove(0);
-        //cards.remove(1);
-        //michael.setCards(cards);
-
-        for(int i = 0 ; i<7; i++) {
-            System.out.println(passedCards[i].getRank());
-        }
-
-        Game.determineWinner(players,cards);
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (hearts flush)
     }
 
+    @Test
+    public void areAllPlayersAligned() {
+        players.add(andy);
+        players.add(michael);
+        players.add(marco);
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+        Game.addPlayer(marco);
 
+        resetPlayerStates(players);
+
+        // Test1
+        // no player has folded, checked or is all in --> not aligned!
+        assertFalse(Game.getInstance().areAllPlayersAligned());
+
+        andy.setHasFolded(true);
+        michael.setCheckStatus(true);
+        marco.setIsAllIn(true);
+
+        // Test2
+        // one player has folded, one has checked, one is all in --> aligned!
+        assertTrue(Game.getInstance().areAllPlayersAligned());
+
+        resetPlayerStates(players);
+
+        andy.setHasFolded(true);
+        michael.setCheckStatus(false);
+        marco.setIsAllIn(true);
+
+        // Test3
+        // one player has folded, one has not checked yet, one is all in --> aligned!
+        assertFalse(Game.getInstance().areAllPlayersAligned());
+    }
+
+    private void resetPlayerStates(ArrayList<Player> players) {
+        for (Player p : players) {
+            p.setIsAllIn(false);
+            p.setHasFolded(false);
+            p.setIsBigBlind(false);
+            p.setIsSmallBlind(false);
+            p.setIsDealer(false);
+            p.setCheckStatus(false);
+        }
+    }
+
+    @Test
+    public void prepareRound() {
+        players.add(andy);
+        players.add(michael);
+        players.add(marco);
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+        Game.addPlayer(marco);
+
+        resetPlayerStates(players);
+
+        andy.setIsDealer(true); // the old dealer
+        marco.setIsBigBlind(true);
+        michael.setIsSmallBlind(true);
+        andy.setIsAllIn(true);
+        michael.setHasFolded(true);
+        marco.setCheckStatus(true);
+
+        Game.getInstance().prepareRound();
+
+        assertFalse(andy.isDealer());
+        assertFalse(michael.isDealer());
+        assertTrue(marco.isDealer());   // must be the new dealer
+
+        for (Player p : players) {
+            assertFalse(p.isSmallBlind());
+            assertFalse(p.isBigBlind());
+            assertFalse(p.hasFolded());
+            assertFalse(p.isAllIn());
+            assertTrue(p.getCard1() == null);
+            assertTrue(p.getCard2() == null);
+        }
+    }
+
+    @Test
+    public void roundDoneCheckWinner() {
+        Card hearts6 = new Card(0,6);
+        Card heartsJack = new Card(0,10);
+        Card heartsAce = new Card(0,0);
+        Card spadesQueen = new Card(1,11);
+        Card diamonds10 = new Card(2,9);
+
+        Game.getInstance().addCommunityCard(hearts6);
+        Game.getInstance().addCommunityCard(heartsJack);
+        Game.getInstance().addCommunityCard(heartsAce);
+        Game.getInstance().addCommunityCard(spadesQueen);
+        Game.getInstance().addCommunityCard(diamonds10);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(0,6));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 5));
+        michael.takeCard(new Card(2, 6));
+        players.add(michael);
+
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+
+        michael.setIsAllIn(true);
+        assertTrue(Game.getInstance().roundDoneCheckWinner());  // michael is all in and has the worse hand, so we have a final winner
+    }
+
+    @Test
+    public void assignBlinds() {
+        players.add(andy);
+        players.add(michael);
+
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+
+        Game.assignBlinds();
+
+        assertTrue(michael.isSmallBlind());
+        assertFalse(michael.isBigBlind());
+        assertEquals(CHIP_COUNT - SMALL_BLIND, michael.getChipCount());
+
+        assertFalse(andy.isSmallBlind());
+        assertTrue(andy.isBigBlind());
+        assertEquals(CHIP_COUNT - SMALL_BLIND*2, andy.getChipCount());
+    }
 }
