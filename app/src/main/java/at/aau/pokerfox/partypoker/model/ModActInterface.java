@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Manuel on 26.04.2018.
  */
@@ -7,6 +9,6 @@ package at.aau.pokerfox.partypoker.model;
 public interface ModActInterface {
     public void showPlayerActions(int minAmountToRaise);
     public void hidePlayerActions();
-    public void update();
-    public void showAllPlayerCards();
+    public void update(ArrayList<Card> communityCards, int potSize, ArrayList<Player> allPlayers);
+    public void showWinner(String winnerInfo);
 }

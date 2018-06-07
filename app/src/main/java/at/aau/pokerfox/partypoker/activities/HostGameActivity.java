@@ -90,8 +90,7 @@ public class HostGameActivity extends AppCompatActivity {
 
                     HostGameActivity.this.network = network;
 
-                    txtConnectedPlayers.setText("Connected players: ");
-
+                    txtConnectedPlayers.setText("Waiting for players...");
 
                     network.startNetworkService(new SalutDeviceCallback() {
                         @Override
@@ -105,6 +104,8 @@ public class HostGameActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+                btn_create.setVisibility(View.INVISIBLE);
 //                }
             }
 

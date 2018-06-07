@@ -9,6 +9,7 @@ import java.util.Observer;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
@@ -41,7 +42,7 @@ public class Game extends Observable {
         return _instance;
     }
 
-    public void initGame() {
+    public void sendInitGameMessage() {
         InitGameMessage initGameMessage = new InitGameMessage();
         initGameMessage.SmallBlind = smallBlind;
         initGameMessage.IsCheatingAllowed = false;
@@ -51,36 +52,40 @@ public class Game extends Observable {
         PartyPokerApplication.getMessageHandler().sendMessageToAllClients(initGameMessage);
     }
 
+    public void sendUpdateTableMessage() {
+        UpdateTableMessage updateTableMessage = new UpdateTableMessage();
+        updateTableMessage.CommunityCards = communityCards;
+        updateTableMessage.NewPotSize = potSize;
+        updateTableMessage.Players = new ArrayList<>();
+        updateTableMessage.Players.addAll(allPlayers);
+        PartyPokerApplication.getMessageHandler().sendMessageToAllClients(updateTableMessage);
+    }
+
     public void startRound() {
         System.out.println("***** Round " + roundCount + " *****");
 
         prepareRound();
+
         assignBlinds();
 
         dealOutCards();
-
-        UpdateTableMessage updateTableMessage = new UpdateTableMessage();
-        updateTableMessage.CommunityCards = new ArrayList<>();
-        updateTableMessage.NewPotSize = 0;
-        updateTableMessage.Players = new ArrayList<>();
-        updateTableMessage.Players.addAll(allPlayers);
-        PartyPokerApplication.getMessageHandler().sendMessageToAllClients(updateTableMessage);
 
         nextStep();
     }
 
     public void nextStep() {
-        Sleep();
-        maInterface.update();
+        ArrayList<Player> players = new ArrayList<>();
+        players.addAll(allPlayers);
+        maInterface.update(communityCards, potSize, players);
+        sendUpdateTableMessage();
+
         if (areAllPlayersAligned()) {	// are all players aligned on current maxBid (or folded?)
             addPlayerBidsToPot();
 
             if (isThereAWinner()) {	// if all players have folded except one, we have a winner for this round -> so we start a new round
-                startRound();
+                ;//startRound();
             } else if (stepID == 3) {   // last step of this round finished
-                if (!roundDoneCheckWinner()) {	// if we have no final winner yet, start a new round, otherwise stop
-                    startRound();
-                }
+                roundDoneCheckWinner();
             } else {
                 maxBid = 0;
                 showCommunityCards(stepID++); // either flop, turn or river
@@ -97,13 +102,12 @@ public class Game extends Observable {
             currentPlayer = getNextPlayer();
 
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
-                if (currentPlayer.isHost()) {    //change this to if (currentPlayer.isHost())
-                    maInterface.showPlayerActions(maxBid);
+                if (currentPlayer.isHost()) {
+                    maInterface.showPlayerActions(maxBid-currentPlayer.getCurrentBid());
                 }
                 else {
-                    maInterface.hidePlayerActions();
                     YourTurnMessage message = new YourTurnMessage();
-                    message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
+                    message.MinAmountToRaise = maxBid-currentPlayer.getCurrentBid();
                     PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
                 }
             }
@@ -115,23 +119,23 @@ public class Game extends Observable {
 
     public boolean areAllPlayersAligned() {
         int playersToAct = allPlayers.size();
+        int playersFolded = 0;
 
         for (Player p : allPlayers) {
             if (p.isAllIn() || p.hasFolded() || p.getCheckStatus()) // if player is all in, has folded or has called maxBid
                 playersToAct--;
+
+            if (p.hasFolded())
+                playersFolded++;
         }
 
-        return playersToAct <= 0;
+        return playersToAct <= 0 || playersFolded == allPlayers.size()-1;   // if no player can act anymore or all players have folded except one
     }
 
     public void playerDone() {
         setChanged();
         notifyObservers();
         nextStep();
-    }
-
-    public int getMinAmountToRaise() {
-        return smallBlind;
     }
   
     public void playerBid(int amount) {
@@ -157,7 +161,7 @@ public class Game extends Observable {
             currentPlayer.setChipCount(currentPlayer.getChipCount() - maxBid + currentPlayer.getCurrentBid());
 
         currentPlayer.setCheckStatus(true);
-        currentPlayer.setCurrentBid(amount);
+        currentPlayer.setCurrentBid(amount + currentPlayer.getCurrentBid());
 
         playerDone();
     }
@@ -169,12 +173,9 @@ public class Game extends Observable {
         playerDone();
     }
 
-    public boolean roundDoneCheckWinner() {
+    public void roundDoneCheckWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
         ArrayList<Player> winners = new ArrayList<Player>();
-
-        if (maInterface != null)
-            maInterface.showAllPlayerCards();
 
         if (activePlayers.size() > 1) { // there is still more than one player active, so we need to check hands to figure out the winner(s)
             winners = determineWinner(activePlayers, communityCards);
@@ -184,28 +185,35 @@ public class Game extends Observable {
             throw new IllegalStateException("No active player anymore!!");
         }
 
-        return handleWinner(winners);
+        handleWinner(winners);
     }
 
     public boolean handleWinner(ArrayList<Player> winners) {
         if (kickOutLosersAndCheckFinalWinner(winners)) // do we have a final winner?
             return true;
 
-            int winAmount = potSize / winners.size(); // in case of split pot
+        int winAmount = potSize / winners.size(); // in case of split pot
 
+        String winnerInfo = "";
 
-            for (Player player: winners) {
-                player.payOutPot(winAmount);
-                WonAmountMessage wonAmountMessage = new WonAmountMessage();
-                wonAmountMessage.Amount = winAmount;
-                PartyPokerApplication.getMessageHandler().sendMessageToDevice(wonAmountMessage, player.getDevice());
-            }
-        //for (Player winner : winners) {
-        //    String winningHand = getWinningHandString(winner);
-        //    System.out.println("***** " + winner.getName() + " won with " + winningHand + " and got " + winAmount + " chips! *****");
-        //    winner.payOutPot(winAmount);
-//        }
+        for (Player winner : winners) {
+            String winningHand = getWinningHandString(winner);
+            winnerInfo += winner.getName() + " won with " + winningHand + " and got " + winAmount + " chips!\n";
+            winner.payOutPot(winAmount);
+        }
 
+        ShowWinnerMessage message = new ShowWinnerMessage();
+        message.WinnerInfo = winnerInfo;
+        PartyPokerApplication.getMessageHandler().sendMessageToAllClients(message);
+
+        maInterface.showWinner(winnerInfo);
+
+        showChipCounts();
+
+        return false;
+    }
+
+    public void showChipCounts() {
         int chipCountSum = 0;
 
         for (Player player : allPlayers) {
@@ -213,9 +221,7 @@ public class Game extends Observable {
             chipCountSum += player.getChipCount();
         }
 
-//        System.out.println("Totally they have " + chipCountSum + " chips!");
-
-        return false;
+        System.out.println("Totally they have " + chipCountSum + " chips!");
     }
 
     public String getWinningHandString(Player winner) {
@@ -296,10 +302,6 @@ public class Game extends Observable {
         }
 
         return false; // only one player left, cannot be deleted!
-    }
-
-    public int getPotSize() {
-        return potSize;
     }
 
     /**
@@ -385,13 +387,13 @@ public class Game extends Observable {
                 Card nextCard = CardDeck.issueNextCardFromDeck();
                 player.takeCard(nextCard);
 
-                if (!player.isHost()) {
+                /*if (!player.isHost()) {
                     NewCardMessage message = new NewCardMessage();
                     message.NewHandCard = nextCard;
                     PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
                 } else {
                     maInterface.update();
-                }
+                }*/
             }
         }
     }
@@ -429,75 +431,6 @@ public class Game extends Observable {
         maxBid = smallBlind * 2;
     }
 
-    /**
-     *
-     * @param amount - the amount the bid round should start with
-     */
-//    private static void bidRound(int amount) {
-//        int maxBid = amount;
-//        boolean isRaised = true;
-//
-//        int activePlayerCount = allPlayers.size();	// all players who have not yet folded
-//        int allInPlayerCount = 0; // all players who are all in
-//
-//        for (Player player : allPlayers) {
-//            if (player.hasFolded())
-//                activePlayerCount--;
-//            if (player.isAllIn())
-//                allInPlayerCount++;
-//        }
-//
-//        while (isRaised) {
-//            isRaised = false;   // assume nobody raises, otherwise set flag to true and repeat loop
-//
-//            for (int j = 0; j<allPlayers.size(); j++) {
-//
-//                Player player = getNextPlayer();
-//
-//                if (!player.hasFolded() && !player.isAllIn()) {  // if player is still in hand
-//                    if (!((activePlayerCount-allInPlayerCount) == 1 && maxBid == player.getCurrentBid())) {	// if only one player is left who has not folded as is not all-in and already called max bid
-//
-//                        if (player.getName().compareTo(currentPlayer.getName()) == 0)
-//                            if (amount == 0)
-//                                maInterface.showPlayerActions(true);
-//                            else
-//                                maInterface.showPlayerActions(false);
-//                        else {
-//                            maInterface.hidePlayerActions();
-////                            player.getNewPlayerAction().execute(amount);
-//                            YourTurnMessage message = new YourTurnMessage();
-//                            message.MinAmountToRaise = Game.getInstance().getMinAmountToRaise();
-//                            PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
-//                        }
-//
-//                        Sleep();
-//
-//                        if (player.hasFolded()) {	// player has folded
-//                            activePlayerCount--;
-//
-//                            if (activePlayerCount == 1)	{ // all other players have folded, so we have a winner!
-//                                addPlayerBidsToPot();
-//                                return;
-//                            }
-//                        }
-//
-//                        if (player.isAllIn())	// player is all-in
-//                            allInPlayerCount++;
-//
-//                        if (player.getCurrentBid() > maxBid) {   // player has raised
-//                            isRaised = true;
-//                            maxBid = player.getCurrentBid(); // current players bid is the new minimum for all other players
-//                            break;  // restart for loop (all players need to be asked again now)
-//                        }
-//                    } else
-//                        System.out.println("Only one player left - no need to ask anymore!");
-//                }
-//            }
-//        }
-//
-//        addPlayerBidsToPot();	// bid round finished, now add up all player bids to pot
-//    }
-
     public static ArrayList<Player> getActivePlayers() {
         ArrayList<Player> activePlayers = new ArrayList<Player>();
 
@@ -519,9 +452,7 @@ public class Game extends Observable {
             player.resetCurrentBid();
         }
 
-        maInterface.update();
         System.out.println("Current pot size: " + potSize);
-        Sleep();
     }
 
     /**
@@ -535,16 +466,23 @@ public class Game extends Observable {
 
         switch (step) {
             case FLOP:
+                System.out.println("Flop cards:");
                 for (int i = 0; i < 3; i++) {
                     card = CardDeck.issueNextCardFromDeck();
-                    System.out.println("Community card added: " + card);
+                    System.out.println(card);
                     communityCards.add(card);
                 }
                 break;
             case TURN:
-            case RIVER:
+                System.out.println("Turn card:");
                 card = CardDeck.issueNextCardFromDeck();
-                System.out.println("Community card added: " + card);
+                System.out.println(card);
+                communityCards.add(card);
+                break;
+            case RIVER:
+                System.out.println("River card:");
+                card = CardDeck.issueNextCardFromDeck();
+                System.out.println(card);
                 communityCards.add(card);
                 break;
             default:
@@ -624,25 +562,6 @@ public class Game extends Observable {
 
     public ArrayList<Card> getCommunityCards() {
         return communityCards;
-    }
-
-    public static void Sleep() {
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isCurrentPlayerAllIn(int raisedAmount) {
-        int chipCount = currentPlayer.getChipCount();
-
-        if (raisedAmount >= chipCount) {
-            currentPlayer.setAllIn();
-            return true;
-        }
-
-        return false;
     }
 
     // just for testing!
