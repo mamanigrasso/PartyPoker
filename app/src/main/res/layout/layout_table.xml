@@ -646,8 +646,8 @@
 
     <Button
         android:id="@+id/btn_cheating"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="78dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/cheat"
@@ -666,14 +666,14 @@
         android:text="fold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.274"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btn_check"
-        android:layout_width="85dp"
+        android:layout_width="115dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -683,7 +683,7 @@
         android:text="CHECK"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -700,7 +700,7 @@
         android:text="RAISE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.623"
+        app:layout_constraintHorizontal_bias="0.639"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -1217,13 +1217,14 @@
         app:layout_constraintVertical_bias="0.821" />
 
     <SeekBar
-        android:id="@+id/seekBar2"
+        android:id="@+id/sbRaiseAmount"
         android:layout_width="181dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.607"
