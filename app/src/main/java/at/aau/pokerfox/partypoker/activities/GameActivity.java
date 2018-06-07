@@ -10,11 +10,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,8 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.peak.salut.SalutDevice;
 
-import java.lang.reflect.Array;
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -78,6 +74,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private int potSize = 0;
     private String myDeviceName = null;
     private boolean eyePossible = false;
+    private boolean raiseActive = false;
+    private int raiseAmount = 0;
 
     private TextView tvTablePot;
 
@@ -152,7 +150,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ArrayList<ImageView> ivPlayerCards1;
     private ArrayList<ImageView> ivPlayerCards2;
 
-    private SeekBar sbRaisedAmount;
+    private SeekBar sbRaiseAmount;
     private ImageView ivTableCard1;
     private ImageView ivTableCard2;
     private ImageView ivTableCard3;
@@ -186,6 +184,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             hideAllUnusedViews();
             setPlayerNames();
             updateViews();
+            initSeekBar();
         }
         this.receiver = new PokerBroadcastReceiver();
 
@@ -194,8 +193,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         hideCheatButtons();
         setCheatButtonsVisible();
         chooseOneCardFromDeck();
-
-        this.sbRaisedAmount = findViewById(R.id.seekBar2);
 
         hidePlayerActions();
 
@@ -449,7 +446,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     private void updatePlayerCardViews(boolean showAllOtherPlayerCards) {
         int i=1;
-
         for (Player p : players) {
             if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
                 if (p.getCard1() == null)
@@ -474,7 +470,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
                     if (showAllOtherPlayerCards) {
                         ivPlayerCards1.get(i).setImageDrawable(getDrawable(p.getCard1().getDrawableID()));
-                        System.out.println("showing card1 of player i=" + i);
                     }
                     else {
                         ivPlayerCards1.get(i).setImageDrawable(getDrawable(R.drawable.card_back));
@@ -675,16 +670,33 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     public void buttonRaisePressed(View v) {
-        int amount = this.sbRaisedAmount.getProgress();
-        //TODO: find out if player is all in
-        boolean isAllIn = false;
-        hidePlayerActions();
-        if (PartyPokerApplication.isHost()) {
-            Game.getInstance().playerBid(amount);
+        if (!raiseActive) {
+            int playerChips = 0;
+            for (Player p : players) {
+                if (p.getDeviceId().equals(myDeviceName)) {
+                    playerChips = p.getChipCount();
+                }
+            }
+
+            sbRaiseAmount.setMax((playerChips-this.bigBlind)/this.bigBlind);
+
+            sbRaiseAmount.setVisibility(View.VISIBLE);
+            raiseActive = true;
         }
         else {
-            prepareAndSendActionMessage(amount, false, isAllIn);
+            raiseActive = false;
+            sbRaiseAmount.setVisibility(View.INVISIBLE);
+            //TODO: find out if player is all in
+            boolean isAllIn = false;
+            hidePlayerActions();
+            if (PartyPokerApplication.isHost()) {
+                Game.getInstance().playerBid(raiseAmount);
+            }
+            else {
+                prepareAndSendActionMessage(raiseAmount, false, isAllIn);
+            }
         }
+
     }
 
     @Override
@@ -867,6 +879,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         hideAllUnusedViews();
         setPlayerNames();
         updateViews();
+        initSeekBar();
     }
 
     private void handlePlayerRolesMessage(Bundle bundle) {
@@ -1083,6 +1096,29 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     }
 
+    public void initSeekBar() {
+        sbRaiseAmount = findViewById(R.id.sbRaiseAmount);
+        final int bigBlind = this.bigBlind;
+
+        sbRaiseAmount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                Toast.makeText(GameActivity.this, String.valueOf(raiseAmount),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+                raiseAmount = bigBlind + (bigBlind*progress);
+                // TODO Auto-generated method stub
+            }
+        });
+    }
 
     //Belongs to Cheat-Funktion "DeadMansHand"
     //if you get the result of the "CardList_array_adapterActivity" you choose the card on your hand you want to change then it changes
