@@ -61,7 +61,7 @@ public class Hand {
         if (cntHearts < 5 && cntSpades < 5 && cntDiamonds < 5 && cntClubs < 5)
             flush = false;
 
-        for (int x = 13; x > 0; x--) {
+        for (int x = 13; x >= 0; x--) {
 
             if (ranks[x] > sameCards) {
 

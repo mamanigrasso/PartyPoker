@@ -7,5 +7,6 @@ public class Broadcasts {
     public static final String PLAYER_ROLES_MESSAGE = "PLAYER_ROLES_MESSAGE";
     public static final String UPDATE_TABLE_MESSAGE = "UPDATE_TABLE_MESSAGE";
     public static final String WON_AMOUNT_MESSAGE = "WON_AMOUNT_MESSAGE";
+    public static final String SHOW_WINNER_MESSAGE = "SHOW_WINNER_MESSAGE";
     public static final String YOUR_TURN_MESSAGE = "YOUR_TURN_MESSAGE";
 }

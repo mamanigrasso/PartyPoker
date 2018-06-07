@@ -135,7 +135,7 @@ public class Card implements Parcelable {
     }
 
     public String toString() {
-        return "*** CARD " + suits[suit] + " " + ranks[rank] + " ***";
+        return suits[suit] + " " + ranks[rank];
     }
 
     public static String rankAsString(int rank ) {

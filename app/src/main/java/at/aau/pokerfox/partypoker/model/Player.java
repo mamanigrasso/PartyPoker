@@ -140,6 +140,7 @@ public class Player implements Parcelable {
         isAllIn = false;
         isSmallBlind = false;
         isBigBlind = false;
+        checkStatus = false;
     }
 
     public void setCheckStatus(boolean status) {

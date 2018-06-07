@@ -7,5 +7,6 @@ public enum MessageTypes {
     PLAYER_ROLES,
     UPDATE_TABLE,
     WON_AMOUNT,
+    SHOW_WINNER,
     YOUR_TURN
 }

@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
 import at.aau.pokerfox.partypoker.model.Player;
 import at.aau.pokerfox.partypoker.model.Card;
+import at.aau.pokerfox.partypoker.model.ShowWinnerTask;
 import at.aau.pokerfox.partypoker.model.network.BroadcastKeys;
 import at.aau.pokerfox.partypoker.model.network.Broadcasts;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
@@ -50,6 +52,7 @@ import static at.aau.pokerfox.partypoker.model.network.Broadcasts.ACTION_MESSAGE
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.INIT_GAME_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.NEW_CARD_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.PLAYER_ROLES_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.SHOW_WINNER_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.UPDATE_TABLE_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.WON_AMOUNT_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESSAGE;
@@ -224,7 +227,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             Game.addPlayer(p);
         }
 
-        Game.getInstance().initGame();
+        Game.getInstance().sendInitGameMessage();
     }
 
     private void startGame() {
@@ -446,6 +449,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
     private void updatePlayerCardViews(boolean showAllOtherPlayerCards) {
         int i=1;
+
         for (Player p : players) {
             if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
                 if (p.getCard1() == null)
@@ -468,10 +472,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 else {
                     ivPlayerCards1.get(i).setVisibility(View.VISIBLE);
 
-                    if (showAllOtherPlayerCards)
+                    if (showAllOtherPlayerCards) {
                         ivPlayerCards1.get(i).setImageDrawable(getDrawable(p.getCard1().getDrawableID()));
-                    else
+                        System.out.println("showing card1 of player i=" + i);
+                    }
+                    else {
                         ivPlayerCards1.get(i).setImageDrawable(getDrawable(R.drawable.card_back));
+                    }
                 }
 
                 if (p.getCard2() == null)
@@ -479,10 +486,12 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 else {
                     ivPlayerCards2.get(i).setVisibility(View.VISIBLE);
 
-                    if (showAllOtherPlayerCards)
+                    if (showAllOtherPlayerCards) {
                         ivPlayerCards2.get(i).setImageDrawable(getDrawable(p.getCard2().getDrawableID()));
-                    else
+                    }
+                    else {
                         ivPlayerCards2.get(i).setImageDrawable(getDrawable(R.drawable.card_back));
+                    }
                 }
                 i++;
             }
@@ -508,7 +517,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         int i=0;
 
         for (ImageView ivTableCard : ivTableCards) {
-            ivTableCard.setVisibility(View.INVISIBLE);;
+            ivTableCard.setVisibility(View.INVISIBLE);
         }
 
         for (Card c : communityCards) {
@@ -580,6 +589,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         buttonRaise.setVisibility(View.VISIBLE);
         buttonCheck.setVisibility(View.VISIBLE);
 
+        this.minAmountToRaise = minAmountToRaise;
+
         if (minAmountToRaise == 0)
             buttonCheck.setText("CHECK");
         else
@@ -609,13 +620,40 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     @Override
-    public void update() {
+    public void update(ArrayList<Card> cards, int pot, ArrayList<Player> players) {
+        this.communityCards = cards;
+        this.potSize = pot;
+        this.players = players;
+
         updateViews();
     }
 
     @Override
-    public void showAllPlayerCards() {
+    public void showWinner(String winnerInfo) {
         updatePlayerCardViews(true);
+
+        AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+
+        createDialog.setTitle("And the winner is...");
+        createDialog.setMessage(winnerInfo);
+
+        final AlertDialog alert = createDialog.create();
+        alert.show();
+
+        final Timer timeoutDialog = new Timer();
+
+        timeoutDialog.schedule(new TimerTask() {
+
+            public void run() {
+                alert.dismiss();
+                timeoutDialog.cancel();
+            }
+        }, 5000);
+
+        if (PartyPokerApplication.isHost()) {
+            ShowWinnerTask showWinnerTask = new ShowWinnerTask();
+            showWinnerTask.execute();
+        }
     }
 
     public void buttonFoldPressed(View v) {
@@ -799,6 +837,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         filter.addAction(Broadcasts.YOUR_TURN_MESSAGE);
         filter.addAction(Broadcasts.PLAYER_ROLES_MESSAGE);
         filter.addAction(Broadcasts.NEW_CARD_MESSAGE);
+        filter.addAction(Broadcasts.SHOW_WINNER_MESSAGE);
         filter.addAction(Broadcasts.WON_AMOUNT_MESSAGE);
         registerReceiver(receiver, filter);
     }
@@ -860,10 +899,14 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         updateViews();
     }
 
+    private void handleShowWinnerMessage(Bundle bundle) {
+        String winnerInfo = bundle.getString(BroadcastKeys.WINNER_INFO);
+
+        showWinner(winnerInfo);
+    }
+
     private void handleYourTurnMessage(Bundle bundle) {
         this.minAmountToRaise = bundle.getInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE);
-
-        Log.e("flow test", "in handleYourTurnMessage()");
 
         showPlayerActions(minAmountToRaise);
     }
@@ -892,6 +935,9 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                     break;
                 case UPDATE_TABLE_MESSAGE:
                     handleUpdateTableMessage(extras);
+                    break;
+                case SHOW_WINNER_MESSAGE:
+                    handleShowWinnerMessage(extras);
                     break;
                 case YOUR_TURN_MESSAGE:
                     handleYourTurnMessage(extras);
@@ -1124,7 +1170,4 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
 
         }
     }
-
 }
-
-

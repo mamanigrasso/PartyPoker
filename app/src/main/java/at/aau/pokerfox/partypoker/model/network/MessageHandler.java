@@ -23,6 +23,7 @@ import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.PlayerRolesMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
@@ -36,7 +37,8 @@ public class MessageHandler implements SalutDataCallback {
             .registerSubtype(InitGameMessage.class)
             .registerSubtype(NewCardMessage.class)
             .registerSubtype(YourTurnMessage.class)
-            .registerSubtype(UpdateTableMessage.class);
+            .registerSubtype(UpdateTableMessage.class)
+            .registerSubtype(ShowWinnerMessage.class);
 
     public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
         Salut network = PartyPokerApplication.getNetwork();
@@ -115,6 +117,13 @@ public class MessageHandler implements SalutDataCallback {
                     extras.putInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE, turnMessage.MinAmountToRaise);
 
                     sendBroadcast(Broadcasts.YOUR_TURN_MESSAGE, extras);
+                    break;
+
+                case SHOW_WINNER:
+                    ShowWinnerMessage showWinnerMessage = LoganSquare.parse(json, ShowWinnerMessage.class);
+                    extras.putString(BroadcastKeys.WINNER_INFO, showWinnerMessage.WinnerInfo);
+
+                    sendBroadcast(Broadcasts.SHOW_WINNER_MESSAGE, extras);
                     break;
 
                 case UPDATE_TABLE:
@@ -196,6 +205,10 @@ public class MessageHandler implements SalutDataCallback {
             return message;
 
         message = parseJsonToMessageClass(json, WonAmountMessage.class);
+        if (message != null)
+            return message;
+
+        message = parseJsonToMessageClass(json, ShowWinnerMessage.class);
         if (message != null)
             return message;
 
