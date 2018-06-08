@@ -27,13 +27,12 @@ import android.widget.Toast;
 import com.peak.salut.SalutDevice;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
+import at.aau.pokerfox.partypoker.model.CardDeck;
 import at.aau.pokerfox.partypoker.model.ShowTheCheater;
 import at.aau.pokerfox.partypoker.model.Game;
 import at.aau.pokerfox.partypoker.model.ModActInterface;
@@ -43,14 +42,14 @@ import at.aau.pokerfox.partypoker.model.ShowWinnerTask;
 import at.aau.pokerfox.partypoker.model.network.BroadcastKeys;
 import at.aau.pokerfox.partypoker.model.network.Broadcasts;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.ACTION_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.INIT_GAME_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.NEW_CARD_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.Broadcasts.PLAYER_ROLES_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.REPLACE_CARD_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.SHOW_WINNER_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.UPDATE_TABLE_MESSAGE;
-import static at.aau.pokerfox.partypoker.model.network.Broadcasts.WON_AMOUNT_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESSAGE;
 
 /**
@@ -565,6 +564,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         buttonCheck.setVisibility(View.INVISIBLE);
         buttonFold.setVisibility(View.INVISIBLE);
         buttonRaise.setVisibility(View.INVISIBLE);
+        btnCheat.setVisibility(View.INVISIBLE);
 
         if (sbRaiseAmount != null)
             sbRaiseAmount.setVisibility(View.INVISIBLE);
@@ -575,6 +575,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         buttonFold.setVisibility(View.VISIBLE);
         buttonRaise.setVisibility(View.VISIBLE);
         buttonCheck.setVisibility(View.VISIBLE);
+        btnCheat.setVisibility(View.VISIBLE);
 
         this.minAmountToRaise = minAmountToRaise;
 
@@ -833,6 +834,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
         IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
+        filter.addAction(Broadcasts.REPLACE_CARD_MESSAGE);
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
         filter.addAction(Broadcasts.UPDATE_TABLE_MESSAGE);
         filter.addAction(Broadcasts.YOUR_TURN_MESSAGE);
@@ -852,6 +854,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         } else {
             Game.getInstance().playerBid(amount);
         }
+    }
+
+    private void handleReplaceCardMessage(Bundle bundle) {
+        Card replacementCard = bundle.getParcelable(BroadcastKeys.REPLACEMENT_CARD);
+        boolean cardToReplace = bundle.getBoolean(BroadcastKeys.CARD_TO_REPLACE);
+
+        System.out.println("GOT REPLACECARDMESSAGE" + replacementCard.toString());
+        Game.getInstance().replacePlayersCard(cardToReplace, replacementCard);
     }
 
     private void handleInitGameMessage(Bundle bundle) {
@@ -909,6 +919,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             switch (action) {
                 case ACTION_MESSAGE:
                     handleActionMessage(extras);
+                    break;
+                case REPLACE_CARD_MESSAGE:
+                    handleReplaceCardMessage(extras);
                     break;
                 case INIT_GAME_MESSAGE:
                     handleInitGameMessage(extras);
@@ -1112,6 +1125,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 @Override
                 public void onClick(View view) {
 
+                    ReplaceCardMessage message = new ReplaceCardMessage();
+                    message.replaceCard1 = true;
+                    message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
+                    PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+
+                    System.out.println("MessageSENT!!!!!!");
                     playersCardLeft.setImageDrawable(getDrawable(deadMansID));
                     playersCardRight.setClickable(false);
 
@@ -1122,6 +1141,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 @Override
                 public void onClick(View view) {
 
+                    ReplaceCardMessage message = new ReplaceCardMessage();
+                    message.replaceCard1 = false;
+                    message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
+                    PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+
+                    System.out.println("MessageSENT!!!!!!");
                     playersCardRight.setImageDrawable(getDrawable(deadMansID));
                     playersCardLeft.setClickable(false);
                 }

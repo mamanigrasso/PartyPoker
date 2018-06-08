@@ -8,5 +8,6 @@ public enum MessageTypes {
     UPDATE_TABLE,
     WON_AMOUNT,
     SHOW_WINNER,
+    REPLACE_CARD,
     YOUR_TURN
 }

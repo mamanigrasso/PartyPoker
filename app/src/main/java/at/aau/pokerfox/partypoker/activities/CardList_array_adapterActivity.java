@@ -4,16 +4,12 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
-import at.aau.pokerfox.partypoker.R;
 import at.aau.pokerfox.partypoker.model.CardDeck;
 import at.aau.pokerfox.partypoker.model.CardListAdapter;
 import at.aau.pokerfox.partypoker.model.DrawableCard;
@@ -70,17 +66,17 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
         //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
-            cardnames[i]= getResources().getResourceEntryName(CardDeck.addDrawableIds().get(i)); //hopefully works
+            cardnames[i]= getResources().getResourceEntryName(CardDeck.getDrawableIds().get(i)); //hopefully works
         }
 
         //Fillig up with the CardIDs
         for (int i = 0; i<52; i++) {
-            cardIDs[i]=CardDeck.addDrawableIds().get(i).toString();
+            cardIDs[i]=CardDeck.getDrawableIds().get(i).toString();
         }
 
         //Filling up with the DrawableObjects
         for (int i = 0; i<52; i++) {
-            cardDrawableList.add(getDrawable(CardDeck.addDrawableIds().get(i)));
+            cardDrawableList.add(getDrawable(CardDeck.getDrawableIds().get(i)));
         }
 
 
