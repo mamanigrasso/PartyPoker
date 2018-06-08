@@ -2,9 +2,6 @@ package at.aau.pokerfox.partypoker.model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
-
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
@@ -50,6 +47,7 @@ public class Game {
         initGameMessage.Players = new ArrayList<>();
         initGameMessage.Players.addAll(allPlayers);
         PartyPokerApplication.getMessageHandler().sendMessageToAllClients(initGameMessage);
+        System.out.println("INITGAMEMESSAGE sent to " + PartyPokerApplication.getConnectedDevices().size() + " devices!");
     }
 
     public void sendUpdateTableMessage() {
