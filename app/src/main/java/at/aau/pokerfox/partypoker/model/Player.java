@@ -302,4 +302,13 @@ public class Player implements Parcelable {
     public void setIsHost(boolean host) {
         isHost = host;
     }
+
+    public void replaceCard(boolean replaceCard1, Card replacementCard) {
+        int cardToReplace = 0;
+
+        if (!replaceCard1)
+            cardToReplace = 1;
+
+        cards.set(cardToReplace, replacementCard);
+    }
 }

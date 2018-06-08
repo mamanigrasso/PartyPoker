@@ -545,4 +545,8 @@ public class Game {
     public void addCommunityCard(Card c) {
         communityCards.add(c);
     }
+
+    public void replacePlayersCard(boolean replaceCard1, Card replacementCard) {
+        currentPlayer.replaceCard(replaceCard1, replacementCard);
+    }
 }

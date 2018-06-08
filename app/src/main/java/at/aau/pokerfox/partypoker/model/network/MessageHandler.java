@@ -20,12 +20,11 @@ import java.io.IOException;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
-import at.aau.pokerfox.partypoker.model.network.messages.host.PlayerRolesMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
-import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 import at.aau.pokerfox.partypoker.model.network.typeadapters.RuntimeTypeAdapterFactory;
 
@@ -34,6 +33,7 @@ public class MessageHandler implements SalutDataCallback {
     private final RuntimeTypeAdapterFactory typeAdapterFactory = RuntimeTypeAdapterFactory
             .of(AbstractMessage.class, "type")
             .registerSubtype(ActionMessage.class)
+            .registerSubtype(ReplaceCardMessage.class)
             .registerSubtype(InitGameMessage.class)
             .registerSubtype(NewCardMessage.class)
             .registerSubtype(YourTurnMessage.class)
@@ -76,6 +76,14 @@ public class MessageHandler implements SalutDataCallback {
                     extras.putBoolean(BroadcastKeys.HAS_FOLDED, actionMessage.HasFolded);
 
                     sendBroadcast(Broadcasts.ACTION_MESSAGE, extras);
+                    break;
+
+                case REPLACE_CARD:
+                    ReplaceCardMessage replaceCardMessage = LoganSquare.parse(json, ReplaceCardMessage.class);
+                    extras.putParcelable(BroadcastKeys.REPLACEMENT_CARD, replaceCardMessage.replacementCard);
+                    extras.putBoolean(BroadcastKeys.CARD_TO_REPLACE, replaceCardMessage.replaceCard1);
+
+                    sendBroadcast(Broadcasts.REPLACE_CARD_MESSAGE, extras);
                     break;
 
                 case INIT_GAME:
@@ -169,6 +177,10 @@ public class MessageHandler implements SalutDataCallback {
         AbstractMessage message = null;
 
         message = parseJsonToMessageClass(json, ActionMessage.class);
+        if (message != null)
+            return message;
+
+        message = parseJsonToMessageClass(json, ReplaceCardMessage.class);
         if (message != null)
             return message;
 
