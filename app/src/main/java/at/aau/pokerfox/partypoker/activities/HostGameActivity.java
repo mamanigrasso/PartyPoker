@@ -51,10 +51,6 @@ public class HostGameActivity extends AppCompatActivity {
         final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
         final Button btnStartGame = findViewById(R.id.btn_start_game);
 
-        if (!btnStartGame.isEnabled()) {
-            btnStartGame.setEnabled(true);
-        }
-
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -16,4 +16,5 @@ public class BroadcastKeys {
     public static final String MIN_AMOUNT_TO_RAISE = "MIN_AMOUNT_TO_RAISE";
     public static final String NEW_POT = "CARD";
     public static final String WINNER_INFO = "WINNER_INFO";
+    public static final String FINAL_WINNER = "FINAL_WINNER";
 }

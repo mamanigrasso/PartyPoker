@@ -19,5 +19,8 @@ public class ShowWinnerMessage extends AbstractMessage {
 
     @JsonField
     public String WinnerInfo;
+
+    @JsonField
+    public boolean FinalWinner;
 }
 

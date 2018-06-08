@@ -14,7 +14,7 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage
 import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
-public class Game extends Observable {
+public class Game {
     private static final Game _instance = new Game();
     private static LinkedList<Player> allPlayers = new LinkedList<>();
     private static int potSize;
@@ -131,12 +131,6 @@ public class Game extends Observable {
 
         return playersToAct <= 0 || playersFolded == allPlayers.size()-1;   // if no player can act anymore or all players have folded except one
     }
-
-    public void playerDone() {
-        setChanged();
-        notifyObservers();
-        nextStep();
-    }
   
     public void playerBid(int amount) {
         if (amount == 0)
@@ -155,22 +149,26 @@ public class Game extends Observable {
             }
         }
 
-        if (currentPlayer.getChipCount() == amount)
-            currentPlayer.setAllIn();
-        else
-            currentPlayer.setChipCount(currentPlayer.getChipCount() - maxBid + currentPlayer.getCurrentBid());
-
         currentPlayer.setCheckStatus(true);
-        currentPlayer.setCurrentBid(amount + currentPlayer.getCurrentBid());
+        int prevBit = currentPlayer.getCurrentBid();
+        currentPlayer.setCurrentBid(amount + prevBit);
 
-        playerDone();
+        if (currentPlayer.getChipCount() == currentPlayer.getCurrentBid()) {
+            currentPlayer.setAllIn();
+        }
+        else {
+            int oldChipCount = currentPlayer.getChipCount();
+            currentPlayer.setChipCount(oldChipCount - currentPlayer.getCurrentBid());
+        }
+
+        nextStep();
     }
 
     public void playerFolded() {
         currentPlayer.setStatus("Folded");
         currentPlayer.setFolded();
 
-        playerDone();
+        nextStep();
     }
 
     public void roundDoneCheckWinner() {
@@ -188,13 +186,12 @@ public class Game extends Observable {
         handleWinner(winners);
     }
 
-    public boolean handleWinner(ArrayList<Player> winners) {
-        if (kickOutLosersAndCheckFinalWinner(winners)) // do we have a final winner?
-            return true;
+    public void handleWinner(ArrayList<Player> winners) {
+        ShowWinnerMessage message = new ShowWinnerMessage();
+        message.FinalWinner = false;
+        String winnerInfo = "";
 
         int winAmount = potSize / winners.size(); // in case of split pot
-
-        String winnerInfo = "";
 
         for (Player winner : winners) {
             String winningHand = getWinningHandString(winner);
@@ -202,26 +199,17 @@ public class Game extends Observable {
             winner.payOutPot(winAmount);
         }
 
-        ShowWinnerMessage message = new ShowWinnerMessage();
+        Player finalWinner = kickOutLosersAndCheckFinalWinner(winners);
+
+        if (finalWinner != null) { // do we have a final winner?
+            message.FinalWinner = true;
+            winnerInfo = "We have a final WINNER: " + finalWinner.getName() + "!!!";
+        }
+
         message.WinnerInfo = winnerInfo;
         PartyPokerApplication.getMessageHandler().sendMessageToAllClients(message);
 
-        maInterface.showWinner(winnerInfo);
-
-        showChipCounts();
-
-        return false;
-    }
-
-    public void showChipCounts() {
-        int chipCountSum = 0;
-
-        for (Player player : allPlayers) {
-            System.out.println("Chip count of " + player.getName() + ": " + player.getChipCount());
-            chipCountSum += player.getChipCount();
-        }
-
-        System.out.println("Totally they have " + chipCountSum + " chips!");
+        maInterface.showWinner(winnerInfo, message.FinalWinner);
     }
 
     public String getWinningHandString(Player winner) {
@@ -238,14 +226,6 @@ public class Game extends Observable {
             return new Hand(cardArray).display();
         } else
             return winner.getCard1().toString() + " and " + winner.getCard2().toString();
-    }
-
-    public int getMaxBid() {
-        return maxBid;
-    }
-
-    public void addMyObserver(Observer o) {
-        addObserver(o);
     }
 
     /**
@@ -310,13 +290,13 @@ public class Game extends Observable {
     public static void prepareRound() {
         potSize = 0;
         stepID = 0;
-        maxBid = 0;
         communityCards.clear();
         preparePlayers();
         assignDealer();
         prepareCardDeck();
         if (roundCount % roundsBetweenBlindIncrease == 0)
             smallBlind *= 2;
+        maxBid = smallBlind*2;
         roundCount++;
     }
 
@@ -419,16 +399,13 @@ public class Game extends Observable {
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
         player.setCurrentBid(smallBlind);
-        player.setChipCount(player.getChipCount() - smallBlind);
         player.setIsSmallBlind(true);
 
         player = getNextPlayer();
         System.out.println(player.getName() + " is big blind.");
-        player.giveBlind(smallBlind * 2);
+        player.giveBlind(smallBlind*2);
         player.setCurrentBid(smallBlind*2);
-        player.setChipCount(player.getChipCount() - smallBlind * 2);
         player.setIsBigBlind(true);
-        maxBid = smallBlind * 2;
     }
 
     public static ArrayList<Player> getActivePlayers() {
@@ -449,7 +426,7 @@ public class Game extends Observable {
     public static void addPlayerBidsToPot() {
         for (Player player : allPlayers) {
             potSize += player.getCurrentBid();
-            player.resetCurrentBid();
+            player.setCurrentBid(0);
         }
 
         System.out.println("Current pot size: " + potSize);
@@ -540,7 +517,7 @@ public class Game extends Observable {
      * @param winners
      *            - the list of winners
      */
-    public static boolean kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
+    public static Player kickOutLosersAndCheckFinalWinner(ArrayList<Player> winners) {
         int playerCount = allPlayers.size();
 
         for (int i = 0; i < playerCount; i++) {
@@ -554,10 +531,10 @@ public class Game extends Observable {
 
         if (allPlayers.size() == 1) {
             System.out.println("***************** We have a final Winner! Congrats to " + allPlayers.get(0).getName() + "!!! *****************");
-            return true;
+            return allPlayers.get(0);
         }
 
-        return false;
+        return null;
     }
 
     public ArrayList<Card> getCommunityCards() {
