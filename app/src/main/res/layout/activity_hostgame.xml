@@ -33,7 +33,7 @@
         android:ems="10"
         android:hint="Tablename"
         android:inputType="textPersonName"
-        android:text="asdfTable"
+        android:text="Table"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"

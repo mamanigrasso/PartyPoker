@@ -72,9 +72,11 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int minAmountToRaise;
     private int potSize = 0;
     private String myDeviceName = null;
+    private String myPlayerName = null;
     private boolean eyePossible = false;
     private boolean raiseActive = false;
     private int raiseAmount = 0;
+    private boolean initGameMessageReceived = false;
 
     private TextView tvTablePot;
 
@@ -174,6 +176,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         setContentView(R.layout.layout_table);
 
         myDeviceName = getIntent().getExtras().getString(MainActivity.BUNDLE_DEVICE_NAME);
+        myPlayerName = getIntent().getExtras().getString(MainActivity.BUNDLE_PLAYER_NAME);
 
         if (PartyPokerApplication.isHost()) {
             Bundle bundle = getIntent().getExtras();
@@ -205,7 +208,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void prepareGame() {
         players = new ArrayList<>();
 
-        Player myself = new Player("host");
+        Player myself = new Player(myPlayerName);
         myself.setIsHost(true);
         myself.setDevice(PartyPokerApplication.getNetwork().thisDevice);
         players.add(myself);
@@ -215,7 +218,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         Game.addPlayer(myself);
 
         for (SalutDevice device : PartyPokerApplication.getConnectedDevices()) {
-            Player p = new Player(device.deviceName);
+            Player p = new Player(device.readableName);
             p.setDevice(device);
             players.add(p);
             Game.addPlayer(p);
@@ -838,10 +841,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
         filter.addAction(Broadcasts.UPDATE_TABLE_MESSAGE);
         filter.addAction(Broadcasts.YOUR_TURN_MESSAGE);
-        filter.addAction(Broadcasts.PLAYER_ROLES_MESSAGE);
         filter.addAction(Broadcasts.NEW_CARD_MESSAGE);
         filter.addAction(Broadcasts.SHOW_WINNER_MESSAGE);
-        filter.addAction(Broadcasts.WON_AMOUNT_MESSAGE);
         registerReceiver(receiver, filter);
     }
 
@@ -868,11 +869,11 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         boolean isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
         int bigBlind = bundle.getInt(BroadcastKeys.BIG_BLIND);
-        int playerPot = bundle.getInt(BroadcastKeys.PLAYER_POT);
 
         this.players = players;
         this.bigBlind = bigBlind;
 
+        initGameMessageReceived = true;
         createAllViews();
         hideAllUnusedViews();
         setPlayerNames();
@@ -890,6 +891,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         this.communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
+
+        if (!initGameMessageReceived)
+            throw new RuntimeException("Communication Error! InitGameMessage not received!");
 
         this.players = players;
         updateViews();

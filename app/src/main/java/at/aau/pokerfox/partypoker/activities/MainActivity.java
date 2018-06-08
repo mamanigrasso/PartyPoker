@@ -34,6 +34,7 @@ import at.aau.pokerfox.partypoker.R;
 public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_NAME = "BUNDLE_PLAYER_NAME";
     public static final String BUNDLE_DEVICE_NAME = "BUNDLE_DEVICE_NAME";
+    public static final String CHEATING_ALLOWED = "CHEATING_ALLOWED";
 
     private String playerName = "";
     private Salut network;
@@ -68,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PartyPokerApplication.setIsHost(false);
-
 //                Intent intent = new Intent("TablechoiceActivity");
 //                Bundle bundle = new Bundle();
 //                bundle.putString(BUNDLE_PLAYER_NAME, playerName);
@@ -209,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent("GameActivity");
                     String deviceName = network.thisDevice.deviceName;
                     Bundle bundle = new Bundle();
+                    bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                     bundle.putString(BUNDLE_DEVICE_NAME, deviceName);
                     intent.putExtras(bundle);
                     startActivity(intent);
