@@ -20,7 +20,4 @@ public class ActionMessage extends AbstractMessage {
 
     @JsonField
     public Boolean HasFolded;
-
-    @JsonField
-    public Boolean IsAllIn;
 }

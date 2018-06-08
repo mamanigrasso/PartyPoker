@@ -57,7 +57,7 @@ import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESS
  * Created by TimoS on 04.04.2018.
  */
 
-public class GameActivity extends AppCompatActivity implements Observer,ModActInterface {
+public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     private final int MAX_PLAYER_COUNT = 6;
     private String[] playerNames=new String[MAX_PLAYER_COUNT];
@@ -150,7 +150,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ArrayList<ImageView> ivPlayerCards1;
     private ArrayList<ImageView> ivPlayerCards2;
 
-    private SeekBar sbRaiseAmount;
+    private SeekBar sbRaiseAmount = null;
+
     private ImageView ivTableCard1;
     private ImageView ivTableCard2;
     private ImageView ivTableCard3;
@@ -158,11 +159,13 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private ImageView ivTableCard5;
     private ArrayList<ImageView> ivTableCards;
 
+    private Button buttonCheck;
+    private Button buttonFold;
+    private Button buttonRaise;
     private Button btnCheat;
     private Button btnShowTableCard;
     private Button btnProbability;
     private Button btnChooseOneCardFromDeck;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,16 +196,11 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         hideCheatButtons();
         setCheatButtonsVisible();
         chooseOneCardFromDeck();
-
+        initPlayerButtons();
         hidePlayerActions();
 
         if (PartyPokerApplication.isHost())
-            startGame();
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        updateViews();
+            Game.getInstance().startRound();
     }
 
     private void prepareGame() {
@@ -225,12 +223,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         }
 
         Game.getInstance().sendInitGameMessage();
-    }
-
-    private void startGame() {
-        Game.getInstance().addObserver(this);
-        Game.getInstance().startRound();
-        eyePossible = false;
     }
 
     private void createTablePotView() {
@@ -563,23 +555,23 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         updateTableCardViews();
     }
 
+    private void initPlayerButtons() {
+        buttonCheck = (Button)findViewById(R.id.btn_check);
+        buttonFold = (Button)findViewById(R.id.btn_fold);
+        buttonRaise = (Button)findViewById(R.id.btn_raise);
+    }
     @Override
     public void hidePlayerActions() {
-        Button buttonCheck = (Button)findViewById(R.id.btn_check);
-        Button buttonFold = (Button)findViewById(R.id.btn_fold);
-        Button buttonRaise = (Button)findViewById(R.id.btn_raise);
-
         buttonCheck.setVisibility(View.INVISIBLE);
         buttonFold.setVisibility(View.INVISIBLE);
         buttonRaise.setVisibility(View.INVISIBLE);
+
+        if (sbRaiseAmount != null)
+            sbRaiseAmount.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showPlayerActions(int minAmountToRaise) {
-        Button buttonCheck = (Button)findViewById(R.id.btn_check);
-        Button buttonFold = (Button)findViewById(R.id.btn_fold);
-        Button buttonRaise = (Button)findViewById(R.id.btn_raise);
-
         buttonFold.setVisibility(View.VISIBLE);
         buttonRaise.setVisibility(View.VISIBLE);
         buttonCheck.setVisibility(View.VISIBLE);
@@ -592,25 +584,21 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             buttonCheck.setText("CALL(" + minAmountToRaise + ")");
     }
 
-    private void prepareAndSendActionMessage(int amount, boolean hasFolded, boolean isAllIn) {
+    private void prepareAndSendActionMessage(int amount, boolean hasFolded) {
         ActionMessage message = new ActionMessage();
         message.Amount = amount;
         message.HasFolded = hasFolded;
-        message.IsAllIn = isAllIn;
         PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
     }
 
     public void buttonCheckPressed(View v) {
-        //TODO: find out if player is all in
-        boolean isAllIn = false;
-
         hidePlayerActions();
 
         if (PartyPokerApplication.isHost()) {
             Game.getInstance().playerBid(this.minAmountToRaise);
         }
         else {
-            prepareAndSendActionMessage(this.minAmountToRaise, false, isAllIn);
+            prepareAndSendActionMessage(this.minAmountToRaise, false);
         }
     }
 
@@ -624,30 +612,36 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     }
 
     @Override
-    public void showWinner(String winnerInfo) {
+    public void showWinner(String winnerInfo, boolean finalWinner) {
         updatePlayerCardViews(true);
 
-        AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+        AlertDialog.Builder winnerDialog = new AlertDialog.Builder(GameActivity.this);
 
-        createDialog.setTitle("And the winner is...");
-        createDialog.setMessage(winnerInfo);
+        if (finalWinner)
+            winnerDialog.setTitle("Game over!");
+        else
+            winnerDialog.setTitle("And the winner is...");
 
-        final AlertDialog alert = createDialog.create();
-        alert.show();
+        winnerDialog.setMessage(winnerInfo);
 
-        final Timer timeoutDialog = new Timer();
+        final AlertDialog winnerAlert = winnerDialog.create();
+        winnerAlert.show();
 
-        timeoutDialog.schedule(new TimerTask() {
+        if (!finalWinner) {
+            final Timer timeoutDialog = new Timer();
 
-            public void run() {
-                alert.dismiss();
-                timeoutDialog.cancel();
+            timeoutDialog.schedule(new TimerTask() {
+
+                public void run() {
+                    winnerAlert.dismiss();
+                    timeoutDialog.cancel();
+                }
+            }, 5000);
+
+            if (PartyPokerApplication.isHost()) {
+                ShowWinnerTask showWinnerTask = new ShowWinnerTask();
+                showWinnerTask.execute();
             }
-        }, 5000);
-
-        if (PartyPokerApplication.isHost()) {
-            ShowWinnerTask showWinnerTask = new ShowWinnerTask();
-            showWinnerTask.execute();
         }
     }
 
@@ -658,7 +652,7 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             Game.getInstance().playerFolded();
         }
         else {
-            prepareAndSendActionMessage(0, true, false);
+            prepareAndSendActionMessage(0, true);
         }
     }
 
@@ -679,24 +673,19 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             }
 
             sbRaiseAmount.setMax((playerChips-this.bigBlind)/this.bigBlind);
-
             sbRaiseAmount.setVisibility(View.VISIBLE);
             raiseActive = true;
         }
         else {
             raiseActive = false;
-            sbRaiseAmount.setVisibility(View.INVISIBLE);
-            //TODO: find out if player is all in
-            boolean isAllIn = false;
             hidePlayerActions();
             if (PartyPokerApplication.isHost()) {
                 Game.getInstance().playerBid(raiseAmount);
             }
             else {
-                prepareAndSendActionMessage(raiseAmount, false, isAllIn);
+                prepareAndSendActionMessage(raiseAmount, false);
             }
         }
-
     }
 
     @Override
@@ -857,7 +846,6 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
     private void handleActionMessage(Bundle bundle) {
         int amount = bundle.getInt(BroadcastKeys.AMOUNT);
         boolean hasFolded = bundle.getBoolean(BroadcastKeys.HAS_FOLDED);
-        boolean isAllIn = bundle.getBoolean(BroadcastKeys.IS_ALL_IN);
 
         if (hasFolded) {
             Game.getInstance().playerFolded();
@@ -882,24 +870,10 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         initSeekBar();
     }
 
-    private void handlePlayerRolesMessage(Bundle bundle) {
-        boolean isDealer = bundle.getBoolean(BroadcastKeys.IS_DEALER);
-        boolean isSmallBlind = bundle.getBoolean(BroadcastKeys.IS_SMALL_BLIND);
-        boolean isBigBlind = bundle.getBoolean(BroadcastKeys.IS_BIG_BLIND);
-
-        // not needed anymore!
-    }
-
     private void handleNewCardMessage(Bundle bundle) {
         Card newHandCard = bundle.getParcelable(BroadcastKeys.CARD);
 
         // update cards UI
-    }
-
-    private void handleWonAmountMessage(Bundle bundle) {
-        int wonAmount = bundle.getInt(BroadcastKeys.AMOUNT);
-
-        // not needed
     }
 
     private void handleUpdateTableMessage(Bundle bundle) {
@@ -907,15 +881,15 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
 
-        updateTablePot();
         this.players = players;
         updateViews();
     }
 
     private void handleShowWinnerMessage(Bundle bundle) {
         String winnerInfo = bundle.getString(BroadcastKeys.WINNER_INFO);
+        boolean finalWinner = bundle.getBoolean(BroadcastKeys.FINAL_WINNER);
 
-        showWinner(winnerInfo);
+        showWinner(winnerInfo, finalWinner);
     }
 
     private void handleYourTurnMessage(Bundle bundle) {
@@ -930,6 +904,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
             String action = intent.getAction();
             Bundle extras = intent.getExtras();
 
+            System.out.println("Got message: " + action);
+
             switch (action) {
                 case ACTION_MESSAGE:
                     handleActionMessage(extras);
@@ -937,14 +913,8 @@ public class GameActivity extends AppCompatActivity implements Observer,ModActIn
                 case INIT_GAME_MESSAGE:
                     handleInitGameMessage(extras);
                     break;
-                case PLAYER_ROLES_MESSAGE:
-                    handlePlayerRolesMessage(extras);
-                    break;
                 case NEW_CARD_MESSAGE:
                     handleNewCardMessage(extras);
-                    break;
-                case WON_AMOUNT_MESSAGE:
-                    handleWonAmountMessage(extras);
                     break;
                 case UPDATE_TABLE_MESSAGE:
                     handleUpdateTableMessage(extras);

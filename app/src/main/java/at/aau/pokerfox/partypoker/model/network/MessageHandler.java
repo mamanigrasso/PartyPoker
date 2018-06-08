@@ -74,7 +74,6 @@ public class MessageHandler implements SalutDataCallback {
                     ActionMessage actionMessage = LoganSquare.parse(json, ActionMessage.class);
                     extras.putInt(BroadcastKeys.AMOUNT, actionMessage.Amount);
                     extras.putBoolean(BroadcastKeys.HAS_FOLDED, actionMessage.HasFolded);
-                    extras.putBoolean(BroadcastKeys.IS_ALL_IN, actionMessage.IsAllIn);
 
                     sendBroadcast(Broadcasts.ACTION_MESSAGE, extras);
                     break;
@@ -96,22 +95,6 @@ public class MessageHandler implements SalutDataCallback {
                     sendBroadcast(Broadcasts.NEW_CARD_MESSAGE, extras);
                     break;
 
-                case PLAYER_ROLES:
-                    PlayerRolesMessage rolesMessage = LoganSquare.parse(json, PlayerRolesMessage.class);
-                    extras.putBoolean(BroadcastKeys.IS_SMALL_BLIND, rolesMessage.IsSmallBlind);
-                    extras.putBoolean(BroadcastKeys.IS_BIG_BLIND, rolesMessage.IsBigBlind);
-                    extras.putBoolean(BroadcastKeys.IS_DEALER, rolesMessage.IsDealer);
-
-                    sendBroadcast(Broadcasts.PLAYER_ROLES_MESSAGE, extras);
-                    break;
-
-                case WON_AMOUNT:
-                    WonAmountMessage amountMessage = LoganSquare.parse(json, WonAmountMessage.class);
-                    extras.putInt(BroadcastKeys.AMOUNT, amountMessage.Amount);
-
-                    sendBroadcast(Broadcasts.WON_AMOUNT_MESSAGE, extras);
-                    break;
-
                 case YOUR_TURN:
                     YourTurnMessage turnMessage = LoganSquare.parse(json, YourTurnMessage.class);
                     extras.putInt(BroadcastKeys.MIN_AMOUNT_TO_RAISE, turnMessage.MinAmountToRaise);
@@ -122,6 +105,7 @@ public class MessageHandler implements SalutDataCallback {
                 case SHOW_WINNER:
                     ShowWinnerMessage showWinnerMessage = LoganSquare.parse(json, ShowWinnerMessage.class);
                     extras.putString(BroadcastKeys.WINNER_INFO, showWinnerMessage.WinnerInfo);
+                    extras.putBoolean(BroadcastKeys.FINAL_WINNER, showWinnerMessage.FinalWinner);
 
                     sendBroadcast(Broadcasts.SHOW_WINNER_MESSAGE, extras);
                     break;
@@ -196,15 +180,7 @@ public class MessageHandler implements SalutDataCallback {
         if (message != null)
             return message;
 
-        message = parseJsonToMessageClass(json, PlayerRolesMessage.class);
-        if (message != null)
-            return message;
-
         message = parseJsonToMessageClass(json, UpdateTableMessage.class);
-        if (message != null)
-            return message;
-
-        message = parseJsonToMessageClass(json, WonAmountMessage.class);
         if (message != null)
             return message;
 

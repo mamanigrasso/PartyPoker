@@ -10,5 +10,5 @@ public interface ModActInterface {
     public void showPlayerActions(int minAmountToRaise);
     public void hidePlayerActions();
     public void update(ArrayList<Card> communityCards, int potSize, ArrayList<Player> allPlayers);
-    public void showWinner(String winnerInfo);
+    public void showWinner(String winnerInfo, boolean finalWinner);
 }

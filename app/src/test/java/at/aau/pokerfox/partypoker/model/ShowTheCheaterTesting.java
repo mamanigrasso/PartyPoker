@@ -36,9 +36,9 @@ public class ShowTheCheaterTesting {
     @Before
     public void setUp() {
         //This are the Cheaters
-        andy.setCheatStaus(true);
-        michael.setCheatStaus(true);
-        mathias.setCheatStaus(true);
+        andy.setCheatStatus(true);
+        michael.setCheatStatus(true);
+        mathias.setCheatStatus(true);
 
 
         cheaters = new ArrayList<>();
