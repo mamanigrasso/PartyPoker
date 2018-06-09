@@ -24,6 +24,7 @@ public class Game {
     private static final int TURN = 1;
     private static final int RIVER = 2;
     private static ArrayList<Card> communityCards;
+    private static boolean cheatingAllowed = false;
     private static int maxBid = 0;
     private static Player currentPlayer;
     private static int stepID = 1;
@@ -42,7 +43,7 @@ public class Game {
     public void sendInitGameMessage() {
         InitGameMessage initGameMessage = new InitGameMessage();
         initGameMessage.SmallBlind = smallBlind;
-        initGameMessage.IsCheatingAllowed = false;
+        initGameMessage.IsCheatingAllowed = cheatingAllowed;
         initGameMessage.PlayerPot = startChipCount;
         initGameMessage.Players = new ArrayList<>();
         initGameMessage.Players.addAll(allPlayers);
@@ -238,7 +239,7 @@ public class Game {
      * @param players
      *            - maximum number of allPlayers allowed
      */
-    public static void init(int blind, int blindIncrease, int chipCount, int players, ModActInterface maInt) {
+    public static void init(int blind, int blindIncrease, int chipCount, int players, boolean cheating, ModActInterface maInt) {
         potSize = 0;
         smallBlind = blind;
         roundsBetweenBlindIncrease = blindIncrease;
@@ -246,6 +247,7 @@ public class Game {
         maxPlayers = players;
         allPlayers = new LinkedList<Player>();
         communityCards = new ArrayList<Card>();
+        cheatingAllowed = cheating;
         maInterface = maInt;
     }
 

@@ -34,7 +34,6 @@ import at.aau.pokerfox.partypoker.R;
 public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_NAME = "BUNDLE_PLAYER_NAME";
     public static final String BUNDLE_DEVICE_NAME = "BUNDLE_DEVICE_NAME";
-    public static final String CHEATING_ALLOWED = "CHEATING_ALLOWED";
 
     private String playerName = "";
     private Salut network;
