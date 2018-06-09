@@ -3,6 +3,7 @@ package at.aau.pokerfox.partypoker.model.network;
 public class Broadcasts {
     public static final String ACTION_MESSAGE = "ACTION_MESSAGE";
     public static final String REPLACE_CARD_MESSAGE = "REPLACE_CARD_MESSAGE";
+    public static final String CHEAT_PENALTY_MESSAGE = "CHEAT_PENALTY_MESSAGE";
     public static final String INIT_GAME_MESSAGE = "INIT_GAME_MESSAGE";
     public static final String NEW_CARD_MESSAGE = "NEW_CARD_MESSAGE";
     public static final String PLAYER_ROLES_MESSAGE = "PLAYER_ROLES_MESSAGE";

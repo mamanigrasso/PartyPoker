@@ -20,6 +20,7 @@ import java.io.IOException;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.CheatPenaltyMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
@@ -34,6 +35,7 @@ public class MessageHandler implements SalutDataCallback {
             .of(AbstractMessage.class, "type")
             .registerSubtype(ActionMessage.class)
             .registerSubtype(ReplaceCardMessage.class)
+            .registerSubtype(CheatPenaltyMessage.class)
             .registerSubtype(InitGameMessage.class)
             .registerSubtype(NewCardMessage.class)
             .registerSubtype(YourTurnMessage.class)
@@ -84,6 +86,15 @@ public class MessageHandler implements SalutDataCallback {
                     extras.putBoolean(BroadcastKeys.CARD_TO_REPLACE, replaceCardMessage.replaceCard1);
 
                     sendBroadcast(Broadcasts.REPLACE_CARD_MESSAGE, extras);
+                    break;
+
+                case CHEAT_PENALTY:
+                    CheatPenaltyMessage cheatPenaltyMessage = LoganSquare.parse(json, CheatPenaltyMessage.class);
+                    extras.putString(BroadcastKeys.COMPLAINER, cheatPenaltyMessage.complainer);
+                    extras.putString(BroadcastKeys.CHEATER, cheatPenaltyMessage.cheater);
+                    extras.putBoolean(BroadcastKeys.PENALIZECHEATER, cheatPenaltyMessage.penalizeCheater);
+
+                    sendBroadcast(Broadcasts.CHEAT_PENALTY_MESSAGE, extras);
                     break;
 
                 case INIT_GAME:
@@ -181,6 +192,10 @@ public class MessageHandler implements SalutDataCallback {
             return message;
 
         message = parseJsonToMessageClass(json, ReplaceCardMessage.class);
+        if (message != null)
+            return message;
+
+        message = parseJsonToMessageClass(json, CheatPenaltyMessage.class);
         if (message != null)
             return message;
 

@@ -19,4 +19,8 @@ public class BroadcastKeys {
     public static final String FINAL_WINNER = "FINAL_WINNER";
     public static final String REPLACEMENT_CARD = "REPLACEMENT_CARD";
     public static final String CARD_TO_REPLACE = "CARD_TO_REPLACE";
+    public static final String COMPLAINER = "COMPLAINER";
+    public static final String CHEATER = "CHEATER";
+    public static final String PENALIZECHEATER = "PENALIZECHEATER";
+
 }

@@ -42,9 +42,11 @@ import at.aau.pokerfox.partypoker.model.ShowWinnerTask;
 import at.aau.pokerfox.partypoker.model.network.BroadcastKeys;
 import at.aau.pokerfox.partypoker.model.network.Broadcasts;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.CheatPenaltyMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.ACTION_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.CHEAT_PENALTY_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.INIT_GAME_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.NEW_CARD_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.REPLACE_CARD_MESSAGE;
@@ -77,6 +79,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private boolean raiseActive = false;
     private int raiseAmount = 0;
     private boolean initGameMessageReceived = false;
+    private boolean cheatOptionsVisible = false;
 
     private TextView tvTablePot;
 
@@ -574,7 +577,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         buttonFold.setVisibility(View.INVISIBLE);
         buttonRaise.setVisibility(View.INVISIBLE);
         btnCheat.setVisibility(View.INVISIBLE);
-        btnCheatingAlarm.setVisibility(View.INVISIBLE);
 
         if (sbRaiseAmount != null)
             sbRaiseAmount.setVisibility(View.INVISIBLE);
@@ -595,10 +597,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         if (isCheatingAllowed) {
             btnCheat.setVisibility(View.VISIBLE);
-            btnCheatingAlarm.setVisibility(View.VISIBLE);
         } else {
             btnCheat.setVisibility(View.INVISIBLE);
-            btnCheatingAlarm.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -854,6 +854,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
         IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
         filter.addAction(Broadcasts.REPLACE_CARD_MESSAGE);
+        filter.addAction(Broadcasts.CHEAT_PENALTY_MESSAGE);
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
         filter.addAction(Broadcasts.UPDATE_TABLE_MESSAGE);
         filter.addAction(Broadcasts.YOUR_TURN_MESSAGE);
@@ -878,6 +879,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         boolean cardToReplace = bundle.getBoolean(BroadcastKeys.CARD_TO_REPLACE);
 
         Game.getInstance().replacePlayersCard(cardToReplace, replacementCard);
+    }
+
+    private void handleCheatPenaltyMessage(Bundle bundle) {
+        String complainer = bundle.getString(BroadcastKeys.COMPLAINER);
+        String cheater = bundle.getString(BroadcastKeys.CHEATER);
+        boolean penalizeCheater = bundle.getBoolean(BroadcastKeys.PENALIZECHEATER);
+
+        Game.getInstance().cheatPenalty(complainer, cheater, penalizeCheater);
     }
 
     private void handleInitGameMessage(Bundle bundle) {
@@ -907,6 +916,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             throw new RuntimeException("Communication Error! InitGameMessage not received!");
 
         this.players = players;
+
         updateViews();
     }
 
@@ -937,6 +947,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                     break;
                 case REPLACE_CARD_MESSAGE:
                     handleReplaceCardMessage(extras);
+                    break;
+                case CHEAT_PENALTY_MESSAGE:
+                    handleCheatPenaltyMessage(extras);
                     break;
                 case INIT_GAME_MESSAGE:
                     handleInitGameMessage(extras);
@@ -989,20 +1002,19 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
 
     private void addingPlayerNamesToArray () {
-        playerNames = new String[players.size()];
+        playerNames = new String[players.size()-1];
+        int j=0;
 
         for(int i=0; i<players.size(); i++) {
-            playerNames[i]=players.get(i).getName();
+            if (!players.get(i).getName().equals(myPlayerName))
+                playerNames[j++]=players.get(i).getName();
         }
     }
 
     //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
     //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
-        if(!isCheatingAllowed) {
-            btnCheatingAlarm.setEnabled(false);
-        } else if (isCheatingAllowed) {
-            btnCheatingAlarm.setEnabled(true);
+        if (isCheatingAllowed) {
             showTheCheater = new ShowTheCheater();
         }
 
@@ -1018,29 +1030,22 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int indexPosition) {
-                        boolean wasCheatingFlag = false;
-                        for (int i = 0; i < players.size(); i++) {
+                        Player cheater = getPlayerByName(playerNames[indexPosition]);
 
-                            if (playerNames[indexPosition].equals(players.get(i).getName())) {
-                                showTheCheater.ditHeCheat(players, players.get(0), players.get(indexPosition), players.get(indexPosition).getChipCount() / 5);
-                                // Penalty=1/5 of the ChipCount of the opposite choosen player
-
-                                updatePlayerChipsViews();
-                                /*tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
-                                tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
-                                tvPlayer3Chips = findViewById(R.id.text_checkop2);
-                                tvPlayer1Chips.setText(String.valueOf(players.get(0).getChipCount()));
-                                tvPlayer2Chips.setText(String.valueOf(players.get(1).getChipCount()));
-                                tvPlayer3Chips.setText(String.valueOf(players.get(2).getChipCount()));*/
-
-                                if (players.get(indexPosition).getCheatStatus() == true) {
-                                    wasCheatingFlag = true;
-                                }
-                                break;
-                            }
+                        if (PartyPokerApplication.isHost()) {
+                            Game.getInstance().cheatPenalty(myPlayerName, playerNames[indexPosition], cheater.getCheatStatus());
+                        } else {
+                            CheatPenaltyMessage message = new CheatPenaltyMessage();
+                            message.complainer = myPlayerName;
+                            message.cheater = playerNames[indexPosition];
+                            message.penalizeCheater = cheater.getCheatStatus();
+                            PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
                         }
+
+                        updatePlayerChipsViews();
+
                         dialogInterface.dismiss();
-                        if (wasCheatingFlag == true) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                        if (cheater.getCheatStatus()) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
                             Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
@@ -1072,6 +1077,15 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
 
         });
+    }
+
+    private Player getPlayerByName(String playerName) {
+        for (Player p : players) {
+            if (p.getName().equals(playerName))
+                return p;
+        }
+
+        return null;
     }
 
     //Cheat-Funktion - "DeadMansHand"
@@ -1137,12 +1151,15 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 @Override
                 public void onClick(View view) {
 
-                    ReplaceCardMessage message = new ReplaceCardMessage();
-                    message.replaceCard1 = true;
-                    message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
-                    PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                    if (PartyPokerApplication.isHost())
+                        Game.getInstance().replacePlayersCard(true, CardDeck.getCardFromDrawableCardId(deadMansID));
+                    else {
+                        ReplaceCardMessage message = new ReplaceCardMessage();
+                        message.replaceCard1 = true;
+                        message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
+                        PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                    }
 
-                    System.out.println("MessageSENT!!!!!!");
                     playersCardLeft.setImageDrawable(getDrawable(deadMansID));
                     playersCardRight.setClickable(false);
 
@@ -1153,12 +1170,15 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 @Override
                 public void onClick(View view) {
 
-                    ReplaceCardMessage message = new ReplaceCardMessage();
-                    message.replaceCard1 = false;
-                    message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
-                    PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                    if (PartyPokerApplication.isHost())
+                        Game.getInstance().replacePlayersCard(false, CardDeck.getCardFromDrawableCardId(deadMansID));
+                    else {
+                        ReplaceCardMessage message = new ReplaceCardMessage();
+                        message.replaceCard1 = false;
+                        message.replacementCard = CardDeck.getCardFromDrawableCardId(deadMansID);
+                        PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                    }
 
-                    System.out.println("MessageSENT!!!!!!");
                     playersCardRight.setImageDrawable(getDrawable(deadMansID));
                     playersCardLeft.setClickable(false);
                 }
@@ -1209,10 +1229,15 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 // onClick on the "ShowTheCheater"-Button the showTheCheater-option can be chose
                 @Override
                 public void onClick(View view) {
-
-                    btnShowTableCard.setVisibility(View.VISIBLE);
-                    btnProbability.setVisibility(View.VISIBLE);
-                    btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
+                    if (cheatOptionsVisible) {
+                        btnShowTableCard.setVisibility(View.INVISIBLE);
+                        btnProbability.setVisibility(View.INVISIBLE);
+                        btnChooseOneCardFromDeck.setVisibility(View.INVISIBLE);
+                    } else {
+                        btnShowTableCard.setVisibility(View.VISIBLE);
+                        btnProbability.setVisibility(View.VISIBLE);
+                        btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
