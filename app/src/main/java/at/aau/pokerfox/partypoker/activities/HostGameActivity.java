@@ -31,6 +31,7 @@ public class HostGameActivity extends AppCompatActivity {
     public static final String TAG = ".activities.HostGameActivity";
     public static final String BUNDLE_BIG_BLIND = "BUNDLE_BIG_BLIND";
     public static final String BUNDLE_PLAYER_POT = "BUNDLE_PLAYER_POT";
+    public static final String BUNDLE_CHEATING_ALLOWED = "CHEATING_ALLOWED";
 
     private String tableName = "";
     private Salut network;
@@ -48,6 +49,7 @@ public class HostGameActivity extends AppCompatActivity {
         CheckBox cbx_cheaton = findViewById(R.id.box_cheatOn);
         final EditText txt_bigblind = findViewById(R.id.txt_bigblind);
         final EditText txt_playerpot= findViewById(R.id.txt_playerpot);
+        final CheckBox box_cheaton = findViewById(R.id.box_cheatOn);
         final Button btn_create = findViewById(R.id.btn_create);
         final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
         final Button btnStartGame = findViewById(R.id.btn_start_game);
@@ -117,6 +119,7 @@ public class HostGameActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txt_bigblind.getText().toString()));
                 bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txt_playerpot.getText().toString()));
+                bundle.putBoolean(BUNDLE_CHEATING_ALLOWED, box_cheaton.isChecked());
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 bundle.putString(BUNDLE_DEVICE_NAME, network.thisDevice.deviceName);
                 intent.putExtras(bundle);

@@ -59,10 +59,10 @@ import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESS
 public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     private final int MAX_PLAYER_COUNT = 6;
-    private String[] playerNames=new String[MAX_PLAYER_COUNT];
+    private String[] playerNames;
     //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
-    private boolean isCheatingAllowed = true; //initGameMessage - METHOD
+    private boolean isCheatingAllowed = true;
     private ShowTheCheater showTheCheater;
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Card> communityCards = new ArrayList<>();
@@ -167,6 +167,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private Button btnShowTableCard;
     private Button btnProbability;
     private Button btnChooseOneCardFromDeck;
+    private Button btnCheatingAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,24 +183,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             Bundle bundle = getIntent().getExtras();
             bigBlind = bundle.getInt(HostGameActivity.BUNDLE_BIG_BLIND);
             playerPot = bundle.getInt(HostGameActivity.BUNDLE_PLAYER_POT);
+            isCheatingAllowed = bundle.getBoolean(HostGameActivity.BUNDLE_CHEATING_ALLOWED);
 
             prepareGame();
-
-            createAllViews();
-            hideAllUnusedViews();
-            setPlayerNames();
-            updateViews();
-            initSeekBar();
+            initGame();
         }
         this.receiver = new PokerBroadcastReceiver();
-
-        showTheCheater();
-        initialiseCheatButtons();
-        hideCheatButtons();
-        setCheatButtonsVisible();
-        chooseOneCardFromDeck();
-        initPlayerButtons();
-        hidePlayerActions();
 
         if (PartyPokerApplication.isHost())
             Game.getInstance().startRound();
@@ -213,7 +202,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         myself.setDevice(PartyPokerApplication.getNetwork().thisDevice);
         players.add(myself);
 
-        Game.init(bigBlind, bigBlind, playerPot, PartyPokerApplication.getConnectedDevices().size()+1, this);
+        Game.init(bigBlind, 15, playerPot, PartyPokerApplication.getConnectedDevices().size()+1, isCheatingAllowed, this);
 
         Game.addPlayer(myself);
 
@@ -225,6 +214,23 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
 
         Game.getInstance().sendInitGameMessage();
+
+        try {
+            Thread.sleep(500); // give init game message some time to be transferred
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initGame() {
+        createAllViews();
+        hideAllUnusedViews();
+        setPlayerNames();
+        updateViews();
+        initSeekBar();
+        initCheating();
+        initPlayerButtons();
+        hidePlayerActions();
     }
 
     private void createTablePotView() {
@@ -568,6 +574,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         buttonFold.setVisibility(View.INVISIBLE);
         buttonRaise.setVisibility(View.INVISIBLE);
         btnCheat.setVisibility(View.INVISIBLE);
+        btnCheatingAlarm.setVisibility(View.INVISIBLE);
 
         if (sbRaiseAmount != null)
             sbRaiseAmount.setVisibility(View.INVISIBLE);
@@ -578,7 +585,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         buttonFold.setVisibility(View.VISIBLE);
         buttonRaise.setVisibility(View.VISIBLE);
         buttonCheck.setVisibility(View.VISIBLE);
-        btnCheat.setVisibility(View.VISIBLE);
 
         this.minAmountToRaise = minAmountToRaise;
 
@@ -586,6 +592,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             buttonCheck.setText("CHECK");
         else
             buttonCheck.setText("CALL(" + minAmountToRaise + ")");
+
+        if (isCheatingAllowed) {
+            btnCheat.setVisibility(View.VISIBLE);
+            btnCheatingAlarm.setVisibility(View.VISIBLE);
+        } else {
+            btnCheat.setVisibility(View.INVISIBLE);
+            btnCheatingAlarm.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void prepareAndSendActionMessage(int amount, boolean hasFolded) {
@@ -670,13 +684,15 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     public void buttonRaisePressed(View v) {
         if (!raiseActive) {
             int playerChips = 0;
+            int playerBid = 0;
             for (Player p : players) {
                 if (p.getDeviceId().equals(myDeviceName)) {
                     playerChips = p.getChipCount();
+                    playerBid = p.getCurrentBid();
                 }
             }
 
-            sbRaiseAmount.setMax((playerChips-this.bigBlind)/this.bigBlind);
+            sbRaiseAmount.setMax((playerChips-this.bigBlind-playerBid)/this.bigBlind);
             sbRaiseAmount.setVisibility(View.VISIBLE);
             raiseActive = true;
         }
@@ -861,24 +877,19 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         Card replacementCard = bundle.getParcelable(BroadcastKeys.REPLACEMENT_CARD);
         boolean cardToReplace = bundle.getBoolean(BroadcastKeys.CARD_TO_REPLACE);
 
-        System.out.println("GOT REPLACECARDMESSAGE" + replacementCard.toString());
         Game.getInstance().replacePlayersCard(cardToReplace, replacementCard);
     }
 
     private void handleInitGameMessage(Bundle bundle) {
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
-        boolean isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
+        isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
         int bigBlind = bundle.getInt(BroadcastKeys.BIG_BLIND);
 
         this.players = players;
         this.bigBlind = bigBlind;
 
         initGameMessageReceived = true;
-        createAllViews();
-        hideAllUnusedViews();
-        setPlayerNames();
-        updateViews();
-        initSeekBar();
+        initGame();
     }
 
     private void handleNewCardMessage(Bundle bundle) {
@@ -978,6 +989,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
 
     private void addingPlayerNamesToArray () {
+        playerNames = new String[players.size()];
+
         for(int i=0; i<players.size(); i++) {
             playerNames[i]=players.get(i).getName();
         }
@@ -986,29 +999,24 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
     //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
-        Button btnShowCheater = findViewById(R.id.btn_cheating);
-        // CheckBox cheatOn = findViewById(R.id.box_cheatOn);          //should compare with the CheckBox, if it´s clicked
-
         if(!isCheatingAllowed) {
-            //if(!cheatOn.isChecked()){
-            btnShowCheater.setEnabled(false);
+            btnCheatingAlarm.setEnabled(false);
         } else if (isCheatingAllowed) {
-            //} else if (cheatOn.isChecked()) {
-            btnShowCheater.setEnabled(true);
+            btnCheatingAlarm.setEnabled(true);
             showTheCheater = new ShowTheCheater();
         }
 
-        btnShowCheater.setOnClickListener(new View.OnClickListener() {
+        btnCheatingAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 addingPlayerNamesToArray();
 
-
                 AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
                 createDialog.setTitle("Choose the Cheater! You have 5 seconds");
                 createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialogInterface, int indexPosition) {
                         boolean wasCheatingFlag = false;
                         for (int i = 0; i < players.size(); i++) {
@@ -1158,15 +1166,20 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
     }
 
+    public void initCheating() {
+        initialiseCheatButtons();
+        hideCheatButtons();
+        setCheatButtonsVisible();
+        showTheCheater();
+        chooseOneCardFromDeck();
+    }
 
-
-
-
-    public void initialiseCheatButtons () {
+    public void initialiseCheatButtons() {
         btnCheat = findViewById(R.id.btn_cheat);
         btnShowTableCard = findViewById(R.id.btn_eye);
         btnProbability = findViewById(R.id.btn_wahr);
         btnChooseOneCardFromDeck = findViewById(R.id.btn_dead);
+        btnCheatingAlarm = findViewById(R.id.btn_cheatingalarm);
     }
 
 
@@ -1174,7 +1187,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     public void hideCheatButtons() {
         if(!isCheatingAllowed) {
-
+            btnCheatingAlarm.setVisibility(View.GONE);
             btnCheat.setVisibility(View.GONE);
             btnShowTableCard.setVisibility(View.GONE);
             btnProbability.setVisibility(View.GONE);
@@ -1185,7 +1198,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //Shows The ShowTheCheater Buttons if Cheating is allowed
     public void setCheatButtonsVisible () {
         if(isCheatingAllowed) {
-
+            btnCheatingAlarm.setVisibility(View.VISIBLE);
             btnShowTableCard.setVisibility(View.GONE);
             btnProbability.setVisibility(View.GONE);
             btnChooseOneCardFromDeck.setVisibility(View.GONE);
@@ -1202,7 +1215,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                     btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
                 }
             });
-
         }
     }
 }
