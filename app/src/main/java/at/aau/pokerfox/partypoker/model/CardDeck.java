@@ -15,7 +15,6 @@ public class CardDeck {
 
     private CardDeck() {
         drawableIdList = new ArrayList<Integer>();
-        drawableIdList.add(R.drawable.hearts_ace);
         drawableIdList.add(R.drawable.hearts_2);
         drawableIdList.add(R.drawable.hearts_3);
         drawableIdList.add(R.drawable.hearts_4);
@@ -28,7 +27,7 @@ public class CardDeck {
         drawableIdList.add(R.drawable.hearts_jack);
         drawableIdList.add(R.drawable.hearts_queen);
         drawableIdList.add(R.drawable.hearts_king);
-        drawableIdList.add(R.drawable.spades_ace);
+        drawableIdList.add(R.drawable.hearts_ace);
         drawableIdList.add(R.drawable.spades_2);
         drawableIdList.add(R.drawable.spades_3);
         drawableIdList.add(R.drawable.spades_4);
@@ -41,7 +40,7 @@ public class CardDeck {
         drawableIdList.add(R.drawable.spades_jack);
         drawableIdList.add(R.drawable.spades_queen);
         drawableIdList.add(R.drawable.spades_king);
-        drawableIdList.add(R.drawable.diamonds_ace);
+        drawableIdList.add(R.drawable.spades_ace);
         drawableIdList.add(R.drawable.diamonds_2);
         drawableIdList.add(R.drawable.diamonds_3);
         drawableIdList.add(R.drawable.diamonds_4);
@@ -54,7 +53,7 @@ public class CardDeck {
         drawableIdList.add(R.drawable.diamonds_jack);
         drawableIdList.add(R.drawable.diamonds_queen);
         drawableIdList.add(R.drawable.diamonds_king);
-        drawableIdList.add(R.drawable.clubs_ace);
+        drawableIdList.add(R.drawable.diamonds_ace);
         drawableIdList.add(R.drawable.clubs_2);
         drawableIdList.add(R.drawable.clubs_3);
         drawableIdList.add(R.drawable.clubs_4);
@@ -67,6 +66,7 @@ public class CardDeck {
         drawableIdList.add(R.drawable.clubs_jack);
         drawableIdList.add(R.drawable.clubs_queen);
         drawableIdList.add(R.drawable.clubs_king);
+        drawableIdList.add(R.drawable.clubs_ace);
     }
 
     public static Card issueNextCardFromDeck() {

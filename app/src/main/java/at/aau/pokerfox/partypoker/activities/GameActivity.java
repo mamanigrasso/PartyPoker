@@ -692,6 +692,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 }
             }
 
+            buttonCheck.setVisibility(View.INVISIBLE);
+            buttonFold.setVisibility(View.INVISIBLE);
             sbRaiseAmount.setMax((playerChips-this.bigBlind-playerBid)/this.bigBlind);
             sbRaiseAmount.setVisibility(View.VISIBLE);
             raiseActive = true;
@@ -1112,19 +1114,16 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         sbRaiseAmount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
                 Toast.makeText(GameActivity.this, String.valueOf(raiseAmount),Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
                 raiseAmount = bigBlind + (bigBlind*progress);
-                // TODO Auto-generated method stub
             }
         });
     }
@@ -1230,10 +1229,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 @Override
                 public void onClick(View view) {
                     if (cheatOptionsVisible) {
+                        cheatOptionsVisible = false;
                         btnShowTableCard.setVisibility(View.INVISIBLE);
                         btnProbability.setVisibility(View.INVISIBLE);
                         btnChooseOneCardFromDeck.setVisibility(View.INVISIBLE);
                     } else {
+                        cheatOptionsVisible = true;
                         btnShowTableCard.setVisibility(View.VISIBLE);
                         btnProbability.setVisibility(View.VISIBLE);
                         btnChooseOneCardFromDeck.setVisibility(View.VISIBLE);
