@@ -226,7 +226,7 @@ public class Player implements Parcelable {
         this.currentBid = in.readInt();
         this.cards = in.createTypedArrayList(Card.CREATOR);
         this.cheatStatus = in.readByte() != 0;
-        this.cheatStatus = in.readByte() != 0;
+        this.checkStatus = in.readByte() != 0;
         this.status = in.readString();
         this.isHost = in.readByte() != 0;
         this.deviceId = in.readString();
