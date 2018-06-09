@@ -12,8 +12,8 @@ import at.aau.pokerfox.partypoker.R;
 public class Card implements Parcelable {
 
     private static String[] suits = { "hearts", "spades", "diamonds", "clubs" };
-    private static String[] ranks  = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
-            "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
+    private static String[] ranks  = { "Two", "Three", "Four", "Five", "Six", "Seven",
+            "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace" };
 
     @JsonField
     private int suit;
@@ -34,67 +34,67 @@ public class Card implements Parcelable {
 
         switch (suit) {
             case 0:
-                if (rank == 0) drawableID = R.drawable.hearts_ace;
-                if (rank == 1) drawableID = R.drawable.hearts_2;
-                if (rank == 2) drawableID = R.drawable.hearts_3;
-                if (rank == 3) drawableID = R.drawable.hearts_4;
-                if (rank == 4) drawableID = R.drawable.hearts_5;
-                if (rank == 5) drawableID = R.drawable.hearts_6;
-                if (rank == 6) drawableID = R.drawable.hearts_7;
-                if (rank == 7) drawableID = R.drawable.hearts_8;
-                if (rank == 8) drawableID = R.drawable.hearts_9;
-                if (rank == 9) drawableID = R.drawable.hearts_10;
-                if (rank == 10) drawableID = R.drawable.hearts_jack;
-                if (rank == 11) drawableID = R.drawable.hearts_queen;
-                if (rank == 12) drawableID = R.drawable.hearts_king;
+                if (rank == 0) drawableID = R.drawable.hearts_2;
+                if (rank == 1) drawableID = R.drawable.hearts_3;
+                if (rank == 2) drawableID = R.drawable.hearts_4;
+                if (rank == 3) drawableID = R.drawable.hearts_5;
+                if (rank == 4) drawableID = R.drawable.hearts_6;
+                if (rank == 5) drawableID = R.drawable.hearts_7;
+                if (rank == 6) drawableID = R.drawable.hearts_8;
+                if (rank == 7) drawableID = R.drawable.hearts_9;
+                if (rank == 8) drawableID = R.drawable.hearts_10;
+                if (rank == 9) drawableID = R.drawable.hearts_jack;
+                if (rank == 10) drawableID = R.drawable.hearts_queen;
+                if (rank == 11) drawableID = R.drawable.hearts_king;
+                if (rank == 12) drawableID = R.drawable.hearts_ace;
                 break;
 
             case 1:
-                if (rank == 0) drawableID = R.drawable.spades_ace;
-                if (rank == 1) drawableID = R.drawable.spades_2;
-                if (rank == 2) drawableID = R.drawable.spades_3;
-                if (rank == 3) drawableID = R.drawable.spades_4;
-                if (rank == 4) drawableID = R.drawable.spades_5;
-                if (rank == 5) drawableID = R.drawable.spades_6;
-                if (rank == 6) drawableID = R.drawable.spades_7;
-                if (rank == 7) drawableID = R.drawable.spades_8;
-                if (rank == 8) drawableID = R.drawable.spades_9;
-                if (rank == 9) drawableID = R.drawable.spades_10;
-                if (rank == 10) drawableID = R.drawable.spades_jack;
-                if (rank == 11) drawableID = R.drawable.spades_queen;
-                if (rank == 12) drawableID = R.drawable.spades_king;
+                if (rank == 0) drawableID = R.drawable.spades_2;
+                if (rank == 1) drawableID = R.drawable.spades_3;
+                if (rank == 2) drawableID = R.drawable.spades_4;
+                if (rank == 3) drawableID = R.drawable.spades_5;
+                if (rank == 4) drawableID = R.drawable.spades_6;
+                if (rank == 5) drawableID = R.drawable.spades_7;
+                if (rank == 6) drawableID = R.drawable.spades_8;
+                if (rank == 7) drawableID = R.drawable.spades_9;
+                if (rank == 8) drawableID = R.drawable.spades_10;
+                if (rank == 9) drawableID = R.drawable.spades_jack;
+                if (rank == 10) drawableID = R.drawable.spades_queen;
+                if (rank == 11) drawableID = R.drawable.spades_king;
+                if (rank == 12) drawableID = R.drawable.spades_ace;
                 break;
 
             case 2:
-                if (rank == 0) drawableID = R.drawable.diamonds_ace;
-                if (rank == 1) drawableID = R.drawable.diamonds_2;
-                if (rank == 2) drawableID = R.drawable.diamonds_3;
-                if (rank == 3) drawableID = R.drawable.diamonds_4;
-                if (rank == 4) drawableID = R.drawable.diamonds_5;
-                if (rank == 5) drawableID = R.drawable.diamonds_6;
-                if (rank == 6) drawableID = R.drawable.diamonds_7;
-                if (rank == 7) drawableID = R.drawable.diamonds_8;
-                if (rank == 8) drawableID = R.drawable.diamonds_9;
-                if (rank == 9) drawableID = R.drawable.diamonds_10;
-                if (rank == 10) drawableID = R.drawable.diamonds_jack;
-                if (rank == 11) drawableID = R.drawable.diamonds_queen;
-                if (rank == 12) drawableID = R.drawable.diamonds_king;
+                if (rank == 0) drawableID = R.drawable.diamonds_2;
+                if (rank == 1) drawableID = R.drawable.diamonds_3;
+                if (rank == 2) drawableID = R.drawable.diamonds_4;
+                if (rank == 3) drawableID = R.drawable.diamonds_5;
+                if (rank == 4) drawableID = R.drawable.diamonds_6;
+                if (rank == 5) drawableID = R.drawable.diamonds_7;
+                if (rank == 6) drawableID = R.drawable.diamonds_8;
+                if (rank == 7) drawableID = R.drawable.diamonds_9;
+                if (rank == 8) drawableID = R.drawable.diamonds_10;
+                if (rank == 9) drawableID = R.drawable.diamonds_jack;
+                if (rank == 10) drawableID = R.drawable.diamonds_queen;
+                if (rank == 11) drawableID = R.drawable.diamonds_king;
+                if (rank == 12) drawableID = R.drawable.diamonds_ace;
                 break;
 
             case 3:
-                if (rank == 0) drawableID = R.drawable.clubs_ace;
-                if (rank == 1) drawableID = R.drawable.clubs_2;
-                if (rank == 2) drawableID = R.drawable.clubs_3;
-                if (rank == 3) drawableID = R.drawable.clubs_4;
-                if (rank == 4) drawableID = R.drawable.clubs_5;
-                if (rank == 5) drawableID = R.drawable.clubs_6;
-                if (rank == 6) drawableID = R.drawable.clubs_7;
-                if (rank == 7) drawableID = R.drawable.clubs_8;
-                if (rank == 8) drawableID = R.drawable.clubs_9;
-                if (rank == 9) drawableID = R.drawable.clubs_10;
-                if (rank == 10) drawableID = R.drawable.clubs_jack;
-                if (rank == 11) drawableID = R.drawable.clubs_queen;
-                if (rank == 12) drawableID = R.drawable.clubs_king;
+                if (rank == 0) drawableID = R.drawable.clubs_2;
+                if (rank == 1) drawableID = R.drawable.clubs_3;
+                if (rank == 2) drawableID = R.drawable.clubs_4;
+                if (rank == 3) drawableID = R.drawable.clubs_5;
+                if (rank == 4) drawableID = R.drawable.clubs_6;
+                if (rank == 5) drawableID = R.drawable.clubs_7;
+                if (rank == 6) drawableID = R.drawable.clubs_8;
+                if (rank == 7) drawableID = R.drawable.clubs_9;
+                if (rank == 8) drawableID = R.drawable.clubs_10;
+                if (rank == 9) drawableID = R.drawable.clubs_jack;
+                if (rank == 10) drawableID = R.drawable.clubs_queen;
+                if (rank == 11) drawableID = R.drawable.clubs_king;
+                if (rank == 12) drawableID = R.drawable.clubs_ace;
                 break;
         }
 

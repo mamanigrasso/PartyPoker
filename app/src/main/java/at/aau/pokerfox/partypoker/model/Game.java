@@ -99,13 +99,18 @@ public class Game {
         } else { // not all players aligned yet, so ask next player for action
             currentPlayer = getNextPlayer();
 
+            int minAmountToRaise = maxBid-currentPlayer.getCurrentBid();
+
+            if (minAmountToRaise > currentPlayer.getChipCount())
+                minAmountToRaise = currentPlayer.getChipCount();
+
             if (!currentPlayer.isAllIn() && !currentPlayer.hasFolded()) {
                 if (currentPlayer.isHost()) {
-                    maInterface.showPlayerActions(maxBid-currentPlayer.getCurrentBid());
+                    maInterface.showPlayerActions(minAmountToRaise);
                 }
                 else {
                     YourTurnMessage message = new YourTurnMessage();
-                    message.MinAmountToRaise = maxBid-currentPlayer.getCurrentBid();
+                    message.MinAmountToRaise = minAmountToRaise;
                     PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, currentPlayer.getDevice());
                 }
             }
@@ -208,6 +213,12 @@ public class Game {
         PartyPokerApplication.getMessageHandler().sendMessageToAllClients(message);
 
         maInterface.showWinner(winnerInfo, message.FinalWinner);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getWinningHandString(Player winner) {
