@@ -8,7 +8,6 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
-import at.aau.pokerfox.partypoker.model.network.messages.host.WonAmountMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
 
 public class Game {
@@ -547,6 +546,46 @@ public class Game {
     }
 
     public void replacePlayersCard(boolean replaceCard1, Card replacementCard) {
+        currentPlayer.setCheatStatus(true);
         currentPlayer.replaceCard(replaceCard1, replacementCard);
+    }
+
+    public void cheatPenalty(String complainerName, String cheaterName, boolean penalizeCheater) {
+        Player complainer = getPlayerByName(complainerName);
+        Player cheater = getPlayerByName(cheaterName);
+
+        int penalty = cheater.getChipCount()/5;
+
+        if (!penalizeCheater) {
+            if (complainer.getChipCount() >= penalty) {
+                complainer.reduceChipCount(penalty);
+                cheater.raiseChipCount(penalty);
+            } else {
+                cheater.raiseChipCount(complainer.getChipCount());
+                complainer.setChipCount(0);
+            }
+        } else {
+            if (cheater.getChipCount() >= penalty) {
+                cheater.reduceChipCount(penalty);
+                complainer.raiseChipCount(penalty);
+            } else {
+                complainer.raiseChipCount(cheater.getChipCount());
+                cheater.setChipCount(0);
+            }
+        }
+
+        ArrayList<Player> players = new ArrayList<>();
+        players.addAll(allPlayers);
+        maInterface.update(communityCards, potSize, players);
+        sendUpdateTableMessage();
+    }
+
+    private Player getPlayerByName(String playerName) {
+        for (Player p : allPlayers) {
+            if (p.getName().equals(playerName))
+                return p;
+        }
+
+        return null;
     }
 }

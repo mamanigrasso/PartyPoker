@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final SalutDevice device = arrayAdapter.getItem(which);
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(MainActivity.this);
-                builderInner.setMessage(device.instanceName);
+                builderInner.setMessage(device.readableName);
                 builderInner.setTitle("You will join");
                 builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override

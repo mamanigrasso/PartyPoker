@@ -32,7 +32,7 @@ public class CardList_array_adapterActivity  extends ListActivity {
     public static String resultCardID = "deadMansCardID";
     public String[] cardnames;
     public String[] cardIDs;
-    public ArrayList<Drawable> cardDrawableList;
+    public ArrayList<Integer> cardDrawableIdList;
     public ArrayList<DrawableCard> cardList;
 
 
@@ -61,7 +61,7 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
         cardnames = new String [52];
         cardIDs = new String [52];
-        cardDrawableList = new ArrayList<>();
+        cardDrawableIdList = new ArrayList<>();
         cardList = new ArrayList<>();
 
         //Filling up with the CardNames
@@ -76,12 +76,12 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
         //Filling up with the DrawableObjects
         for (int i = 0; i<52; i++) {
-            cardDrawableList.add(getDrawable(CardDeck.getDrawableIds().get(i)));
+            cardDrawableIdList.add(CardDeck.getDrawableIds().get(i));
         }
 
 
         for(int i = 0; i < 52; i++){
-            cardList.add(new DrawableCard(cardnames[i], cardIDs[i], cardDrawableList.get(i)));
+            cardList.add(new DrawableCard(cardnames[i], cardIDs[i], cardDrawableIdList.get(i)));
         }
 
     }

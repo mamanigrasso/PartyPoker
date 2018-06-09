@@ -132,6 +132,7 @@ public class Player implements Parcelable {
         isSmallBlind = false;
         isBigBlind = false;
         checkStatus = false;
+        cheatStatus = false;
         status = "";
     }
 
