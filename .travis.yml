@@ -30,3 +30,4 @@ gradle build connectedCheck
 script:
     - ./gradlew build
     - ./gradlew test
+    #test
