@@ -15,7 +15,8 @@ import at.aau.pokerfox.partypoker.activities.GameActivity;
 import static org.junit.Assert.*;
 
 /**
- * Created by Timo on 12.06.2018.
+ * Created by Andreas on 16.05.2018.
+ * Changed by Timo on 12.06.2018
  */
 public class GameTest {
 
