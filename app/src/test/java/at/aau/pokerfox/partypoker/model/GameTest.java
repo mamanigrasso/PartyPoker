@@ -343,6 +343,62 @@ public class GameTest {
         assertEquals(1, winners.size()); // one winner
         assertEquals(andy, winners.get(0));  // andy is winner (three of a row)
     }
+    @Test
+    public void determineWinnerTestHighCard() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(2,3);
+        Card card4 = new Card(3,5);
+        Card random8 = new Card(2,6);
+        Card random9 = new Card(3,1);
+
+        andy.takeCard(new Card(3,7));
+        andy.takeCard(new Card(0,10));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 9));
+        michael.takeCard(new Card(2, 8));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (High Card)
+    }
+    @Test
+    public void determineWinnerTestFullHouse() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(2,2);
+        Card card4 = new Card(3,9);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(3,2));
+        andy.takeCard(new Card(0,4));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 3));
+        michael.takeCard(new Card(1, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (Full House)
+    }
 
     @Test
     public void determineWinnerTest() {
