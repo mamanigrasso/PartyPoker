@@ -174,7 +174,7 @@ public class Game {
         nextStep();
     }
 
-    public void roundDoneCheckWinner() {
+    public boolean roundDoneCheckWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
         ArrayList<Player> winners = new ArrayList<Player>();
 
@@ -187,6 +187,8 @@ public class Game {
         }
 
         handleWinner(winners);
+
+        return true;
     }
 
     public void handleWinner(ArrayList<Player> winners) {

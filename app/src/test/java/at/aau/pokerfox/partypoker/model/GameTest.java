@@ -67,8 +67,9 @@ public class GameTest {
         players= new ArrayList<>();
         cards = new ArrayList<>();
         PartyPokerApplication.setIsHost(true);
+        boolean isCheatingAllowed = false;
         //Game.getInstance().initGame();
-        Game.init(SMALL_BLIND,100,CHIP_COUNT,6,modActInterface);
+        Game.init(SMALL_BLIND,100,CHIP_COUNT,6, isCheatingAllowed, modActInterface);
     }
 
     @After
