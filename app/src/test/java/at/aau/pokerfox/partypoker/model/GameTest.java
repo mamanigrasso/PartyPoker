@@ -130,7 +130,7 @@ public class GameTest {
 
     @Test (expected =   IllegalStateException.class)
     public void getInstance() throws Exception {
-//            Game.getInstance();
+            Game.getInstance();
 
     }
 
