@@ -46,12 +46,22 @@ public class Hand {
         }
 
         // check for flush
-        for (int x = 0; x < 6; x++) {
-            if (cards[x].getSuit() != cards[x+1].getSuit())
-                flush = false;
+        int cntHearts = 0, cntSpades = 0, cntDiamonds = 0, cntClubs = 0;
+        for (int x = 0; x < 7; x++) {
+            if (cards[x].getSuit() == 0)
+                cntHearts++;
+            if (cards[x].getSuit() == 1)
+                cntSpades++;
+            if (cards[x].getSuit() == 2)
+                cntDiamonds++;
+            if (cards[x].getSuit() == 3)
+                cntClubs++;
         }
 
-        for (int x = 13; x > 0; x--) {
+        if (cntHearts < 5 && cntSpades < 5 && cntDiamonds < 5 && cntClubs < 5)
+            flush = false;
+
+        for (int x = 13; x >= 0; x--) {
 
             if (ranks[x] > sameCards) {
 

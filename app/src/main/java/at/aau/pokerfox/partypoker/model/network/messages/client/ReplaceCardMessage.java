@@ -1,23 +1,25 @@
 package at.aau.pokerfox.partypoker.model.network.messages.client;
 
-import android.drm.DrmStore;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import at.aau.pokerfox.partypoker.model.Card;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.MessageTypes;
 
-@JsonObject
-public class ActionMessage extends AbstractMessage {
+/**
+ * Created by Manuel on 08.06.2018.
+ */
 
-    public ActionMessage() {
-        this.MessageType = MessageTypes.ACTION;
+@JsonObject
+public class ReplaceCardMessage extends AbstractMessage {
+    public ReplaceCardMessage() {
+        this.MessageType = MessageTypes.REPLACE_CARD;
     }
 
     @JsonField
-    public Integer Amount;
+    public Card replacementCard;
 
     @JsonField
-    public Boolean HasFolded;
+    public Boolean replaceCard1;
 }

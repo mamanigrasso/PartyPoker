@@ -12,10 +12,11 @@ import com.peak.salut.SalutServiceData;
 import java.util.ArrayList;
 
 import at.aau.pokerfox.partypoker.model.network.MessageHandler;
+import at.aau.pokerfox.partypoker.model.network.NetworkHelper;
 
 public class PartyPokerApplication extends Application {
 
-    public static final int SALUT_PORT = 50489;
+    public static final int SALUT_PORT = NetworkHelper.findFreePort();
     public static final String SALUT_SERVICE_NAME = "SAS";
 
     private static Context appContext;

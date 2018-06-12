@@ -24,10 +24,14 @@ import com.peak.salut.SalutServiceData;
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.R;
 
+import static at.aau.pokerfox.partypoker.activities.MainActivity.BUNDLE_DEVICE_NAME;
+import static at.aau.pokerfox.partypoker.activities.MainActivity.BUNDLE_PLAYER_NAME;
+
 public class HostGameActivity extends AppCompatActivity {
     public static final String TAG = ".activities.HostGameActivity";
     public static final String BUNDLE_BIG_BLIND = "BUNDLE_BIG_BLIND";
     public static final String BUNDLE_PLAYER_POT = "BUNDLE_PLAYER_POT";
+    public static final String BUNDLE_CHEATING_ALLOWED = "CHEATING_ALLOWED";
 
     private String tableName = "";
     private Salut network;
@@ -45,13 +49,10 @@ public class HostGameActivity extends AppCompatActivity {
         CheckBox cbx_cheaton = findViewById(R.id.box_cheatOn);
         final EditText txt_bigblind = findViewById(R.id.txt_bigblind);
         final EditText txt_playerpot= findViewById(R.id.txt_playerpot);
+        final CheckBox box_cheaton = findViewById(R.id.box_cheatOn);
         final Button btn_create = findViewById(R.id.btn_create);
         final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
         final Button btnStartGame = findViewById(R.id.btn_start_game);
-
-        if (!btnStartGame.isEnabled()) {
-            btnStartGame.setEnabled(true);
-        }
 
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +89,7 @@ public class HostGameActivity extends AppCompatActivity {
 
                     HostGameActivity.this.network = network;
 
+                    txtConnectedPlayers.setText("Waiting for players...");
 
                     network.startNetworkService(new SalutDeviceCallback() {
                         @Override
@@ -101,6 +103,8 @@ public class HostGameActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+                btn_create.setVisibility(View.INVISIBLE);
 //                }
             }
 
@@ -115,7 +119,9 @@ public class HostGameActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txt_bigblind.getText().toString()));
                 bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txt_playerpot.getText().toString()));
-
+                bundle.putBoolean(BUNDLE_CHEATING_ALLOWED, box_cheaton.isChecked());
+                bundle.putString(BUNDLE_PLAYER_NAME, playerName);
+                bundle.putString(BUNDLE_DEVICE_NAME, network.thisDevice.deviceName);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

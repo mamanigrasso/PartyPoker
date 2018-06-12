@@ -1,23 +1,28 @@
 package at.aau.pokerfox.partypoker.model.network.messages.client;
 
-import android.drm.DrmStore;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import at.aau.pokerfox.partypoker.model.Player;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.MessageTypes;
 
-@JsonObject
-public class ActionMessage extends AbstractMessage {
+/**
+ * Created by Manuel on 09.06.2018.
+ */
 
-    public ActionMessage() {
-        this.MessageType = MessageTypes.ACTION;
+@JsonObject
+public class CheatPenaltyMessage extends AbstractMessage {
+    public CheatPenaltyMessage() {
+        this.MessageType = MessageTypes.CHEAT_PENALTY;
     }
 
     @JsonField
-    public Integer Amount;
+    public String complainer;
 
     @JsonField
-    public Boolean HasFolded;
+    public String cheater;
+
+    @JsonField
+    public Boolean penalizeCheater;
 }

@@ -1,6 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class CardListAdapter extends ArrayAdapter<DrawableCard> {
 
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.cardName.setText(list.get(position).getName());
-        holder.image.setImageDrawable(list.get(position).getImage());
+        holder.image.setImageDrawable(ContextCompat.getDrawable(contextActivity, list.get(position).getImageID()));
         return view;
     }
 }

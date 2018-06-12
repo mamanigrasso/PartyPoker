@@ -33,6 +33,7 @@ import at.aau.pokerfox.partypoker.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_NAME = "BUNDLE_PLAYER_NAME";
+    public static final String BUNDLE_DEVICE_NAME = "BUNDLE_DEVICE_NAME";
 
     private String playerName = "";
     private Salut network;
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
 
-                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
-                click.start();
+//                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
+//                click.start();
             }
 
 
@@ -67,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PartyPokerApplication.setIsHost(false);
-
 //                Intent intent = new Intent("TablechoiceActivity");
 //                Bundle bundle = new Bundle();
 //                bundle.putString(BUNDLE_PLAYER_NAME, playerName);
@@ -77,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
 //                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
 //                click1.start();
-
+//                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
+//                click.start();
                 discoverAndJoinService();
             }
         });
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final SalutDevice device = arrayAdapter.getItem(which);
                 AlertDialog.Builder builderInner = new AlertDialog.Builder(MainActivity.this);
-                builderInner.setMessage(device.instanceName);
+                builderInner.setMessage(device.readableName);
                 builderInner.setTitle("You will join");
                 builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -204,8 +204,13 @@ public class MainActivity extends AppCompatActivity {
                 public void call() {
                     Toast.makeText(MainActivity.this, "You registered successfully!",
                             Toast.LENGTH_LONG).show();
-                Intent intent = new Intent("GameActivity");
-                startActivity(intent);
+                    Intent intent = new Intent("GameActivity");
+                    String deviceName = network.thisDevice.deviceName;
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BUNDLE_PLAYER_NAME, playerName);
+                    bundle.putString(BUNDLE_DEVICE_NAME, deviceName);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             }, new SalutCallback() {
                 @Override

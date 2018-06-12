@@ -41,6 +41,8 @@ public class Player implements Parcelable {
     @JsonField
     private String status = "";
     @JsonField
+    private String deviceId;
+    @JsonField
     private SalutDevice device;
     @JsonField
     private boolean isHost = false;
@@ -65,7 +67,6 @@ public class Player implements Parcelable {
 
     public void takeCard(Card card) {
         cards.add(card);
-        System.out.println(name + " got " + card.toString());
     }
 
     public void removeCards() {
@@ -73,8 +74,6 @@ public class Player implements Parcelable {
     }
 
     public int getCurrentBid() { return currentBid; }
-
-    public void resetCurrentBid() { currentBid = 0; }
 
     public void setCurrentBid(int bid) { currentBid = bid; }
 
@@ -87,12 +86,19 @@ public class Player implements Parcelable {
             currentBid = blind;
         }
 
-        System.out.println(name + " gave blind " + currentBid);
         return currentBid; // return amount is either the required blind or the whole chipCount if it's less than the blind
     }
 
     public boolean hasFolded() {
         return hasFolded;
+    }
+
+    public boolean getIsAllIn() {
+        return isAllIn;
+    }
+
+    public void setIsAllIn(boolean allIn) {
+        isAllIn = allIn;
     }
 
     public boolean isAllIn() {
@@ -107,21 +113,16 @@ public class Player implements Parcelable {
         this.isDealer = isDealer;
     }
 
-    public boolean getIsAllIn() {
-        return isAllIn;
-    }
-
-    public boolean getIsDealer() {
-        return isDealer;
-    }
-
     public void payOutPot(int pot) {
-        System.out.println(name + " just got " + pot + " chips!");
         chipCount += pot;
     }
 
-    public ArrayList<Card> getPlayerHand() {
-        return cards;
+    public void setDeviceId(String id) {
+        this.deviceId = id;
+    }
+
+    public String getDeviceId() {
+        return this.deviceId;
     }
 
     public void activate() {
@@ -130,6 +131,9 @@ public class Player implements Parcelable {
         isAllIn = false;
         isSmallBlind = false;
         isBigBlind = false;
+        checkStatus = false;
+        cheatStatus = false;
+        status = "";
     }
 
     public void setCheckStatus(boolean status) {
@@ -157,7 +161,7 @@ public class Player implements Parcelable {
     }
 
     //Cheating-Area: Set @true, if the player has Cheated in the last round;
-    public void setCheatStaus(boolean hasCheated) {
+    public void setCheatStatus(boolean hasCheated) {
         this.cheatStatus=hasCheated;
     }
 
@@ -198,6 +202,7 @@ public class Player implements Parcelable {
         parcel.writeByte((byte) (this.checkStatus ? 1 : 0));
         parcel.writeString(this.status);
         parcel.writeByte((byte) (this.isHost ? 1 : 0));
+        parcel.writeString(this.deviceId);
     }
 
     public static final Parcelable.Creator<Player> CREATOR
@@ -222,9 +227,10 @@ public class Player implements Parcelable {
         this.currentBid = in.readInt();
         this.cards = in.createTypedArrayList(Card.CREATOR);
         this.cheatStatus = in.readByte() != 0;
-        this.cheatStatus = in.readByte() != 0;
+        this.checkStatus = in.readByte() != 0;
         this.status = in.readString();
         this.isHost = in.readByte() != 0;
+        this.deviceId = in.readString();
     }
 
     public boolean isBigBlind() {
@@ -253,6 +259,7 @@ public class Player implements Parcelable {
 
     public void setDevice(SalutDevice device) {
         this.device = device;
+        this.deviceId = device.deviceName;
     }
 
     public SalutDevice getDevice() {
@@ -263,20 +270,8 @@ public class Player implements Parcelable {
         this.name = name;
     }
 
-    public boolean isHasFolded() {
-        return hasFolded;
-    }
-
     public void setHasFolded(boolean hasFolded) {
         this.hasFolded = hasFolded;
-    }
-
-    public void setSmallBlind(boolean smallBlind) {
-        isSmallBlind = smallBlind;
-    }
-
-    public void setBigBlind(boolean bigBlind) {
-        isBigBlind = bigBlind;
     }
 
     public ArrayList<Card> getCards() {
@@ -285,22 +280,6 @@ public class Player implements Parcelable {
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
-    }
-
-    public boolean isCheatStatus() {
-        return cheatStatus;
-    }
-
-    public void setCheatStatus(boolean cheatStatus) {
-        this.cheatStatus = cheatStatus;
-    }
-
-    public boolean isCheckStatus() {
-        return checkStatus;
-    }
-
-    public void setIsAllIn(boolean allIn) {
-        this.isAllIn = allIn;
     }
   
     public Card getCard1() {
@@ -323,5 +302,14 @@ public class Player implements Parcelable {
 
     public void setIsHost(boolean host) {
         isHost = host;
+    }
+
+    public void replaceCard(boolean replaceCard1, Card replacementCard) {
+        int cardToReplace = 0;
+
+        if (!replaceCard1)
+            cardToReplace = 1;
+
+        cards.set(cardToReplace, replacementCard);
     }
 }

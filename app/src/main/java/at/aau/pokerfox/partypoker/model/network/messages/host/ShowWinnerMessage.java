@@ -1,6 +1,4 @@
-package at.aau.pokerfox.partypoker.model.network.messages.client;
-
-import android.drm.DrmStore;
+package at.aau.pokerfox.partypoker.model.network.messages.host;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -8,16 +6,21 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.MessageTypes;
 
-@JsonObject
-public class ActionMessage extends AbstractMessage {
+/**
+ * Created by Manuel on 07.06.2018.
+ */
 
-    public ActionMessage() {
-        this.MessageType = MessageTypes.ACTION;
+@JsonObject
+public class ShowWinnerMessage extends AbstractMessage {
+
+    public ShowWinnerMessage() {
+        this.MessageType = MessageTypes.SHOW_WINNER;
     }
 
     @JsonField
-    public Integer Amount;
+    public String WinnerInfo;
 
     @JsonField
-    public Boolean HasFolded;
+    public boolean FinalWinner;
 }
+
