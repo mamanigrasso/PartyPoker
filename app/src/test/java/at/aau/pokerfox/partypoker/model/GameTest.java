@@ -231,6 +231,118 @@ public class GameTest {
         assertEquals(1, winners.size()); // one winner
         assertEquals(andy, winners.get(0));  // andy is winner (hearts street)
     }
+    @Test
+    public void determineWinnerTestStraightFlush() {
+        Card card2 = new Card(0,2);
+        Card card3 = new Card(0,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(0,6));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 9));
+        michael.takeCard(new Card(0, 9));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (straight flush)
+    }
+    @Test
+    public void determineWinnerTest4ofarow() {
+        Card card2 = new Card(2,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,9);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,9));
+        andy.takeCard(new Card(0,9));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 3));
+        michael.takeCard(new Card(0, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (4 of a row)
+    }
+    @Test
+    public void determineWinnerTest2pairs() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,6);
+        Card random8 = new Card(1,8);
+        Card random9 = new Card(0,2);
+
+        andy.takeCard(new Card(2,2));
+        andy.takeCard(new Card(3,3));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 3));
+        michael.takeCard(new Card(0, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (2 pairs)
+    }
+    @Test
+    public void determineWinnerTestThreeofarow() {
+        Card card2 = new Card(2,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,9));
+        andy.takeCard(new Card(0,9));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 3));
+        michael.takeCard(new Card(1, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (three of a row)
+    }
 
     @Test
     public void determineWinnerTest() {
