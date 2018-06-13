@@ -156,12 +156,11 @@ public class Game {
         int prevBit = currentPlayer.getCurrentBid();
         currentPlayer.setCurrentBid(amount + prevBit);
 
-        if (currentPlayer.getChipCount() == currentPlayer.getCurrentBid()) {
+        if (currentPlayer.getChipCount() == amount) {
             currentPlayer.setAllIn();
         }
         else {
-            int oldChipCount = currentPlayer.getChipCount();
-            currentPlayer.setChipCount(oldChipCount - currentPlayer.getCurrentBid());
+            currentPlayer.reduceChipCount(amount);
         }
 
         nextStep();
@@ -411,12 +410,14 @@ public class Game {
         System.out.println(player.getName() + " is small blind.");
         player.giveBlind(smallBlind);
         player.setCurrentBid(smallBlind);
+        player.reduceChipCount(smallBlind);
         player.setIsSmallBlind(true);
 
         player = getNextPlayer();
         System.out.println(player.getName() + " is big blind.");
         player.giveBlind(smallBlind*2);
         player.setCurrentBid(smallBlind*2);
+        player.reduceChipCount(smallBlind*2);
         player.setIsBigBlind(true);
     }
 

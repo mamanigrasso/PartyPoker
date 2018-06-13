@@ -78,6 +78,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private boolean eyePossible = false;
     private boolean raiseActive = false;
     private int raiseAmount = 0;
+    private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
 
@@ -696,7 +697,16 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
             buttonCheck.setVisibility(View.INVISIBLE);
             buttonFold.setVisibility(View.INVISIBLE);
-            sbRaiseAmount.setMax((playerChips-this.bigBlind-playerBid)/this.bigBlind);
+
+            if (minAmountToRaise == 0) {
+                this.sbMinAmount = bigBlind;
+            }
+            else {
+                this.sbMinAmount = minAmountToRaise;
+            }
+
+            sbRaiseAmount.setMax((playerChips - sbMinAmount) / this.bigBlind);  // (max - min) / step
+
             sbRaiseAmount.setVisibility(View.VISIBLE);
             raiseActive = true;
         }
@@ -1133,7 +1143,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-                raiseAmount = bigBlind + (bigBlind*progress);
+                raiseAmount = sbMinAmount + (bigBlind*progress);
             }
         });
     }
