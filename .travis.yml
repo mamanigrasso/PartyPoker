@@ -29,6 +29,7 @@ script:
     #  secure: SONAR_TOKEN # encrypted value of your token
 script:
   # other script steps might be done before running the actual analysis
+  - ./gradlew sonarqube
   -Dsonar.organization=pokerfox
   -Dsonar.host.url=https://sonarcloud.io
   -Dsonar.login=642b06e480dd1c850c606e21049dd5d59b1c3e55

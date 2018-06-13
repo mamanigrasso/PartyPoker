@@ -15,11 +15,30 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.6.1"
+}
+
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+    }
+
+    apply plugin: "jacoco"
+}
+
+jacoco {
+    toolVersion '0.8.1'
+    reportsDir = file("$buildDir/jacocoReports")
+}
+
+sonarqube {
+    properties {
+        property 'sonar.jacoco.reportPath', '$buildDir/jacoco'
+        property 'sonar.junit.reportsPath','$buildDir/test-results'
+        property 'sonar.tests', '$buildDir/classes/test'
     }
 }
 
