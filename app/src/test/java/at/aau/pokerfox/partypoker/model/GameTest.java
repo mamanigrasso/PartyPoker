@@ -16,24 +16,11 @@ import static org.junit.Assert.*;
 
 /**
  * Created by Andreas on 16.05.2018.
+ * Changed by Timo on 12.06.2018
  */
 public class GameTest {
 
-    /*private static final Game _instance = new Game();
-    private static LinkedList<Player> allPlayers = new LinkedList<>();
-    private static int potSize;
-    private static int smallBlind;
-    private static int roundsBetweenBlindIncrease;
-    private static int startChipCount;
-    private static int maxPlayers;
-    private static int roundCount = 1;
-    private static final int FLOP = 0;
-    private static final int TURN = 1;
-    private static final int RIVER = 2;
-    private static ArrayList<Card> communityCards;
-    private static int maxBid = 0;
-    private static Player currentPlayer;
-    private static int stepID = 1;*/
+
 
     private static ModActInterface modActInterface = null;
     private final int SMALL_BLIND = 50;
@@ -55,21 +42,18 @@ public class GameTest {
     Card card5 = new Card(2,5);
     Card card6 = new Card(1,6);
     Card card7 = new Card(3,7);
-    /*Card card8 = new Card(0,0);
-    Card card9 = new Card(0,0);
-    Card card10 = new Card(1,0);*/
+
 
     ArrayList<Player> players;
     ArrayList<Card> cards;
 
     @Before
     public void setUp() throws Exception {
-//        players= new ArrayList<>();
-//        cards = new ArrayList<>();
-//        PartyPokerApplication.setIsHost(true);
-//        boolean isCheatingAllowed = false;
-        //Game.getInstance().initGame();
-//        Game.init(SMALL_BLIND,100,CHIP_COUNT,6, isCheatingAllowed, modActInterface);
+        players= new ArrayList<>();
+        cards = new ArrayList<>();
+        PartyPokerApplication.setIsHost(true);
+        boolean isCheatingAllowed = false;
+        Game.init(SMALL_BLIND,100,CHIP_COUNT,6, isCheatingAllowed, modActInterface);
     }
 
     @After
@@ -103,13 +87,13 @@ public class GameTest {
     public void nextStepTest() throws Exception {  //runs threw the game logic until somebody folded
 //        Game.addPlayer(andy);
 //        Game.addPlayer(michael);
-
-       // Game.getInstance().startGame();
+//
+//           Game.getInstance().startGame();
 //        Game.getInstance().nextStep();
-        //Game.addPlayer(player1);
-        //Game.addPlayer(michael);
-        //Game.getInstance().nextStep();
-        //Game.getInstance().playerFolded();
+//        Game.addPlayer(player1);
+//        Game.addPlayer(michael);
+//        Game.getInstance().nextStep();
+//        Game.getInstance().playerFolded();
     }
 
     @Test
@@ -127,12 +111,12 @@ public class GameTest {
     @Test
     public void init() throws Exception {
     }
-
-    @Test (expected =   IllegalStateException.class)
-    public void getInstance() throws Exception {
-            Game.getInstance();
-
-    }
+//
+//    @Test (expected =   IllegalStateException.class)
+//    public void getInstance() throws Exception {
+//            Game.getInstance();
+//
+//    }
 
     @Test
     public void addPlayer() throws Exception {
@@ -141,46 +125,46 @@ public class GameTest {
 
     @Test
     public void addToMuchPlayers() throws Exception {
-//        assertTrue(Game.addPlayer(andy));
-//        assertTrue(Game.addPlayer(michael));
-//        assertTrue(Game.addPlayer(mathias));
-//        assertTrue(Game.addPlayer(timo));
-//        assertTrue(Game.addPlayer(marco));
-//        assertTrue(Game.addPlayer(manuel));
-//        assertFalse(Game.addPlayer(marco)); //maxSize = 6
+        assertTrue(Game.addPlayer(andy));
+        assertTrue(Game.addPlayer(michael));
+        assertTrue(Game.addPlayer(mathias));
+        assertTrue(Game.addPlayer(timo));
+        assertTrue(Game.addPlayer(marco));
+        assertTrue(Game.addPlayer(manuel));
+        assertFalse(Game.addPlayer(marco)); //maxSize = 6
     }
 
     @Test
     public void removePlayer() throws Exception {
-//        assertTrue(Game.addPlayer(andy));
-//        assertTrue(Game.addPlayer(michael));
-//        assertTrue(Game.addPlayer(mathias));
-//        assertTrue(Game.addPlayer(timo));
-//        assertTrue(Game.addPlayer(marco));
-//        assertTrue(Game.addPlayer(manuel));
-//
-//        assertTrue(Game.removePlayer(manuel));
-//        assertTrue(Game.removePlayer(marco));
-//        assertTrue(Game.removePlayer(timo));
-//        assertTrue(Game.removePlayer(mathias));
-//        assertTrue(Game.removePlayer(michael));  //there is one left
+        assertTrue(Game.addPlayer(andy));
+        assertTrue(Game.addPlayer(michael));
+        assertTrue(Game.addPlayer(mathias));
+        assertTrue(Game.addPlayer(timo));
+        assertTrue(Game.addPlayer(marco));
+        assertTrue(Game.addPlayer(manuel));
+
+        assertTrue(Game.removePlayer(manuel));
+        assertTrue(Game.removePlayer(marco));
+        assertTrue(Game.removePlayer(timo));
+        assertTrue(Game.removePlayer(mathias));
+        assertTrue(Game.removePlayer(michael));  //there is one left
 
     }
     @Test
     public void removeAllPlayer() throws Exception {
-//        assertTrue(Game.addPlayer(andy));
-//        assertTrue(Game.addPlayer(michael));
-//        assertTrue(Game.addPlayer(mathias));
-//        assertTrue(Game.addPlayer(timo));
-//        assertTrue(Game.addPlayer(marco));
-//        assertTrue(Game.addPlayer(manuel));
-//
-//        assertTrue(Game.removePlayer(manuel));
-//        assertTrue(Game.removePlayer(marco));
-//        assertTrue(Game.removePlayer(timo));
-//        assertTrue(Game.removePlayer(mathias));
-//        assertTrue(Game.removePlayer(michael));
-//        assertFalse(Game.removePlayer(andy));   //last one can´t be removed so assertFalse
+        assertTrue(Game.addPlayer(andy));
+        assertTrue(Game.addPlayer(michael));
+        assertTrue(Game.addPlayer(mathias));
+        assertTrue(Game.addPlayer(timo));
+        assertTrue(Game.addPlayer(marco));
+        assertTrue(Game.addPlayer(manuel));
+
+        assertTrue(Game.removePlayer(manuel));
+        assertTrue(Game.removePlayer(marco));
+        assertTrue(Game.removePlayer(timo));
+        assertTrue(Game.removePlayer(mathias));
+        assertTrue(Game.removePlayer(michael));
+        assertFalse(Game.removePlayer(andy));   //last one can´t be removed so assertFalse
     }
 
     @Test
@@ -220,32 +204,229 @@ public class GameTest {
     }
 
     @Test
+    public void determineWinnerTestStreet() {
+        Card card2 = new Card(0,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(2,4);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(2,9);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(3,6));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 9));
+        michael.takeCard(new Card(0, 9));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (hearts street)
+    }
+    @Test
+    public void determineWinnerTestStraightFlush() {
+        Card card2 = new Card(0,2);
+        Card card3 = new Card(0,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(0,6));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 9));
+        michael.takeCard(new Card(0, 9));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (straight flush)
+    }
+    @Test
+    public void determineWinnerTest4ofarow() {
+        Card card2 = new Card(2,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,9);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,9));
+        andy.takeCard(new Card(0,9));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 3));
+        michael.takeCard(new Card(0, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (4 of a row)
+    }
+    @Test
+    public void determineWinnerTest2pairs() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,6);
+        Card random8 = new Card(1,8);
+        Card random9 = new Card(0,2);
+
+        andy.takeCard(new Card(2,2));
+        andy.takeCard(new Card(3,3));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 3));
+        michael.takeCard(new Card(0, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (2 pairs)
+    }
+    @Test
+    public void determineWinnerTestThreeofarow() {
+        Card card2 = new Card(2,2);
+        Card card3 = new Card(1,3);
+        Card card4 = new Card(0,4);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(0,9));
+        andy.takeCard(new Card(0,9));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 3));
+        michael.takeCard(new Card(1, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (three of a row)
+    }
+    @Test
+    public void determineWinnerTestHighCard() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(2,3);
+        Card card4 = new Card(3,5);
+        Card random8 = new Card(2,6);
+        Card random9 = new Card(3,1);
+
+        andy.takeCard(new Card(3,7));
+        andy.takeCard(new Card(0,10));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 9));
+        michael.takeCard(new Card(2, 8));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (High Card)
+    }
+    @Test
+    public void determineWinnerTestFullHouse() {
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(2,2);
+        Card card4 = new Card(3,9);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(3,2));
+        andy.takeCard(new Card(0,4));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 3));
+        michael.takeCard(new Card(1, 1));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (Full House)
+    }
+
+    @Test
     public void determineWinnerTest() {
-//        Card hearts6 = new Card(0,6);
-//        Card heartsJack = new Card(0,10);
-//        Card heartsAce = new Card(0,0);
-//        Card spadesQueen = new Card(1,11);
-//        Card diamonds10 = new Card(2,9);
-//
-//        andy.takeCard(new Card(0,5));
-//        andy.takeCard(new Card(0,6));
-//        players.add(andy);
-//
-//        michael.takeCard(new Card(2, 5));
-//        michael.takeCard(new Card(2, 6));
-//        players.add(michael);
-//
-//        cards.clear();
-//        cards.add(hearts6);
-//        cards.add(heartsJack);
-//        cards.add(heartsAce);
-//        cards.add(spadesQueen);
-//        cards.add(diamonds10);
-//
-//        ArrayList<Player> winners = Game.determineWinner(players,cards);
-//
-//        assertEquals(1, winners.size()); // one winner
-//        assertEquals(andy, winners.get(0));  // andy is winner (hearts flush)
+        Card hearts6 = new Card(0,6);
+        Card heartsJack = new Card(0,10);
+        Card heartsAce = new Card(0,0);
+        Card spadesQueen = new Card(1,11);
+        Card diamonds10 = new Card(2,9);
+
+        andy.takeCard(new Card(0,5));
+        andy.takeCard(new Card(0,6));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 5));
+        michael.takeCard(new Card(2, 6));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(hearts6);
+        cards.add(heartsJack);
+        cards.add(heartsAce);
+        cards.add(spadesQueen);
+        cards.add(diamonds10);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (hearts flush)
     }
 
     @Test

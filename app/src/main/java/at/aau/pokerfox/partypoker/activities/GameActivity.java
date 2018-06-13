@@ -523,6 +523,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             ivTableCards.get(i).setImageDrawable(getDrawable(c.getDrawableID()));
             i++;
         }
+        turnForXPlayers(false, false, false, false, false, i==3, i==3, i==3, i==4, i==5);
+
     }
 
     private void createAllViews() {
@@ -779,29 +781,28 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
         if (flop1) {
             int[] myIds = {R.id.flop1};
-            int[] drawableIds = {Game.getInstance().getCommunityCards().get(0).getDrawableID()};
+            int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (flop2) {
             int[] myIds = {R.id.flop2};
-            int[] drawableIds = {Game.getInstance().getCommunityCards().get(1).getDrawableID()};
+            int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (flop3) {
             int[] myIds = {R.id.flop3};
-            int[] drawableIds = {Game.getInstance().getCommunityCards().get(2).getDrawableID()};
+            int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (turn) {
-            eyePossible = true;
             int[] myIds = {R.id.turn};
-            int[] drawableIds = {Game.getInstance().getCommunityCards().get(3).getDrawableID()};
+            int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
             int[] myIds = {R.id.river};
-            int[] drawableIds = {Game.getInstance().getCommunityCards().get(4).getDrawableID()};
+            int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
 
@@ -810,11 +811,11 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     public void turnMiddleCards() {
         int[] myIds = {R.id.flop1, R.id.flop2, R.id.flop3, R.id.turn, R.id.river};
         int[] drawableIds = {
-                Game.getInstance().getCommunityCards().get(0).getDrawableID(),
-                Game.getInstance().getCommunityCards().get(1).getDrawableID(),
-                Game.getInstance().getCommunityCards().get(2).getDrawableID(),
-                Game.getInstance().getCommunityCards().get(3).getDrawableID(),
-                Game.getInstance().getCommunityCards().get(4).getDrawableID()
+                this.communityCards.get(0).getDrawableID(),
+                this.communityCards.get(1).getDrawableID(),
+                this.communityCards.get(2).getDrawableID(),
+                this.communityCards.get(3).getDrawableID(),
+                this.communityCards.get(4).getDrawableID()
         };
         turnCards(myIds, drawableIds);
     }
@@ -825,6 +826,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 players.get(0).getCard1().getDrawableID(),
                 players.get(0).getCard2().getDrawableID()
         };
+        turnCards(myIds, drawableIds);
+    }
+
+    public void turnCard(int viewId, int cardId) {
+        int[] myIds = {viewId};
+        int[] drawableIds = {cardId};
         turnCards(myIds, drawableIds);
     }
 
@@ -913,6 +920,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         this.communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
+
+        if (this.communityCards != null && this.communityCards.size() >= 4)
+            eyePossible = true;
 
         if (!initGameMessageReceived)
             throw new RuntimeException("Communication Error! InitGameMessage not received!");
