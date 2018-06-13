@@ -8,9 +8,8 @@ import java.util.ArrayList;
 
 public class ProbCheating {
 
-    private ArrayList<Card> allCardsOfCheater = new ArrayList<>();
-
-    private ArrayList<Card> streetCards = new ArrayList<>(5);
+    ArrayList<Card> allCardsOfCheater = new ArrayList<>();
+    ArrayList<Card> streetCards = new ArrayList<>(5);
     boolean aceIsLastCardInStreet = false;
 
     //How often do we have the same Ranks -> saved in an integer-Array
@@ -219,74 +218,6 @@ public class ProbCheating {
     }
 
 
-      /*  public int testAufDrillingVierling () {
-
-            int currentSuit = 0;
-
-
-            int z = 0;
-
-
-            for (int y = 0; y < 4; y++) {
-
-                if (z > maxUseSameSuit) {
-                    maxUseSameSuit = z;
-                }
-                z = 0;
-
-                for (int i = 0; i < 5; i++) {
-                    currentSuit = i;
-                    if (allCardsOfCheater.get(i).getSuit() == currentSuit) {
-                        z++;
-                    }
-                }
-                if (z == maxUseSameSuit && howOftensameMaxSuite < 1) {
-                    howOftensameMaxSuite++;
-
-                }
-
-            }
-
-
-            System.out.println("maxusesamesuit" + maxUseSameSuit);
-            System.out.println("howoftensamemaxsuite" + howOftensameMaxSuite);
-            return maxUseSameSuit;
-        }
-
-        public void wahrDrillingVierlingFullhouse () {
-
-            int wahrDrilling = 0;
-            int wahrVierling = 0;
-            int wahrFullHouse = 0;
-
-
-            int highestWahr = 0;
-
-
-            if (testAufDrillingVierling() == 2 && howOftensameMaxSuite == 1) {
-                wahrFullHouse = 4 * 4;
-            }
-            if (testAufDrillingVierling() == 3) {
-                wahrVierling = 1 * 4;
-            }
-            if (testAufDrillingVierling() == 2 && howOftensameMaxSuite == 0) {
-                wahrDrilling = 2 * 4;
-            }
-
-            if (wahrFullHouse != 0) {
-                highestWahr = wahrFullHouse;
-                System.out.println("Full-House: ");
-            } else if (wahrVierling != 0) {
-                highestWahr = wahrVierling;
-                System.out.println("Vierling: ");
-            } else if (wahrDrilling != 0) {
-                highestWahr = wahrDrilling;
-                System.out.println("Drilling: ");
-            }
-
-            System.out.println(highestWahr);
-        }*/
-
     //Sorts the cards according to their ranks -> bottom-up
     public void sortAllCardsOfCheater () {
 
@@ -302,9 +233,7 @@ public class ProbCheating {
                 }
             }
         }
-        // for (int i = 0; i < allCardsOfCheater.size(); i++) {
-        //     System.out.println(allCardsOfCheater.get(i).getRank());
-        // }
+
     }
 
     public int probStreetDraw () {
@@ -492,5 +421,10 @@ public class ProbCheating {
 
         streetCards.clear();
         return showProb;
+    }
+
+    //Just for test-cases
+    public void addCardsToArrayList(Card c) {
+        allCardsOfCheater.add(c);
     }
 }

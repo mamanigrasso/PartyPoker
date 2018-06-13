@@ -593,7 +593,7 @@ public class Game {
         sendUpdateTableMessage();
     }
 
-    private Player getPlayerByName(String playerName) {
+    public Player getPlayerByName(String playerName) {
         for (Player p : allPlayers) {
             if (p.getName().equals(playerName))
                 return p;
