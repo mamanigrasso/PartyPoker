@@ -22,11 +22,16 @@ android:
 script:
     - ./gradlew build
     #- ./gradlew test
-addons:
-  sonarcloud:
-    organization: "pokerfox" # the key of the org you chose at step #3
-    token:
-      secure: SONAR_TOKEN # encrypted value of your token
+#addons:
+ # sonarcloud:
+  #  organization: "pokerfox" # the key of the org you chose at step #3
+   # token:
+    #  secure: SONAR_TOKEN # encrypted value of your token
 script:
   # other script steps might be done before running the actual analysis
-  - sonar-scanner
+  -Dsonar.organization=pokerfox
+  -Dsonar.host.url=https://sonarcloud.io
+  -Dsonar.login=642b06e480dd1c850c606e21049dd5d59b1c3e55
+  -Dsonar.branch.name=master
+  -sonar-scanner
+  
