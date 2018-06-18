@@ -4,7 +4,7 @@
 ## Game Description
 
 
-Poker Fox is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
+PokerFox is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
 Each player gets two cards and betting chips. The players put a different amount of money (chips) on the odds of winning 
 their own hand without knowing about the opponent's hand. The chips of a game (pot) used by the players wins the player with 
 the strongest hand. This opens up the opportunity to win by bluffing even with weak cards. 
