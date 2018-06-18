@@ -4,7 +4,7 @@
 ## Game Description
 
 
-PokerFox is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
+POKERFOX is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
 Each player gets two cards and betting chips. The players put a different amount of money (chips) on the odds of winning 
 their own hand without knowing about the opponent's hand. The chips of a game (pot) used by the players wins the player with 
 the strongest hand. This opens up the opportunity to win by bluffing even with weak cards. 
@@ -17,19 +17,9 @@ But beware, other players can clap you up by clicking the big round red button w
 If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from 
 the player who has cheated.
 
-schmid_gui_update
-* Eye
-
-The Eye Cheat option gives you access to a card of any player.
-
-* Dead man's Hand
-
-With this cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
-
 * Eye - The Eye Cheat option gives you access to a card of any player.
 
 * Dead man's Hand - With this special cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
- master
 
 ## Preview Scene
 
@@ -38,7 +28,7 @@ With this cheat option, it is possible to exchange one card from the entire deck
 
 ## Technical Details
 
-PokerFox is a multiplayer Android game which was developed using Android Studio and the programming language
+POKERFOX is a multiplayer Android game which was developed using Android Studio and the programming language
 Java and Android SDK version 26. The multiplayer component was implemented using the 3rd party framework called Salut.
 PokerFox can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
 
