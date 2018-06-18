@@ -10,8 +10,8 @@
     <!-- Player section -->
     <ImageView
         android:id="@+id/playerCard1"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/playerCard1_back"
-        android:layout_width="49dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -43,8 +43,8 @@
 
     <ImageView
         android:id="@+id/playerCard2"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -69,8 +69,8 @@
     <!-- Opponent1 section -->
     <ImageView
         android:id="@+id/opponent1Card1"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -86,8 +86,8 @@
 
     <ImageView
         android:id="@+id/opponent1Card1_back"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -105,8 +105,8 @@
 
     <ImageView
         android:id="@+id/opponent1Card2"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -122,8 +122,8 @@
 
     <ImageView
         android:id="@+id/opponent1Card2_back"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -150,8 +150,8 @@
     <!-- Opponent2 section -->
     <ImageView
         android:id="@+id/opponent2Card1"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -166,8 +166,8 @@
 
     <ImageView
         android:id="@+id/opponent2Card2"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -193,8 +193,8 @@
     <!-- Opponent3 section -->
     <ImageView
         android:id="@+id/opponent3Card1"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -209,8 +209,8 @@
 
     <ImageView
         android:id="@+id/opponent3Card2"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -235,8 +235,8 @@
     <!-- Opponent4 section -->
     <ImageView
         android:id="@+id/opponent4Card1"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -252,8 +252,8 @@
 
     <ImageView
         android:id="@+id/opponent4Card1_back"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -270,8 +270,8 @@
 
     <ImageView
         android:id="@+id/opponent4Card2"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -287,8 +287,8 @@
 
     <ImageView
         android:id="@+id/opponent4Card2_back"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -315,8 +315,8 @@
     <!-- Opponent5 section -->
     <ImageView
         android:id="@+id/opponent5Card1"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -331,8 +331,8 @@
 
     <ImageView
         android:id="@+id/opponent5Card2"
-        android:layout_width="35dp"
-        android:layout_height="67dp"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -357,8 +357,8 @@
 
     <ImageView
         android:id="@+id/flop1"
-        android:layout_width="101dp"
-        android:layout_height="55dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -373,8 +373,8 @@
 
     <ImageView
         android:id="@+id/flop2"
-        android:layout_width="100dp"
-        android:layout_height="55dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -389,8 +389,8 @@
 
     <ImageView
         android:id="@+id/flop3"
-        android:layout_width="97dp"
-        android:layout_height="55dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -406,8 +406,8 @@
 
     <ImageView
         android:id="@+id/turn"
-        android:layout_width="104dp"
-        android:layout_height="55dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -423,8 +423,8 @@
 
     <ImageView
         android:id="@+id/river"
-        android:layout_width="108dp"
-        android:layout_height="55dp"
+        android:layout_width="110dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -439,8 +439,8 @@
 
     <Button
         android:id="@+id/btn_cheatingalarm"
-        android:layout_width="78dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/cheat"
