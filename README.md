@@ -17,13 +17,9 @@ But beware, other players can clap you up by clicking the big round red button w
 If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from 
 the player who has cheated.
 
-* Eye
+* Eye - The Eye Cheat option gives you access to a card of any player.
 
-The Eye Cheat option gives you access to a card of any player.
-
-* Dead man's Hand
-
-With this special cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
+* Dead man's Hand - With this special cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
 
 ## Preview Scene
 
