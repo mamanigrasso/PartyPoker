@@ -18,7 +18,7 @@ The goal is to win as many chips as possible from other players.
 ## Technical Details
 
 * [Android Studio](https://developer.android.com/studio/) 
-* [Salut Network] (https://salut-a-toi.org/)
+* [Salut Network](https://salut-a-toi.org/)
 
 ## Other
 
@@ -27,7 +27,7 @@ The goal is to win as many chips as possible from other players.
 
 ## Authors
 
-* [Kogler Andreas] (https://salut-a-toi.org/)
-* Langer Manuel @manlanger
-* Schmid Timo @dalton666
-* Manigrasso Marco @mamanigrasso
+* [Kogler Andreas](https://github.com/andreaskog/)
+* [Langer Manuel](https://github.com/manlanger/)
+* [Schmid Timo](https://github.com/dalton666/)
+* [Manigrasso Marco](https://github.com/mamanigrasso/)
