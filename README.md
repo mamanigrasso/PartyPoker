@@ -17,17 +17,17 @@ The goal is to win as many chips as possible from other players.
 
 # Technical Details
 
--Android Studio [![](https://developer.android.com/studio/)]
--Salut Network [![](https://salut-a-toi.org/)]
+* Android Studio [![](https://developer.android.com/studio/)]
+* Salut Network [![](https://salut-a-toi.org/)]
 
 ## Other
 
--Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
--Code Quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
+* Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
+* Code Quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
 
 ## Authors
 
-*Kogler Andreas @andreaskog
-*Langer Manuel @manlanger
-*Schmid Timo @dalton666
-*Manigrasso Marco @mamanigrasso
+* Kogler Andreas @andreaskog
+* Langer Manuel @manlanger
+* Schmid Timo @dalton666
+* Manigrasso Marco @mamanigrasso
