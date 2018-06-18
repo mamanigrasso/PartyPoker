@@ -1,4 +1,4 @@
-#** POKERFOX **
+# POKERFOX
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
 
 ## Game Description
