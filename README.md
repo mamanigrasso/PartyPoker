@@ -10,12 +10,31 @@ their own hand without knowing about the opponent's hand. The chips of a game (p
 the strongest hand. This opens up the opportunity to win by bluffing even with weak cards. 
 The goal is to win as many chips as possible from other players.
 
+## Cheating
+
+Cheating is allowed once per round. Click on the Cheat button to select one of the two different cheat options(EYE, DEAD MANS HAND).
+But beware, other players can clap you up by clicking the big round red button with the call sign and selecting the player who cheats.
+If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from 
+the player who has cheated.
+
+* Eye
+
+The Eye Cheat option gives you access to a card of any player.
+
+* Dead man's Hand
+
+With this special cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
+
 ## Preview Scene
 
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
 
 
 ## Technical Details
+
+PokerFox is a multiplayer Android game which was developed using Android Studio and the programming language
+Java and Android SDK version 26. The multiplayer component was implemented using the 3rd party framework called Salut.
+PokerFox can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
 
 * [Android Studio](https://developer.android.com/studio/) 
 * [Salut Network](https://salut-a-toi.org/)
