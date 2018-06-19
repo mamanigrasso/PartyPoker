@@ -77,6 +77,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private String myDeviceName = null;
     private String myPlayerName = null;
     private boolean eyePossible = false;
+    private boolean cheatModeEyeOn = false;
+    private boolean performTurn = false;
+    private int lastCardCnt = 0;
     private boolean raiseActive = false;
     private int raiseAmount = 0;
     private int sbMinAmount = 0;
@@ -447,6 +450,35 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ivPlayerCards2.add(ivPlayer4Card2);
         ivPlayerCards2.add(ivPlayer5Card2);
         ivPlayerCards2.add(ivPlayer6Card2);
+
+
+        for (ImageView actView : ivPlayerCards1) {
+            View.OnClickListener clickListener1 = new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (cheatModeEyeOn) {
+                        // CHECK IF CARD IS ACTIVE
+                        turnCard(v.getId(), v.getId());
+                        cheatModeEyeOn = false;
+                    }
+                }
+            };
+            actView.setOnClickListener(clickListener1);
+
+        }
+
+        for (ImageView actView : ivPlayerCards2) {
+            View.OnClickListener clickListener2 = new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (cheatModeEyeOn) {
+                        // CHECK IF CARD ACTIVE
+                        turnCard(v.getId(), v.getId());
+                        cheatModeEyeOn = false;
+                    }
+                }
+            };
+            actView.setOnClickListener(clickListener2);
+
+        }
     }
 
     private void updatePlayerCardViews(boolean showAllOtherPlayerCards) {
@@ -525,7 +557,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             ivTableCards.get(i).setImageDrawable(getDrawable(c.getDrawableID()));
             i++;
         }
-        turnForXPlayers(false, false, false, false, false, i==3, i==3, i==3, i==4, i==5);
+        if (performTurn)
+            turnForXPlayers(false, false, false, false, false, i==3, i==3, i==3, i==4, i==5);
 
     }
 
@@ -681,7 +714,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     public void buttonEyePressed(View v) {
         //prepareAndSendActionMessage(0, true, false);
         if (eyePossible) {
-            turnForXPlayers(false, false, false, false, false, false, false, false, false, true);
+            cheatModeEyeOn = true;
+            //turnForXPlayers(false, false, false, false, false, false, false, false, false, true);
         }
     }
 
@@ -931,7 +965,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         this.communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
         ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
-
+        if (lastCardCnt < this.communityCards.size()) {
+            lastCardCnt = this.communityCards.size();
+            performTurn = true;
+        } else {
+            performTurn = false;
+        }
         if (this.communityCards != null && this.communityCards.size() >= 4)
             eyePossible = true;
 
