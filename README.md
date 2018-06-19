@@ -12,14 +12,15 @@ The goal is to win as many chips as possible from other players.
 
 ## Cheating
 
-Cheating is allowed once per round. Click on the Cheat button to select one of the two different cheat options(EYE, DEAD MANS HAND).
+Cheating is allowed once per round. Click on the Cheat button to select one of the three different cheat options(EYE, DEAD MANS HAND or Probability).
 But beware, other players can clap you up by clicking the big round red button with the call sign and selecting the player who cheats.
-If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from 
-the player who has cheated.
+If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from the player who has cheated.
 
 * Eye - The Eye Cheat option gives you access to a card of any player.
 
-* Dead man's Hand - With this special cheat option, it is possible to exchange one card from the entire deck of the deck for one of the two cards in your hand.
+* Dead man's Hand - With this special cheat option, it is possible to select any card of a full deck and change it with one of the two cards on your hand.
+
+* Probability - This cheating option can be used in the round when the flop is visible but the turn and the river are still not visible. Probability cheating allows you gettin the probability for the best hand the selected player can get with one another card (with the turn or the river). It shows you the probability for what the selected player can have when all cards are visible from the combination "three of a kind" up to the "royal flush".
 
 ## Preview Scene
 
