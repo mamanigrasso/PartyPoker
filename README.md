@@ -24,7 +24,7 @@ If the player is correct, then the round ends for the cheating player and the pl
 
 ## Preview Scene
 
-![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
+![Screenshot](https://user-images.githubusercontent.com/37117215/41621921-5c842cea-740e-11e8-86eb-37aca6399de9.JPG)
 
 
 ## Technical Details
