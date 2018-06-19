@@ -1251,6 +1251,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         setCheatButtonsVisible();
         showTheCheater();
         chooseOneCardFromDeck();
+        testProbability();
     }
 
     public void initialiseCheatButtons() {
@@ -1312,14 +1313,19 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ImageView turn = findViewById(R.id.turn);
 
         //Cheat-Funktion is just for this round
-        if (flop3.getVisibility() == View.VISIBLE && turn.getVisibility() == View.GONE) {
+
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     final ArrayList<Card> openedCards = new ArrayList<>(5);
+                    final ArrayList<Card> interList = new ArrayList<>();
                     //Adding the Playernames to our Array for the Dialog
                     addingPlayerNamesToArray();
+
+                    btnShowTableCard.setVisibility(View.GONE);
+                    btnProbability.setVisibility(View.GONE);
+                    btnChooseOneCardFromDeck.setVisibility(View.GONE);
 
                     AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
                     createDialog.setTitle("Choose the player you want");
@@ -1327,14 +1333,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int indexPosition) {
 
-                            if (PartyPokerApplication.isHost()) {
+                            if (PartyPokerApplication.isHost()&&Game.getInstance().getCommunityCards().get(0)!=null) {
 
                                 openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
                                 openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
                                 openedCards.add(Game.getInstance().getCommunityCards().get(0));
                                 openedCards.add(Game.getInstance().getCommunityCards().get(1));
                                 openedCards.add(Game.getInstance().getCommunityCards().get(2));
-                            } else {
+                            } else if ((!PartyPokerApplication.isHost())&&communityCards.get(0)!=null) {
                                 openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
                                 openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
                                 openedCards.add(communityCards.get(0));
@@ -1342,19 +1348,35 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                                 openedCards.add(communityCards.get(2));
                             }
 
+                            interList.addAll(openedCards);
+                            if(PartyPokerApplication.isHost()&&Game.getInstance().getCommunityCards().get(3)!=null) {
+                                interList.add(Game.getInstance().getCommunityCards().get(3));
+                            } else if ((!PartyPokerApplication.isHost())&&communityCards.get(3)!=null) {
+                                interList.add(communityCards.get(3));
+                            }
+
                             dialogInterface.dismiss();
+
+                            if(openedCards.size()==5) {
+                                ProbCheating probCheating = new ProbCheating();
+                                String probResult = probCheating.probCheat(openedCards);
+                                Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
-                    final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
-                    findProbOfPlayerX.show();
 
-                    ProbCheating probCheating = new ProbCheating();
-                    String probResult = probCheating.probCheat(openedCards);
-                    Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
+
+                    final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
+
+
+                    //Try to get the right round
+                    if(interList.size()==5) {
+                        findProbOfPlayerX.show();
+                    }
+
 
                 }
             });
         }
-    }
 
 }
