@@ -16,7 +16,7 @@ Cheating is allowed once per round. Click on the Cheat button to select one of t
 But beware, other players can clap you up by clicking the big round red button with the call sign and selecting the player who cheats.
 If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from the player who has cheated.
 
-* Eye - The Eye Cheat option gives you access to a card of any player.
+* Eye - The Eye Cheat option gives you access to one card of any player you choose.
 
 * Dead man's Hand - With this special cheat option, it is possible to select any card of a full deck and change it with one of the two cards on your hand.
 
