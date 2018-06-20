@@ -1,10 +1,10 @@
-# POKERFOX
+# PARTYPOKER
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
 
 ## Game Description
 
 
-POKERFOX is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
+PARTYPOKER is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
 Each player gets two cards and betting chips. The players put a different amount of money (chips) on the odds of winning 
 their own hand without knowing about the opponent's hand. The chips of a game (pot) used by the players wins the player with 
 the strongest hand. This opens up the opportunity to win by bluffing even with weak cards. 
@@ -30,9 +30,9 @@ If the player is correct, then the round ends for the cheating player and the pl
 
 ## Technical Details
 
-POKERFOX is a multiplayer Android game which was developed using Android Studio and the programming language
+PARTYPOKER is a multiplayer Android game which was developed using Android Studio and the programming language
 Java and Android SDK version 26. The multiplayer component was implemented using the 3rd party framework called Salut.
-PokerFox can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
+PARTYPOKER can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
 
 * [Android Studio](https://developer.android.com/studio/) 
 * [Salut Network](https://salut-a-toi.org/)
