@@ -84,7 +84,7 @@ script:
     - sonar-scanner -X 
 addons: 
   sonarcloud: 
-     organization: "mamanigrasso-github" # der key der organisation auf sonarcloud.io 
+     organization: "pokerfox" # der key der organisation auf sonarcloud.io 
      token: 
        secure: $SONAR_TOKEN       # $SONAR_TOKEN -> Umgebungsvariable auf travis-ci.org 
 
