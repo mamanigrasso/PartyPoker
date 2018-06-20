@@ -85,6 +85,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
+    private int roundStep = 0; //=0 if no tablecards are visible, 1 if flop3, 2 if turn and 3 if river is visible while gaming
 
     private TextView tvTablePot;
 
@@ -825,27 +826,33 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop1) {
+            roundStep = 1;
             int[] myIds = {R.id.flop1};
             int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
+
         }
         if (flop2) {
+            roundStep = 1;
             int[] myIds = {R.id.flop2};
             int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
-
         }
         if (flop3) {
+            roundStep = 1;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
+
         }
         if (turn) {
+            roundStep=2;
             int[] myIds = {R.id.turn};
             int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
+            roundStep=3;
             int[] myIds = {R.id.river};
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -1312,14 +1319,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ImageView flop3 = findViewById(R.id.flop3);
         ImageView turn = findViewById(R.id.turn);
 
-        //Cheat-Funktion is just for this round
-
+        //Cheat-Funktion is just for the round when the 3 flop-cards are visible
+       //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     final ArrayList<Card> openedCards = new ArrayList<>(5);
-                    final ArrayList<Card> interList = new ArrayList<>();
+
                     //Adding the Playernames to our Array for the Dialog
                     addingPlayerNamesToArray();
 
@@ -1333,14 +1340,14 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int indexPosition) {
 
-                            if (PartyPokerApplication.isHost()&&Game.getInstance().getCommunityCards().get(0)!=null) {
+                            if (PartyPokerApplication.isHost()) {
 
                                 openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
                                 openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
                                 openedCards.add(Game.getInstance().getCommunityCards().get(0));
                                 openedCards.add(Game.getInstance().getCommunityCards().get(1));
                                 openedCards.add(Game.getInstance().getCommunityCards().get(2));
-                            } else if ((!PartyPokerApplication.isHost())&&communityCards.get(0)!=null) {
+                            } else {
                                 openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
                                 openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
                                 openedCards.add(communityCards.get(0));
@@ -1348,35 +1355,22 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                                 openedCards.add(communityCards.get(2));
                             }
 
-                            interList.addAll(openedCards);
-                            if(PartyPokerApplication.isHost()&&Game.getInstance().getCommunityCards().get(3)!=null) {
-                                interList.add(Game.getInstance().getCommunityCards().get(3));
-                            } else if ((!PartyPokerApplication.isHost())&&communityCards.get(3)!=null) {
-                                interList.add(communityCards.get(3));
-                            }
-
                             dialogInterface.dismiss();
 
-                            if(openedCards.size()==5) {
+
                                 ProbCheating probCheating = new ProbCheating();
                                 String probResult = probCheating.probCheat(openedCards);
                                 Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
-                            }
+
                         }
                     });
 
 
                     final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
 
-
-                    //Try to get the right round
-                    if(interList.size()==5) {
                         findProbOfPlayerX.show();
-                    }
-
-
                 }
             });
         }
-
+    //}
 }
