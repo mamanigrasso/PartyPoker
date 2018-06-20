@@ -40,7 +40,7 @@ PARTYPOKER can be played on any Android device, the only requirement is that Wif
 ## Other
 
 * Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
-* Code Quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
+* Code Quality : in progress - this is just a placeholder for the quality gate badge [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
 
 ## Authors
 
