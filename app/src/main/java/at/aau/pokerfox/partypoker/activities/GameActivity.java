@@ -85,6 +85,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
+    private int roundStep = 0; //=0 if no tablecards are visible, 1 if flop3, 2 if turn and 3 if river is visible while gaming
 
     private TextView tvTablePot;
 
@@ -825,27 +826,33 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop1) {
+            roundStep = 1;
             int[] myIds = {R.id.flop1};
             int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
+
         }
         if (flop2) {
+            roundStep = 1;
             int[] myIds = {R.id.flop2};
             int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
-
         }
         if (flop3) {
+            roundStep = 1;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
+
         }
         if (turn) {
+            roundStep=2;
             int[] myIds = {R.id.turn};
             int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
+            roundStep=3;
             int[] myIds = {R.id.river};
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -1251,6 +1258,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         setCheatButtonsVisible();
         showTheCheater();
         chooseOneCardFromDeck();
+        testProbability();
     }
 
     public void initialiseCheatButtons() {
@@ -1311,15 +1319,20 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ImageView flop3 = findViewById(R.id.flop3);
         ImageView turn = findViewById(R.id.turn);
 
-        //Cheat-Funktion is just for this round
-        if (flop3.getVisibility() == View.VISIBLE && turn.getVisibility() == View.GONE) {
+        //Cheat-Funktion is just for the round when the 3 flop-cards are visible
+       //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     final ArrayList<Card> openedCards = new ArrayList<>(5);
+
                     //Adding the Playernames to our Array for the Dialog
                     addingPlayerNamesToArray();
+
+                    btnShowTableCard.setVisibility(View.GONE);
+                    btnProbability.setVisibility(View.GONE);
+                    btnChooseOneCardFromDeck.setVisibility(View.GONE);
 
                     AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
                     createDialog.setTitle("Choose the player you want");
@@ -1343,18 +1356,21 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                             }
 
                             dialogInterface.dismiss();
+
+
+                                ProbCheating probCheating = new ProbCheating();
+                                String probResult = probCheating.probCheat(openedCards);
+                                Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
+
                         }
                     });
+
+
                     final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
-                    findProbOfPlayerX.show();
 
-                    ProbCheating probCheating = new ProbCheating();
-                    String probResult = probCheating.probCheat(openedCards);
-                    Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
-
+                        findProbOfPlayerX.show();
                 }
             });
         }
-    }
-
+    //}
 }

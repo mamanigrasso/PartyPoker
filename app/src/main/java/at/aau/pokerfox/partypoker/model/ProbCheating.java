@@ -128,7 +128,7 @@ public class ProbCheating {
                 streetResult = 'B';  //4 Following Ranks
                 break;
             case 16:
-                streetResult = 'C'; //AceAtLast OR AceAtBeginning OR 2*2 Following Ranks with one distance 2 between OR doubled Ranks
+                streetResult = 'C'; //AceAtLast OR AceAtBeginning OR 2*2 Following Ranks with one distance 2 between
                 break;
             case 0:
                 streetResult = 'D'; //0% Street
@@ -144,17 +144,8 @@ public class ProbCheating {
         }
 
         if(streetResult=='B') {
-            if(testForSameSuit()==true) {
-                probStraightFlush = 2*4; //2 Outs - at the beginning and at the end
-            }
-        }
-        //if aceIsLastCardInStreet would be the we would count the probability of "RoyalFlushDraw"
-        if (streetResult=='C'&&aceIsLastCardInStreet == false) {
-
-            int counter = 0;
-            boolean sameSuit = false;
             boolean doubled = false;
-            boolean sameRank = false;
+            boolean sameSuit = false;
 
             for (int i = 1; i < streetCards.size(); i++) {
                 if (streetCards.get(i).getRank() == streetCards.get(i - 1).getRank() && doubled == false) {
@@ -173,8 +164,37 @@ public class ProbCheating {
             }
 
             if (sameSuit == true) {
+                probStraightFlush = 2 * 4; //2 Outs - at the beginning and at the end
+            }
+        }
+
+        //if aceIsLastCardInStreet would be the we would count the probability of "RoyalFlushDraw"
+        if (streetResult=='C'&&aceIsLastCardInStreet == false) {
+
+            int counter = 0;
+            boolean sameSuit = false;
+            boolean doubled = false;
+            boolean sameRank = false;
+
+            for (int i = 1; i < streetCards.size(); i++) {
+                if (streetCards.get(i).getRank() == streetCards.get(i - 1).getRank() && doubled == false) {
+                    doubled = true;
+                }
+
+                if (streetCards.get(i).getSuit() == streetCards.get(i - 1).getSuit()) {
+                    sameSuit = true;
+                } else if (streetCards.get(i).getSuit() != streetCards.get(i - 1).getSuit() && doubled == true) {
+                    if (streetCards.get(i).getSuit() == streetCards.get(i - 2).getSuit()) {
+                        sameSuit = true;
+                    }
+                } else {
+                        sameSuit = false;
+                        break;
+                }
+            }
+
+            if (sameSuit == true) {
                 probStraightFlush = 1 * 4; //1 Out if 1. aceIsAtBeginning; 2. one rank is doubled; 3. one distance 2
-                //System.out.println("Fat if-else works");
             }
         }
 
@@ -321,19 +341,20 @@ public class ProbCheating {
         if (streetDrawPossible == true && fixTogether == 3 && streetBreaker == 0) { //optimal Row of Ranks (distance 1 each between 4 cards)
             probForStreet = 8 * 4;      //8 outs because 4 suits below the lowest card and 4 suits above the highest card
             // System.out.println("optimal Row");
-        } else if (streetDrawPossible == true && fixTogether == 3 && aceAtFirst == true) {
+        } else if (streetDrawPossible == true && (fixTogether == 3 || fixTogether == 4) && aceAtFirst == true) {
             probForStreet = 4 * 4;     //4 outs because ace is at the Beginning of the street
             // System.out.println("Ace at beginning");
-        } else if (streetDrawPossible == true && (fixTogether == 3|| fixTogether == 4) && ((streetBreaker == 1 && doubledRanks == 0) ||
-                streetBreaker == 0 && doubledRanks ==1 )) {
+        } else if (streetDrawPossible == true && ((fixTogether == 3 && streetBreaker == 1 && doubledRanks == 0) || (
+                    fixTogether == 4 && streetBreaker == 1 && doubledRanks == 1))) {
             probForStreet = 4 * 4;     //4 outs because there has to be this rank in one of the 4 suits in the turn or the river
-            // System.out.println("Row with one distance 2 or one doubled rank");
+                // System.out.println("Row with one distance 2 or one doubled rank");
+        } else if (streetDrawPossible == true && fixTogether == 4 && doubledRanks ==1 && aceAtFirst == false && aceIsLastCardInStreet == false) {
+            probForStreet = 8 * 4;  // e.g. 6,7,7,8,9 --> 4 outs at below lowest and 4 outs above highest card
         } else if (aceIsLastCardInStreet == true &&streetCards.size()==4) {
             probForStreet = 4 * 4;     //4 outs because the ace has to be at last
-            // System.out.println("Ace at last - Draw");
+            //System.out.println("Ace at last - Draw");
         } else if ((streetDrawPossible == true && fixTogether == 4 && doubledRanks==0&&streetBreaker==0)||(aceIsLastCardInStreet==true &&streetCards.size()==5)) {
             probForStreet = 100;  //100% Street - with or without aceAtLast
-            // System.out.println("Street to 100 %");
         } else if (streetDrawPossible == false) {
             // System.out.println("No streetDraw there");
         }
@@ -418,8 +439,8 @@ public class ProbCheating {
         } else {
             showProb = "No mentionable profit probability";
         }
+            streetCards.clear();
 
-        streetCards.clear();
         return showProb;
     }
 
