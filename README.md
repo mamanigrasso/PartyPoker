@@ -1,5 +1,5 @@
-Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
-Code Quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=at.aau.pokerfox.partypoker&metric=alert_status)](https://sonarcloud.io/dashboard?id=at.aau.pokerfox.partypoker)
+* Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
+* Code quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=at.aau.pokerfox.partypoker&metric=alert_status)](https://sonarcloud.io/dashboard?id=at.aau.pokerfox.partypoker)
 
 # PARTYPOKER
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
@@ -39,11 +39,6 @@ PARTYPOKER can be played on any Android device, the only requirement is that Wif
 
 * [Android Studio](https://developer.android.com/studio/) 
 * [Salut Network](https://salut-a-toi.org/)
-
-## Other
-
-* Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
-* Code Quality : in progress - this is just a placeholder for the quality gate badge [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
 
 ## Authors
 
