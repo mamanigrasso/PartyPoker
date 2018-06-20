@@ -24,8 +24,8 @@ If the player is correct, then the round ends for the cheating player and the pl
 
 ## Preview Scene
 
-![Screenshot1](https://user-images.githubusercontent.com/37117215/41647391-861c76ee-7476-11e8-8847-9cc061b588f9.JPG =250x250)
-![Screenshot2](https://user-images.githubusercontent.com/37117215/41647225-16be96a6-7476-11e8-8d2a-731f99dd363b.JPG | width=100)
+![Screenshot1](https://user-images.githubusercontent.com/37117215/41647391-861c76ee-7476-11e8-8847-9cc061b588f9.JPG)
+![Screenshot2](https://user-images.githubusercontent.com/37117215/41647225-16be96a6-7476-11e8-8d2a-731f99dd363b.JPG)
 
 
 ## Technical Details
