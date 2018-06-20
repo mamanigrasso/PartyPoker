@@ -25,7 +25,7 @@ If the player is correct, then the round ends for the cheating player and the pl
 ## Preview Scene
 
 ![Screenshot1](https://user-images.githubusercontent.com/37117215/41647391-861c76ee-7476-11e8-8847-9cc061b588f9.JPG)
-![Screenshot2](https://user-images.githubusercontent.com/37117215/41647225-16be96a6-7476-11e8-8d2a-731f99dd363b.JPG)
+![Screenshot2](https://user-images.githubusercontent.com/37117215/41647760-6f851c00-7477-11e8-8c04-37480e60339b.JPG)
 
 
 ## Technical Details
