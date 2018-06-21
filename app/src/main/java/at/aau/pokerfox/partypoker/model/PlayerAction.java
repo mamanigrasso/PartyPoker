@@ -1,6 +1,8 @@
 package at.aau.pokerfox.partypoker.model;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -69,7 +71,7 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
             int bid = askForAction(integers[0]);
             return bid;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(e.getMessage(), "Error in PlayerAction");
         }
 
         return 0;

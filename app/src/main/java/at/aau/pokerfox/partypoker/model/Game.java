@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -218,7 +220,7 @@ public class Game {
         try {
             Thread.sleep(500);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(e.getMessage(), "Error in Game");
         }
     }
 
