@@ -217,7 +217,7 @@ public class Game {
 
         try {
             Thread.sleep(500);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -600,6 +600,6 @@ public class Game {
                 return p;
         }
 
-        return null;
+        return allPlayers.get(0);
     }
 }

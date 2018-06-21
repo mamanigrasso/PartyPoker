@@ -68,7 +68,7 @@ public class PlayerAction extends AsyncTask<Integer, Void, Integer> {
             Thread.sleep(1000);
             int bid = askForAction(integers[0]);
             return bid;
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
