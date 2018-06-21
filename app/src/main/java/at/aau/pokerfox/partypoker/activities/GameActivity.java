@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -227,7 +228,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         try {
             Thread.sleep(500); // give init game message some time to be transferred
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(e.getMessage(), "Error in GameActivity");
         }
     }
 

@@ -29,11 +29,11 @@ import at.aau.pokerfox.partypoker.model.DrawableCard;
 public class CardList_array_adapterActivity  extends ListActivity {
 
 
-    public static String resultCardID = "deadMansCardID";
-    public String[] cardnames;
-    public String[] cardIDs;
-    public ArrayList<Integer> cardDrawableIdList;
-    public ArrayList<DrawableCard> cardList;
+    public final static String resultCardID = "deadMansCardID";
+    private String[] cardnames;
+    private String[] cardIDs;
+    private ArrayList<Integer> cardDrawableIdList;
+    private ArrayList<DrawableCard> cardList;
 
 
     @Override
