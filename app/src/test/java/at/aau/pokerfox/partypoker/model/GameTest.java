@@ -56,7 +56,6 @@ public class GameTest {
         Game.init(SMALL_BLIND,100,CHIP_COUNT,6, isCheatingAllowed, new ModActSimulator());
     }
 
-    /*
     @After
     public void tearDown() throws Exception {
 //        players=null;
@@ -82,15 +81,21 @@ public class GameTest {
 
     @Test
     public void nextStepTest() throws Exception {  //runs threw the game logic until somebody folded
-//        Game.addPlayer(andy);
-//        Game.addPlayer(michael);
-//
-//           Game.getInstance().startGame();
-//        Game.getInstance().nextStep();
-//        Game.addPlayer(player1);
-//        Game.addPlayer(michael);
-//        Game.getInstance().nextStep();
-//        Game.getInstance().playerFolded();
+        andy.setCheckStatus(true);
+        michael.setCheckStatus(true);
+        mathias.setCheckStatus(true);
+        timo.setCheckStatus(true);
+        marco.setCheckStatus(true);
+        manuel.setCheckStatus(true);
+
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+        Game.addPlayer(mathias);
+        Game.addPlayer(timo);
+        Game.addPlayer(marco);
+        Game.addPlayer(manuel);
+
+        Game.getInstance().nextStep();
     }
 
     @Test
@@ -99,14 +104,18 @@ public class GameTest {
 
     @Test
     public void startGame() throws Exception {
-    }
-
-    @Test
-    public void addMyObserver() throws Exception {
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+        Game.addPlayer(mathias);
+        Game.addPlayer(timo);
+        Game.addPlayer(marco);
+        Game.addPlayer(manuel);
+        Game.getInstance().startRound();
     }
 
     @Test
     public void init() throws Exception {
+        Game.init(SMALL_BLIND,100,CHIP_COUNT,6, false, new ModActSimulator());
     }
 //
 //    @Test (expected =   IllegalStateException.class)
@@ -117,9 +126,9 @@ public class GameTest {
 
     @Test
     public void addPlayer() throws Exception {
-//        assertTrue(Game.addPlayer(andy));
+        assertTrue(Game.addPlayer(andy));
     }
-*/
+
     @Test
     public void addToMuchPlayers() throws Exception {
         assertTrue(Game.addPlayer(andy));
@@ -163,43 +172,7 @@ public class GameTest {
         assertTrue(Game.removePlayer(michael));
         assertFalse(Game.removePlayer(andy));   //last one can´t be removed so assertFalse
     }
-/*
-    @Test
-    public void addObserver() throws Exception {
-    }
 
-    @Test
-    public void deleteObserver() throws Exception {
-    }
-
-    @Test
-    public void notifyObservers() throws Exception {
-    }
-
-    @Test
-    public void notifyObservers1() throws Exception {
-    }
-
-    @Test
-    public void deleteObservers() throws Exception {
-    }
-
-    @Test
-    public void setChanged() throws Exception {
-    }
-
-    @Test
-    public void clearChanged() throws Exception {
-    }
-
-    @Test
-    public void hasChanged() throws Exception {
-    }
-
-    @Test
-    public void countObservers() throws Exception {
-    }
-*/
     @Test
     public void determineWinnerTestStreet() {
         Card card2 = new Card(0,2);
