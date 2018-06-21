@@ -226,7 +226,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         try {
             Thread.sleep(500); // give init game message some time to be transferred
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1154,7 +1154,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 return p;
         }
 
-        return null;
+        return players.get(0);
     }
 
     //Cheat-Funktion - "DeadMansHand"

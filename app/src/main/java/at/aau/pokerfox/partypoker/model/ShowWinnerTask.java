@@ -15,7 +15,7 @@ public class ShowWinnerTask extends AsyncTask<Integer, Void, Integer> {
     protected Integer doInBackground(Integer... integers) {
         try {
             Thread.sleep(5000);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
