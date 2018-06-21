@@ -49,6 +49,9 @@ public class PartyPokerApplication extends Application {
     }
 
     public static MessageHandler getMessageHandler() {
+        if (messageHandler == null)
+            return new MessageHandler();
+
         return messageHandler;
     }
 
