@@ -44,17 +44,23 @@ public class MessageHandler implements SalutDataCallback {
 
     public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToDevice(destinationDevice, message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToDevice(destinationDevice, message, new InnerSalutCallback(message));
     }
 
     public void sendMessageToAllClients(@NonNull final AbstractMessage message) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToAllDevices(message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToAllDevices(message, new InnerSalutCallback(message));
     }
 
     public void sendMessageToHost(@NonNull final AbstractMessage message) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToHost(message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToHost(message, new InnerSalutCallback(message));
     }
 
     private void handleMessage(String json) {
