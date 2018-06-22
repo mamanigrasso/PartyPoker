@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+import android.view.View;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -201,6 +203,7 @@ public class GameTest {
         assertEquals(1, winners.size()); // one winner
         assertEquals(andy, winners.get(0));  // andy is winner (hearts street)
     }
+
     @Test
     public void determineWinnerTestStraightFlush() {
         Card card2 = new Card(0,2);
@@ -228,6 +231,34 @@ public class GameTest {
 
         assertEquals(1, winners.size()); // one winner
         assertEquals(andy, winners.get(0));  // andy is winner (straight flush)
+    }
+    @Test
+    public void determineWinnerTestRoyalFlush() {
+        Card card2 = new Card(0,8);
+        Card card3 = new Card(0,9);
+        Card card4 = new Card(0,10);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(2,9);
+
+        andy.takeCard(new Card(0,11));
+        andy.takeCard(new Card(0,12));
+        players.add(andy);
+
+        michael.takeCard(new Card(1, 1));
+        michael.takeCard(new Card(3, 2));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (royal flush)
     }
     @Test
     public void determineWinnerTest4ofarow() {
@@ -368,6 +399,34 @@ public class GameTest {
 
         assertEquals(1, winners.size()); // one winner
         assertEquals(andy, winners.get(0));  // andy is winner (Full House)
+    }
+    @Test
+    public void determineWinnerTestonepair() {
+        Card card2 = new Card(1,1);
+        Card card3 = new Card(2,2);
+        Card card4 = new Card(3,3);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        andy.takeCard(new Card(3,6));
+        andy.takeCard(new Card(2,1));
+        players.add(andy);
+
+        michael.takeCard(new Card(2, 7));
+        michael.takeCard(new Card(0, 6));
+        players.add(michael);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+        ArrayList<Player> winners = Game.determineWinner(players,cards);
+
+        assertEquals(1, winners.size()); // one winner
+        assertEquals(andy, winners.get(0));  // andy is winner (One Pair)
     }
 
     @Test
@@ -524,5 +583,61 @@ public class GameTest {
         assertFalse(andy.isSmallBlind());
         assertTrue(andy.isBigBlind());
         assertEquals(CHIP_COUNT - SMALL_BLIND*2, andy.getChipCount());
+    }
+
+    @Test
+    public void isHostFalseTest() {
+
+        PartyPokerApplication.setIsHost(false);
+        assertFalse(PartyPokerApplication.isHost());
+    }
+    
+    @Test
+    public void playersBidTest() {
+        players.add(andy);
+        players.add(michael);
+        players.add(marco);
+        players.add(timo);
+        players.add(mathias);
+
+        Game.addPlayer(andy);
+        Game.addPlayer(michael);
+        Game.addPlayer(marco);
+        Game.addPlayer(timo);
+        Game.addPlayer(mathias);
+
+        Card card2 = new Card(1,2);
+        Card card3 = new Card(2,2);
+        Card card4 = new Card(3,9);
+        Card random8 = new Card(2,8);
+        Card random9 = new Card(3,9);
+
+        cards.clear();
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(random8);
+        cards.add(random9);
+
+
+        resetPlayerStates(players);
+
+        Game.getInstance().prepareRound();
+
+        Game.getInstance().playerBid(SMALL_BLIND);
+        Game.getInstance().playerBid(SMALL_BLIND + 50);
+        Game.getInstance().playerBid(CHIP_COUNT);
+
+        assertTrue(marco.getStatus() == "ALL-IN");
+        assertTrue(mathias.isDealer());
+    }
+
+    @Test
+    public void drawableCardTest() {
+        DrawableCard card = new DrawableCard("testcard", "testcardid", 1234);
+
+        assertTrue(card.getName() == "testcard");
+        assertTrue(card.getCardID() == "testcardid");
+        assertTrue(card.getImageID() == 1234);
     }
 }
