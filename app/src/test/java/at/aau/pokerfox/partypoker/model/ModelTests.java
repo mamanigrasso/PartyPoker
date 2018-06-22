@@ -49,6 +49,7 @@ public class ModelTests {
         testPlayer.setCheckStatus(true);
         testPlayer.setDeviceId("blubb");
         testPlayer.setIsDealer(false);
+        testPlayer.setFolded();
 
         assertEquals(cards, testPlayer.getCards());
         assertTrue(testPlayer.getCheatStatus());
@@ -57,7 +58,7 @@ public class ModelTests {
         assertTrue(testPlayer.getCheckStatus());
         assertTrue(testPlayer.getDeviceId() == "blubb");
         assertTrue(testPlayer.isDealer());
-
+        assertTrue(testPlayer.hasFolded());
 
     }
 }
