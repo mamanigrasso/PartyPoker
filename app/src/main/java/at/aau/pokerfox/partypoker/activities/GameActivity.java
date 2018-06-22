@@ -861,29 +861,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         // .. beliebig erweitern
     }
-
-    /*
-    public void turnMiddleCards() {
-        int[] myIds = {R.id.flop1, R.id.flop2, R.id.flop3, R.id.turn, R.id.river};
-        int[] drawableIds = {
-                this.communityCards.get(0).getDrawableID(),
-                this.communityCards.get(1).getDrawableID(),
-                this.communityCards.get(2).getDrawableID(),
-                this.communityCards.get(3).getDrawableID(),
-                this.communityCards.get(4).getDrawableID()
-        };
-        turnCards(myIds, drawableIds);
-    }
-
-    public void turnOwnCards() {
-        int[] myIds = {R.id.playerCard1, R.id.playerCard2};
-        int[] drawableIds = {
-                players.get(0).getCard1().getDrawableID(),
-                players.get(0).getCard2().getDrawableID()
-        };
-        turnCards(myIds, drawableIds);
-    }
-    */
+    
     public void turnCard(int viewId, int cardId) {
         int[] myIds = {viewId};
         int[] drawableIds = {cardId};
