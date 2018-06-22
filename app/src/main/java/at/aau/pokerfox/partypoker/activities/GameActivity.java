@@ -861,6 +861,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         // .. beliebig erweitern
     }
+
+    /*
     public void turnMiddleCards() {
         int[] myIds = {R.id.flop1, R.id.flop2, R.id.flop3, R.id.turn, R.id.river};
         int[] drawableIds = {
@@ -881,7 +883,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         };
         turnCards(myIds, drawableIds);
     }
-
+    */
     public void turnCard(int viewId, int cardId) {
         int[] myIds = {viewId};
         int[] drawableIds = {cardId};

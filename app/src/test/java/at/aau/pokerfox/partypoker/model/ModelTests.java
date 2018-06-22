@@ -7,6 +7,8 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
+import at.aau.pokerfox.partypoker.activities.GameActivity;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
@@ -65,6 +67,7 @@ public class ModelTests {
     @Test
     public void winnerTaskTest() {
         ShowWinnerTask showWinnerTask = new ShowWinnerTask();
+        GameActivity activity = new GameActivity();
         assertTrue(true);
     }
 }
