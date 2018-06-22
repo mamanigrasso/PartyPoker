@@ -144,10 +144,6 @@ public class Player implements Parcelable {
         return checkStatus;
     }
 
-    public PlayerAction getNewPlayerAction() {
-        return new PlayerAction(this);
-    }
-
     // Cheating-Area: Player1 loses Chips, if his cheating was blown by player2;
     // Or Player2 loses Chips, because he thought player1 was cheating, but he didn´t;
     public void reduceChipCount(int amountOfReduce) {

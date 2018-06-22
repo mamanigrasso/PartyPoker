@@ -62,4 +62,10 @@ public class ModelTests {
 
     }
 
+    @Test
+    public void winnerTaskTest() {
+        ShowWinnerTask showWinnerTask = new ShowWinnerTask();
+        showWinnerTask.execute();
+        assertTrue(true);
+    }
 }
