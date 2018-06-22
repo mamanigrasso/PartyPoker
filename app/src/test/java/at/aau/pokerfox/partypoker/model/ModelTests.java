@@ -61,4 +61,5 @@ public class ModelTests {
         assertTrue(testPlayer.hasFolded());
 
     }
+
 }
