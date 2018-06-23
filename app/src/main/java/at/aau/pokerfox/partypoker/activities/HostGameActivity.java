@@ -58,14 +58,6 @@ public class HostGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                MediaPlayer click = MediaPlayer.create(HostGameActivity.this,R.raw.click);
-//                click.start();
-//                btn_create.setEnabled(false);
-
-//                if (isNullOrEmpty(tableName)) {
-//                   Toast.makeText(HostGameActivity.this, "Tablename cannot be empty", Toast.LENGTH_SHORT).show();
-//                } else {
-
                 PartyPokerApplication.resetConnectedDevices();
                 Salut appNetwork = PartyPokerApplication.getNetwork();
 
@@ -126,15 +118,6 @@ public class HostGameActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private static boolean isNullOrEmpty(String s) {
-        boolean isNullOrEmpty = false;
-
-        if (s == null || s.equals(""))
-            isNullOrEmpty = true;
-
-        return isNullOrEmpty;
     }
 
     @Override

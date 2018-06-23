@@ -18,14 +18,6 @@ import at.aau.pokerfox.partypoker.model.DrawableCard;
  * Created by Andreas on 28.05.2018.
  */
 
-
-//This class on the one hand creates a new ArrayAdapter based on the "CardListAdapter-class"
-    //On the other hand it fills up an ArrayList named "cardList" which contains allDrawableCards that we have in our Deck
-    //Now the adapter uses this list for the creation of the adapter
-
-//In the end this class gives the result back which is being catched by the method "onActivityResult" at the GameActivity.class
-
-
 public class CardList_array_adapterActivity  extends ListActivity {
 
 
@@ -64,17 +56,14 @@ public class CardList_array_adapterActivity  extends ListActivity {
         cardDrawableIdList = new ArrayList<>();
         cardList = new ArrayList<>();
 
-        //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
-            cardnames[i]= getResources().getResourceEntryName(CardDeck.getDrawableIds().get(i)); //hopefully works
+            cardnames[i]= getResources().getResourceEntryName(CardDeck.getDrawableIds().get(i));
         }
 
-        //Fillig up with the CardIDs
         for (int i = 0; i<52; i++) {
             cardIDs[i]=CardDeck.getDrawableIds().get(i).toString();
         }
 
-        //Filling up with the DrawableObjects
         for (int i = 0; i<52; i++) {
             cardDrawableIdList.add(CardDeck.getDrawableIds().get(i));
         }
