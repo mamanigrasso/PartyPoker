@@ -64,7 +64,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     private final int MAX_PLAYER_COUNT = 6;
     private String[] playerNames;
-    //= {"Marco", "Mathias","Timo","Michael","Manuel","Andreas"};
 
     private boolean isCheatingAllowed = true;
     private ShowTheCheater showTheCheater;
@@ -86,7 +85,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
-    private int roundStep = 0; //=0 if no tablecards are visible, 1 if flop3, 2 if turn and 3 if river is visible while gaming
+    private int roundStep = 0;
 
     private TextView tvTablePot;
 
@@ -226,7 +225,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         Game.getInstance().sendInitGameMessage();
 
         try {
-            Thread.sleep(500); // give init game message some time to be transferred
+            Thread.sleep(500);
         } catch (Exception e) {
             Log.e(e.getMessage(), "Error in GameActivity");
         }
@@ -271,7 +270,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void setPlayerNames() {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))
                 tvPlayerNames.get(0).setText(p.getName());
             else
                 tvPlayerNames.get(i++).setText(p.getName());
@@ -298,7 +297,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void updatePlayerChipsViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))
                 tvPlayerChips.get(0).setText(p.getChipCount() + "");
             else
                 tvPlayerChips.get(i++).setText(p.getChipCount() + "");
@@ -325,7 +324,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void updatePlayerBidViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))
                 tvPlayerBids.get(0).setText(p.getCurrentBid() + "");
             else
                 tvPlayerBids.get(i++).setText(p.getCurrentBid() + "");
@@ -382,7 +381,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void updatePlayerRoleViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
+            if (p.getDeviceId().equals(myDeviceName)) {
                 ivPlayerBigBlinds.get(0).setVisibility(p.isBigBlind() ? View.VISIBLE : View.INVISIBLE);
                 ivPlayerSmallBlinds.get(0).setVisibility(p.isSmallBlind() ? View.VISIBLE : View.INVISIBLE);
                 ivPlayerDealers.get(0).setVisibility(p.isDealer() ? View.VISIBLE : View.INVISIBLE);
@@ -416,7 +415,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void updatePlayerStatusViews() {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName))    // if p is this player
+            if (p.getDeviceId().equals(myDeviceName))
                 tvPlayerStates.get(0).setText(p.getStatus());
             else
                 tvPlayerStates.get(i++).setText(p.getStatus());
@@ -458,7 +457,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             View.OnClickListener clickListener1 = new View.OnClickListener() {
                 public void onClick(View v) {
                     if (cheatModeEyeOn) {
-                        // CHECK IF CARD IS ACTIVE
                         turnCard(v.getId(), v.getId());
                         cheatModeEyeOn = false;
                     }
@@ -472,7 +470,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             View.OnClickListener clickListener2 = new View.OnClickListener() {
                 public void onClick(View v) {
                     if (cheatModeEyeOn) {
-                        // CHECK IF CARD ACTIVE
                         turnCard(v.getId(), v.getId());
                         cheatModeEyeOn = false;
                     }
@@ -486,7 +483,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void updatePlayerCardViews(boolean showAllOtherPlayerCards) {
         int i=1;
         for (Player p : players) {
-            if (p.getDeviceId().equals(myDeviceName)) {   // if p is this player
+            if (p.getDeviceId().equals(myDeviceName)) {
                 if (p.getCard1() == null)
                     ivPlayerCards1.get(0).setVisibility(View.INVISIBLE);
                 else {
@@ -717,7 +714,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         //prepareAndSendActionMessage(0, true, false);
         if (eyePossible) {
             cheatModeEyeOn = true;
-            //turnForXPlayers(false, false, false, false, false, false, false, false, false, true);
         }
     }
 
@@ -742,7 +738,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 this.sbMinAmount = minAmountToRaise;
             }
 
-            sbRaiseAmount.setMax((playerChips - sbMinAmount) / this.bigBlind);  // (max - min) / step
+            sbRaiseAmount.setMax((playerChips - sbMinAmount) / this.bigBlind);
 
             sbRaiseAmount.setVisibility(View.VISIBLE);
             raiseActive = true;
@@ -763,10 +759,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     protected void onResume()  {
 
         super.onResume();
-        // turnMiddleCards();
-        // turnOwnCards();
-        //turnForXPlayers(true, true, true,true,true,true,true,true,true,true);
-        //drawPlayerCards();
         registerForPokerBroadcasts(this.receiver);
     }
 
@@ -858,8 +850,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
-
-        // .. beliebig erweitern
     }
 
     public void turnCard(int viewId, int cardId) {
@@ -946,7 +936,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void handleNewCardMessage(Bundle bundle) {
         Card newHandCard = bundle.getParcelable(BroadcastKeys.CARD);
 
-        // update cards UI
     }
 
     private void handleUpdateTableMessage(Bundle bundle) {
@@ -1022,7 +1011,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
     }
 
-    //getting the needed Cards from the Class "Card" and link the image with the GUI
     public void drawPlayerCards () {
         int [] playerCards = {R.id.playerCard1, R.id.playerCard2};
         drawCards(playerCards);
@@ -1271,7 +1259,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ImageView flop3 = findViewById(R.id.flop3);
         ImageView turn = findViewById(R.id.turn);
 
-       //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

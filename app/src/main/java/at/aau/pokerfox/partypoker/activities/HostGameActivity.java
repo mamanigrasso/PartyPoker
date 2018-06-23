@@ -61,7 +61,6 @@ public class HostGameActivity extends AppCompatActivity {
                 PartyPokerApplication.resetConnectedDevices();
                 Salut appNetwork = PartyPokerApplication.getNetwork();
 
-//                if (appNetwork != null) appNetwork.stopNetworkService(true);
 
                     SalutDataReceiver dataReceiver = new SalutDataReceiver(HostGameActivity.this, PartyPokerApplication
                             .getMessageHandler());
@@ -97,7 +96,7 @@ public class HostGameActivity extends AppCompatActivity {
                     });
 
                 btn_create.setVisibility(View.INVISIBLE);
-//                }
+
             }
 
         });
