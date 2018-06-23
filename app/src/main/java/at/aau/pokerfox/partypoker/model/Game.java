@@ -83,7 +83,7 @@ public class Game {
             addPlayerBidsToPot();
 
             if (isThereAWinner()) {	// if all players have folded except one, we have a winner for this round -> so we start a new round
-                ;//startRound();
+
             } else if (stepID == 3) {
                 roundDoneCheckWinner();
             } else {
@@ -379,14 +379,6 @@ public class Game {
                 Player player = getNextPlayer();
                 Card nextCard = CardDeck.issueNextCardFromDeck();
                 player.takeCard(nextCard);
-
-                /*if (!player.isHost()) {
-                    NewCardMessage message = new NewCardMessage();
-                    message.NewHandCard = nextCard;
-                    PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
-                } else {
-                    maInterface.update();
-                }*/
             }
         }
     }
@@ -485,7 +477,7 @@ public class Game {
     public boolean isThereAWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
 
-        if (activePlayers.size() == 1) {	
+        if (activePlayers.size() == 1) {
             handleWinner(activePlayers);
             return true;
         }
@@ -556,7 +548,6 @@ public class Game {
         return communityCards;
     }
 
-    // just for testing!
     public void addCommunityCard(Card c) {
         communityCards.add(c);
     }

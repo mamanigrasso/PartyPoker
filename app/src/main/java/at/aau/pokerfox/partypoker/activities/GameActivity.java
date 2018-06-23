@@ -711,7 +711,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     public void buttonEyePressed(View v) {
-        //prepareAndSendActionMessage(0, true, false);
         if (eyePossible) {
             cheatModeEyeOn = true;
         }
@@ -1309,5 +1308,4 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 }
             });
         }
-    //}
 }

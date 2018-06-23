@@ -64,7 +64,6 @@ public class MessageHandler implements SalutDataCallback {
     }
 
     private void handleMessage(String json) {
-//        Gson gson = new GsonBuilder().registerTypeAdapter(MessageWrapper.class, typeAdapterFactory).create();
         Gson gson = new Gson();
         AbstractMessage message = null;
 
@@ -171,8 +170,6 @@ public class MessageHandler implements SalutDataCallback {
 
         @Override
         public void call() {
-//            Toast.makeText(PartyPokerApplication.getAppContext(), "Sending of " + message.toString() + " " +
-//                    "went wrong.", Toast.LENGTH_LONG).show();
             Log.e("sendinWentWrong", message.toString());
         }
     }
@@ -233,7 +230,6 @@ public class MessageHandler implements SalutDataCallback {
         try {
             Gson gson = new Gson();
             message = gson.fromJson(json, c);
-//            message = LoganSquare.parse(json, c);
         } catch (JsonSyntaxException e) {
             Log.e("parseJsonToMessageClass", e.getMessage());
         }
