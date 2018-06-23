@@ -777,7 +777,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     public void turnForXPlayers(boolean player1, boolean player2, boolean player3, boolean player4, boolean player5, boolean flop1, boolean flop2, boolean flop3, boolean turn, boolean river) {
-        // TODO: googlen ob nicht elegantere Variante in JAva möglich mit dynamischen arrays
+
         if (player1) {
             int[] myIds = {R.id.playerCard1, R.id.playerCard2};
             int[] drawableIds = {
@@ -861,7 +861,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         // .. beliebig erweitern
     }
-    
+
     public void turnCard(int viewId, int cardId) {
         int[] myIds = {viewId};
         int[] drawableIds = {cardId};
@@ -1028,21 +1028,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         drawCards(playerCards);
     }
 
-    public void drawfirstThreeCommunityCards() {
-        int [] firstThreeCommunityCards = {R.id.flop1, R.id.flop2, R.id.flop3};
-        drawCards(firstThreeCommunityCards);
-    }
-
-    public void drawTurnCard() {
-        int[] getTurn={R.id.turn};
-        drawCards(getTurn);
-    }
-
-    public void drawRiverCard() {
-        int[] getRiver ={R.id.river};
-        drawCards(getRiver);
-    }
-
     public void drawCards (int [] CardIDs) {
         for(int i : CardIDs) {
             final ImageView cardView = findViewById(i);
@@ -1061,8 +1046,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
     }
 
-    //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
-    //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
         if (isCheatingAllowed) {
             showTheCheater = new ShowTheCheater();
@@ -1095,7 +1078,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                         updatePlayerChipsViews();
 
                         dialogInterface.dismiss();
-                        if (cheater.getCheatStatus()) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                        if (cheater.getCheatStatus()) {
                             Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
@@ -1107,19 +1090,18 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 createDialog.setNegativeButton("Cancel", null);
                 createDialog.setCancelable(true);
 
-                final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
+                final AlertDialog chooseTheCheater = createDialog.create();
 
                 chooseTheCheater.show();
 
 
                 final Timer timeoutDialog = new Timer();
 
-                //Timer to close after 5 seconds
                 timeoutDialog.schedule(new TimerTask() {
 
                     public void run() {
-                        chooseTheCheater.dismiss(); //timeout after 5 seconds
-                        timeoutDialog.cancel(); //timer is canceled now
+                        chooseTheCheater.dismiss();
+                        timeoutDialog.cancel();
                     }
                 }, 5000);
 
@@ -1138,8 +1120,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         return players.get(0);
     }
 
-    //Cheat-Funktion - "DeadMansHand"
-    //You can choose any card of the deck and change it with one on your hand
     public void chooseOneCardFromDeck () {
 
         final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
@@ -1176,8 +1156,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         });
     }
 
-    //Belongs to Cheat-Funktion "DeadMansHand"
-    //if you get the result of the "CardList_array_adapterActivity" you choose the card on your hand you want to change then it changes
     @Override
     public void onActivityResult ( int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -1250,9 +1228,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         btnCheatingAlarm = findViewById(R.id.btn_cheatingalarm);
     }
 
-
-    //Hides All ShowTheCheater Buttons if Cheating is not allowed
-
     public void hideCheatButtons() {
         if(!isCheatingAllowed) {
             btnCheatingAlarm.setVisibility(View.GONE);
@@ -1263,7 +1238,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
     }
 
-    //Shows The ShowTheCheater Buttons if Cheating is allowed
     public void setCheatButtonsVisible () {
         if(isCheatingAllowed) {
             btnCheatingAlarm.setVisibility(View.VISIBLE);
@@ -1274,7 +1248,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             btnCheat.setVisibility(View.VISIBLE);
             btnCheat.setOnClickListener(new View.OnClickListener() {
 
-                // onClick on the "ShowTheCheater"-Button the showTheCheater-option can be chose
                 @Override
                 public void onClick(View view) {
                     if (cheatOptionsVisible) {
@@ -1293,14 +1266,11 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
     }
 
-    //Creates a dialog with the activePlayerNames and then calls the "probCheat"-Method in the "ProbCheating"-Class to find out
-    //the right winning-probability of the choosen player
     public void testProbability() {
 
         ImageView flop3 = findViewById(R.id.flop3);
         ImageView turn = findViewById(R.id.turn);
 
-        //Cheat-Funktion is just for the round when the 3 flop-cards are visible
        //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1308,7 +1278,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
                     final ArrayList<Card> openedCards = new ArrayList<>(5);
 
-                    //Adding the Playernames to our Array for the Dialog
                     addingPlayerNamesToArray();
 
                     btnShowTableCard.setVisibility(View.GONE);
@@ -1347,7 +1316,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                     });
 
 
-                    final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
+                    final AlertDialog findProbOfPlayerX = createDialog.create();
 
                         findProbOfPlayerX.show();
                 }
