@@ -85,7 +85,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
+    private boolean probCheatPossible = false;
     private int roundStep = 0;
+
 
     private TextView tvTablePot;
 
@@ -832,6 +834,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         }
         if (flop3) {
             roundStep = 1;
+            probCheatPossible=true;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -1202,9 +1205,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         initialiseCheatButtons();
         hideCheatButtons();
         setCheatButtonsVisible();
-        showTheCheater();
         chooseOneCardFromDeck();
         testProbability();
+        showTheCheater();
     }
 
     public void initialiseCheatButtons() {
@@ -1258,6 +1261,10 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ImageView flop3 = findViewById(R.id.flop3);
         ImageView turn = findViewById(R.id.turn);
 
+
+        //Cheat-Funktion is just for the round when the 3 flop-cards are visible
+      // if (lastCardCnt==3) {
+
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1308,4 +1315,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 }
             });
         }
+
+   // }
+
 }
