@@ -26,12 +26,12 @@ public class GameActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        gameActivity=gameActivityActivityTestRule.getActivity();
+        gameActivity = gameActivityActivityTestRule.getActivity();
     }
 
     @After
     public void tearDown() throws Exception {
-        gameActivity=null;
+        gameActivity = null;
     }
 
 
