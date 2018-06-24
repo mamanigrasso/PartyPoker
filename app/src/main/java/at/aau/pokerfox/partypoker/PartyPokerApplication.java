@@ -10,6 +10,7 @@ import com.peak.salut.SalutDevice;
 import com.peak.salut.SalutServiceData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import at.aau.pokerfox.partypoker.model.network.MessageHandler;
 import at.aau.pokerfox.partypoker.model.network.NetworkHelper;
@@ -49,8 +50,10 @@ public class PartyPokerApplication extends Application {
     }
 
     public static MessageHandler getMessageHandler() {
-        if (messageHandler == null)
-            return new MessageHandler();
+        if (messageHandler == null) {
+            messageHandler = new MessageHandler();
+            return messageHandler;
+        }
 
         return messageHandler;
     }
@@ -83,7 +86,7 @@ public class PartyPokerApplication extends Application {
         connectedDevices.add(device);
     }
 
-    public static ArrayList<SalutDevice> getConnectedDevices() {
+    public static List<SalutDevice> getConnectedDevices() {
         return connectedDevices;
     }
 
