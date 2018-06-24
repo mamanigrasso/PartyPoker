@@ -390,12 +390,6 @@ public class ProbCheating {
         }
     }
 
-    public void iterateThrewStreetCards () {
-        for (int i = 0; i < streetCards.size(); i++) {
-            System.out.println(streetCards.get(i).getRank());
-        }
-    }
-
     public String probCheat(ArrayList<Card> allCardsOfCheater) {
 
         this.allCardsOfCheater = allCardsOfCheater;

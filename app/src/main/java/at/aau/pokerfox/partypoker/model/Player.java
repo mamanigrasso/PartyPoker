@@ -87,10 +87,6 @@ public class Player implements Parcelable {
         return hasFolded;
     }
 
-    public boolean getIsAllIn() {
-        return isAllIn;
-    }
-
     public void setIsAllIn(boolean allIn) {
         isAllIn = allIn;
     }

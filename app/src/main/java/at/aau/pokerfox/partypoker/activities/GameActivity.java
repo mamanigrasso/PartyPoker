@@ -62,11 +62,9 @@ import static at.aau.pokerfox.partypoker.model.network.Broadcasts.YOUR_TURN_MESS
 
 public class GameActivity extends AppCompatActivity implements ModActInterface {
 
-    private final int MAX_PLAYER_COUNT = 6;
     private String[] playerNames;
 
     private boolean isCheatingAllowed = true;
-    private ShowTheCheater showTheCheater;
     private ArrayList<Player> players = new ArrayList<>();
     private ArrayList<Card> communityCards = new ArrayList<>();
     private PokerBroadcastReceiver receiver;
@@ -85,90 +83,29 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
-    private boolean probCheatPossible = false;
-    private int roundStep = 0;
 
 
     private TextView tvTablePot;
 
-    private TextView tvPlayer1Name;
-    private TextView tvPlayer2Name;
-    private TextView tvPlayer3Name;
-    private TextView tvPlayer4Name;
-    private TextView tvPlayer5Name;
-    private TextView tvPlayer6Name;
     private ArrayList<TextView> tvPlayerNames;
 
-    private TextView tvPlayer1Chips;
-    private TextView tvPlayer2Chips;
-    private TextView tvPlayer3Chips;
-    private TextView tvPlayer4Chips;
-    private TextView tvPlayer5Chips;
-    private TextView tvPlayer6Chips;
     private ArrayList<TextView> tvPlayerChips;
 
-    private TextView tvPlayer1Bid;
-    private TextView tvPlayer2Bid;
-    private TextView tvPlayer3Bid;
-    private TextView tvPlayer4Bid;
-    private TextView tvPlayer5Bid;
-    private TextView tvPlayer6Bid;
     private ArrayList<TextView> tvPlayerBids;
 
-    private ImageView ivPlayer1BigBlind;
-    private ImageView ivPlayer2BigBlind;
-    private ImageView ivPlayer3BigBlind;
-    private ImageView ivPlayer4BigBlind;
-    private ImageView ivPlayer5BigBlind;
-    private ImageView ivPlayer6BigBlind;
     private ArrayList<ImageView> ivPlayerBigBlinds;
 
-    private ImageView ivPlayer1SmallBlind;
-    private ImageView ivPlayer2SmallBlind;
-    private ImageView ivPlayer3SmallBlind;
-    private ImageView ivPlayer4SmallBlind;
-    private ImageView ivPlayer5SmallBlind;
-    private ImageView ivPlayer6SmallBlind;
     private ArrayList<ImageView> ivPlayerSmallBlinds;
 
-    private ImageView ivPlayer1Dealer;
-    private ImageView ivPlayer2Dealer;
-    private ImageView ivPlayer3Dealer;
-    private ImageView ivPlayer4Dealer;
-    private ImageView ivPlayer5Dealer;
-    private ImageView ivPlayer6Dealer;
     private ArrayList<ImageView> ivPlayerDealers;
 
-    private TextView tvPlayer1Status;
-    private TextView tvPlayer2Status;
-    private TextView tvPlayer3Status;
-    private TextView tvPlayer4Status;
-    private TextView tvPlayer5Status;
-    private TextView tvPlayer6Status;
     private ArrayList<TextView> tvPlayerStates;
 
-    private ImageView ivPlayer1Card1;
-    private ImageView ivPlayer1Card2;
-    private ImageView ivPlayer2Card1;
-    private ImageView ivPlayer2Card2;
-    private ImageView ivPlayer3Card1;
-    private ImageView ivPlayer3Card2;
-    private ImageView ivPlayer4Card1;
-    private ImageView ivPlayer4Card2;
-    private ImageView ivPlayer5Card1;
-    private ImageView ivPlayer5Card2;
-    private ImageView ivPlayer6Card1;
-    private ImageView ivPlayer6Card2;
     private ArrayList<ImageView> ivPlayerCards1;
     private ArrayList<ImageView> ivPlayerCards2;
 
     private SeekBar sbRaiseAmount = null;
 
-    private ImageView ivTableCard1;
-    private ImageView ivTableCard2;
-    private ImageView ivTableCard3;
-    private ImageView ivTableCard4;
-    private ImageView ivTableCard5;
     private ArrayList<ImageView> ivTableCards;
 
     private Button buttonCheck;
@@ -253,12 +190,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerNameViews() {
-        tvPlayer1Name = findViewById(R.id.txtPlayer);
-        tvPlayer2Name = findViewById(R.id.txtOpponent1);
-        tvPlayer3Name = findViewById(R.id.txtOpponent2);
-        tvPlayer4Name = findViewById(R.id.txtOpponent3);
-        tvPlayer5Name = findViewById(R.id.txtOpponent4);
-        tvPlayer6Name = findViewById(R.id.txtOpponent5);
+        TextView tvPlayer1Name = findViewById(R.id.txtPlayer);
+        TextView tvPlayer2Name = findViewById(R.id.txtOpponent1);
+        TextView tvPlayer3Name = findViewById(R.id.txtOpponent2);
+        TextView tvPlayer4Name = findViewById(R.id.txtOpponent3);
+        TextView tvPlayer5Name = findViewById(R.id.txtOpponent4);
+        TextView tvPlayer6Name = findViewById(R.id.txtOpponent5);
 
         tvPlayerNames = new ArrayList<TextView>();
         tvPlayerNames.add(tvPlayer1Name);
@@ -280,12 +217,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerChipsViews() {
-        tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
-        tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
-        tvPlayer3Chips = findViewById(R.id.txt_chipsop2);
-        tvPlayer4Chips = findViewById(R.id.txt_chipsop3);
-        tvPlayer5Chips = findViewById(R.id.txt_chipsop4);
-        tvPlayer6Chips = findViewById(R.id.txt_chipsop5);
+        TextView tvPlayer1Chips = findViewById(R.id.txt_chipsplayer);
+        TextView tvPlayer2Chips = findViewById(R.id.txt_chipsop1);
+        TextView tvPlayer3Chips = findViewById(R.id.txt_chipsop2);
+        TextView tvPlayer4Chips = findViewById(R.id.txt_chipsop3);
+        TextView tvPlayer5Chips = findViewById(R.id.txt_chipsop4);
+        TextView tvPlayer6Chips = findViewById(R.id.txt_chipsop5);
 
         tvPlayerChips = new ArrayList<TextView>();
         tvPlayerChips.add(tvPlayer1Chips);
@@ -307,12 +244,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerBidViews() {
-        tvPlayer1Bid = findViewById(R.id.gebotself);
-        tvPlayer2Bid = findViewById(R.id.gebotop1);
-        tvPlayer3Bid = findViewById(R.id.gebotop2);
-        tvPlayer4Bid = findViewById(R.id.gebotop3);
-        tvPlayer5Bid = findViewById(R.id.gebotop4);
-        tvPlayer6Bid = findViewById(R.id.gebotop5);
+        TextView tvPlayer1Bid = findViewById(R.id.gebotself);
+        TextView tvPlayer2Bid = findViewById(R.id.gebotop1);
+        TextView tvPlayer3Bid = findViewById(R.id.gebotop2);
+        TextView tvPlayer4Bid = findViewById(R.id.gebotop3);
+        TextView tvPlayer5Bid = findViewById(R.id.gebotop4);
+        TextView tvPlayer6Bid = findViewById(R.id.gebotop5);
 
         tvPlayerBids = new ArrayList<TextView>();
         tvPlayerBids.add(tvPlayer1Bid);
@@ -334,12 +271,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerRoleViews() {
-        ivPlayer1BigBlind = findViewById(R.id.img_bigblindopself);
-        ivPlayer2BigBlind = findViewById(R.id.img_bigblindop1);
-        ivPlayer3BigBlind = findViewById(R.id.img_bigblindop2);
-        ivPlayer4BigBlind = findViewById(R.id.img_bigblindop3);
-        ivPlayer5BigBlind = findViewById(R.id.img_bigblindop4);
-        ivPlayer6BigBlind = findViewById(R.id.img_bigblindop5);
+        ImageView ivPlayer1BigBlind = findViewById(R.id.img_bigblindopself);
+        ImageView ivPlayer2BigBlind = findViewById(R.id.img_bigblindop1);
+        ImageView ivPlayer3BigBlind = findViewById(R.id.img_bigblindop2);
+        ImageView ivPlayer4BigBlind = findViewById(R.id.img_bigblindop3);
+        ImageView ivPlayer5BigBlind = findViewById(R.id.img_bigblindop4);
+        ImageView ivPlayer6BigBlind = findViewById(R.id.img_bigblindop5);
 
         ivPlayerBigBlinds = new ArrayList<ImageView>();
         ivPlayerBigBlinds.add(ivPlayer1BigBlind);
@@ -349,12 +286,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ivPlayerBigBlinds.add(ivPlayer5BigBlind);
         ivPlayerBigBlinds.add(ivPlayer6BigBlind);
 
-        ivPlayer1SmallBlind = findViewById(R.id.img_smallblindself);
-        ivPlayer2SmallBlind = findViewById(R.id.img_smallblindop1);
-        ivPlayer3SmallBlind = findViewById(R.id.img_smallblindop2);
-        ivPlayer4SmallBlind = findViewById(R.id.img_smallblindop3);
-        ivPlayer5SmallBlind = findViewById(R.id.img_smallblindop4);
-        ivPlayer6SmallBlind = findViewById(R.id.img_smallblindop5);
+        ImageView ivPlayer1SmallBlind = findViewById(R.id.img_smallblindself);
+        ImageView ivPlayer2SmallBlind = findViewById(R.id.img_smallblindop1);
+        ImageView ivPlayer3SmallBlind = findViewById(R.id.img_smallblindop2);
+        ImageView ivPlayer4SmallBlind = findViewById(R.id.img_smallblindop3);
+        ImageView ivPlayer5SmallBlind = findViewById(R.id.img_smallblindop4);
+        ImageView ivPlayer6SmallBlind = findViewById(R.id.img_smallblindop5);
 
         ivPlayerSmallBlinds = new ArrayList<ImageView>();
         ivPlayerSmallBlinds.add(ivPlayer1SmallBlind);
@@ -364,12 +301,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         ivPlayerSmallBlinds.add(ivPlayer5SmallBlind);
         ivPlayerSmallBlinds.add(ivPlayer6SmallBlind);
 
-        ivPlayer1Dealer = findViewById(R.id.img_dealerbtnself);
-        ivPlayer2Dealer = findViewById(R.id.img_dealerbtnop1);
-        ivPlayer3Dealer = findViewById(R.id.img_dealerbtnop2);
-        ivPlayer4Dealer = findViewById(R.id.img_dealerbtnop3);
-        ivPlayer5Dealer = findViewById(R.id.img_dealerbtnop4);
-        ivPlayer6Dealer = findViewById(R.id.img_dealerbtnop5);
+        ImageView ivPlayer1Dealer = findViewById(R.id.img_dealerbtnself);
+        ImageView ivPlayer2Dealer = findViewById(R.id.img_dealerbtnop1);
+        ImageView ivPlayer3Dealer = findViewById(R.id.img_dealerbtnop2);
+        ImageView ivPlayer4Dealer = findViewById(R.id.img_dealerbtnop3);
+        ImageView ivPlayer5Dealer = findViewById(R.id.img_dealerbtnop4);
+        ImageView ivPlayer6Dealer = findViewById(R.id.img_dealerbtnop5);
 
         ivPlayerDealers = new ArrayList<ImageView>();
         ivPlayerDealers.add(ivPlayer1Dealer);
@@ -398,12 +335,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerStatusViews() {
-        tvPlayer1Status = findViewById(R.id.text_checkself);
-        tvPlayer2Status = findViewById(R.id.text_checkop1);
-        tvPlayer3Status = findViewById(R.id.text_checkop2);
-        tvPlayer4Status = findViewById(R.id.text_checkop3);
-        tvPlayer5Status = findViewById(R.id.text_checkop4);
-        tvPlayer6Status = findViewById(R.id.text_checkop5);
+        TextView tvPlayer1Status = findViewById(R.id.text_checkself);
+        TextView tvPlayer2Status = findViewById(R.id.text_checkop1);
+        TextView tvPlayer3Status = findViewById(R.id.text_checkop2);
+        TextView tvPlayer4Status = findViewById(R.id.text_checkop3);
+        TextView tvPlayer5Status = findViewById(R.id.text_checkop4);
+        TextView tvPlayer6Status = findViewById(R.id.text_checkop5);
 
         tvPlayerStates = new ArrayList<TextView>();
         tvPlayerStates.add(tvPlayer1Status);
@@ -425,18 +362,18 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createPlayerCardViews() {
-        ivPlayer1Card1 = findViewById(R.id.playerCard1);
-        ivPlayer1Card2 = findViewById(R.id.playerCard2);
-        ivPlayer2Card1 = findViewById(R.id.opponent1Card1);
-        ivPlayer2Card2 = findViewById(R.id.opponent1Card2);
-        ivPlayer3Card1 = findViewById(R.id.opponent2Card1);
-        ivPlayer3Card2 = findViewById(R.id.opponent2Card2);
-        ivPlayer4Card1 = findViewById(R.id.opponent3Card1);
-        ivPlayer4Card2 = findViewById(R.id.opponent3Card2);
-        ivPlayer5Card1 = findViewById(R.id.opponent4Card1);
-        ivPlayer5Card2 = findViewById(R.id.opponent4Card2);
-        ivPlayer6Card1 = findViewById(R.id.opponent5Card1);
-        ivPlayer6Card2 = findViewById(R.id.opponent5Card2);
+        ImageView ivPlayer1Card1 = findViewById(R.id.playerCard1);
+        ImageView ivPlayer1Card2 = findViewById(R.id.playerCard2);
+        ImageView ivPlayer2Card1 = findViewById(R.id.opponent1Card1);
+        ImageView ivPlayer2Card2 = findViewById(R.id.opponent1Card2);
+        ImageView ivPlayer3Card1 = findViewById(R.id.opponent2Card1);
+        ImageView ivPlayer3Card2 = findViewById(R.id.opponent2Card2);
+        ImageView ivPlayer4Card1 = findViewById(R.id.opponent3Card1);
+        ImageView ivPlayer4Card2 = findViewById(R.id.opponent3Card2);
+        ImageView ivPlayer5Card1 = findViewById(R.id.opponent4Card1);
+        ImageView ivPlayer5Card2 = findViewById(R.id.opponent4Card2);
+        ImageView ivPlayer6Card1 = findViewById(R.id.opponent5Card1);
+        ImageView ivPlayer6Card2 = findViewById(R.id.opponent5Card2);
 
         ivPlayerCards1 = new ArrayList<ImageView>();
         ivPlayerCards1.add(ivPlayer1Card1);
@@ -532,11 +469,11 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void createTableCardViews() {
-        ivTableCard1 = findViewById(R.id.flop1);
-        ivTableCard2 = findViewById(R.id.flop2);
-        ivTableCard3 = findViewById(R.id.flop3);
-        ivTableCard4 = findViewById(R.id.turn);
-        ivTableCard5 = findViewById(R.id.river);
+        ImageView ivTableCard1 = findViewById(R.id.flop1);
+        ImageView ivTableCard2 = findViewById(R.id.flop2);
+        ImageView ivTableCard3 = findViewById(R.id.flop3);
+        ImageView ivTableCard4 = findViewById(R.id.turn);
+        ImageView ivTableCard5 = findViewById(R.id.river);
 
         ivTableCards = new ArrayList<ImageView>();
         ivTableCards.add(ivTableCard1);
@@ -584,7 +521,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             ivPlayerCards2.get(i).setVisibility(View.VISIBLE);
         }
 
-        for (int i=players.size(); i < MAX_PLAYER_COUNT; i++) {
+        int MAX_PLAYER_COUNT = 6;
+        for (int i = players.size(); i < MAX_PLAYER_COUNT; i++) {
             tvPlayerNames.get(i).setVisibility(View.INVISIBLE);
             tvPlayerChips.get(i).setVisibility(View.INVISIBLE);
             tvPlayerBids.get(i).setVisibility(View.INVISIBLE);
@@ -829,8 +767,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop3) {
-            roundStep = 1;
-            probCheatPossible=true;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -1031,7 +967,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     public void showTheCheater () {
         if (isCheatingAllowed) {
-            showTheCheater = new ShowTheCheater();
+            ShowTheCheater showTheCheater = new ShowTheCheater();
         }
 
         btnCheatingAlarm.setOnClickListener(new View.OnClickListener() {
@@ -1105,7 +1041,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     public void chooseOneCardFromDeck () {
 
-        final Intent deadMansIntent = new Intent(this, CardList_array_adapterActivity.class);
+        final Intent deadMansIntent = new Intent(this, CardListArrayAdapterActivity.class);
 
 
         btnChooseOneCardFromDeck.setOnClickListener(new View.OnClickListener() {
@@ -1143,7 +1079,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     public void onActivityResult ( int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            final String CardId = data.getStringExtra(CardList_array_adapterActivity.resultCardID);
+            final String CardId = data.getStringExtra(CardListArrayAdapterActivity.RESULT_CARD_ID);
 
 
             btnShowTableCard.setVisibility(View.GONE);

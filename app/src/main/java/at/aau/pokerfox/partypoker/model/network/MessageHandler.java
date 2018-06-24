@@ -27,20 +27,8 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
-import at.aau.pokerfox.partypoker.model.network.typeadapters.RuntimeTypeAdapterFactory;
 
 public class MessageHandler implements SalutDataCallback {
-
-    private final RuntimeTypeAdapterFactory typeAdapterFactory = RuntimeTypeAdapterFactory
-            .of(AbstractMessage.class, "type")
-            .registerSubtype(ActionMessage.class)
-            .registerSubtype(ReplaceCardMessage.class)
-            .registerSubtype(CheatPenaltyMessage.class)
-            .registerSubtype(InitGameMessage.class)
-            .registerSubtype(NewCardMessage.class)
-            .registerSubtype(YourTurnMessage.class)
-            .registerSubtype(UpdateTableMessage.class)
-            .registerSubtype(ShowWinnerMessage.class);
 
     public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
         Salut network = PartyPokerApplication.getNetwork();

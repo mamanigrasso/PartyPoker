@@ -17,13 +17,10 @@ import at.aau.pokerfox.partypoker.model.DrawableCard;
  * Created by Andreas on 28.05.2018.
  */
 
-public class CardList_array_adapterActivity  extends ListActivity {
+public class CardListArrayAdapterActivity extends ListActivity {
 
 
-    public final static String resultCardID = "deadMansCardID";
-    private String[] cardnames;
-    private String[] cardIDs;
-    private ArrayList<Integer> cardDrawableIdList;
+    public final static String RESULT_CARD_ID = "deadMansCardID";
     private ArrayList<DrawableCard> cardList;
 
 
@@ -41,7 +38,7 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
                 Intent returnIntent = new Intent();
 
-                returnIntent.putExtra(resultCardID,d.getCardID());
+                returnIntent.putExtra(RESULT_CARD_ID,d.getCardID());
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -50,9 +47,9 @@ public class CardList_array_adapterActivity  extends ListActivity {
 
     public void fillUpCardList() {
 
-        cardnames = new String [52];
-        cardIDs = new String [52];
-        cardDrawableIdList = new ArrayList<>();
+        String[] cardnames = new String[52];
+        String[] cardIDs = new String[52];
+        ArrayList<Integer> cardDrawableIdList = new ArrayList<>();
         cardList = new ArrayList<>();
 
         for (int i = 0; i<52; i++) {

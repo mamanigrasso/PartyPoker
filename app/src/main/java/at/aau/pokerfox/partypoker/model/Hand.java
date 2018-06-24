@@ -230,12 +230,6 @@ public class Hand {
         return s;
     }
 
-    void displayAll()
-    {
-        for (int x=0; x<5; x++)
-            System.out.println(cards[x]);
-    }
-
     int compareTo(Hand that)
     {
         for (int x=0; x<6; x++)
