@@ -171,7 +171,6 @@ public class Card implements Parcelable {
         this.drawableID = in.readInt();
     }
 
-    //to get the id of one specific card use: "R.drawable.clubs_4" for example.
     public static int getCards () {
 
         return CardDeck.getRandomId(CardDeck.getDrawableIds());

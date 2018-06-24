@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model.network.typeadapters;
 
+import android.util.Log;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -22,7 +24,7 @@ public final class MessageInterfaceAdapter implements JsonDeserializer<MessageIn
 
             return (MessageInterface) context.deserialize(json, cls);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.e(e.getMessage(), "Error in MessageInterfaceAdapter");
         }
 
         return null;

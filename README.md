@@ -1,10 +1,13 @@
-# POKERFOX
+[![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=at.aau.pokerfox.partypoker&metric=alert_status)](https://sonarcloud.io/dashboard?id=at.aau.pokerfox.partypoker)
+
+# PARTYPOKER
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)
 
 ## Game Description
 
 
-POKERFOX is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
+PARTYPOKER is a round / real-time card game for two to six players with cheating features to increase the fun factor. 
 Each player gets two cards and betting chips. The players put a different amount of money (chips) on the odds of winning 
 their own hand without knowing about the opponent's hand. The chips of a game (pot) used by the players wins the player with 
 the strongest hand. This opens up the opportunity to win by bluffing even with weak cards. 
@@ -24,22 +27,18 @@ If the player is correct, then the round ends for the cheating player and the pl
 
 ## Preview Scene
 
-![Screenshot](https://user-images.githubusercontent.com/37117215/41621921-5c842cea-740e-11e8-86eb-37aca6399de9.JPG)
+![Screenshot1](https://user-images.githubusercontent.com/37117215/41647391-861c76ee-7476-11e8-8847-9cc061b588f9.JPG)
+![Screenshot2](https://user-images.githubusercontent.com/37117215/41647760-6f851c00-7477-11e8-8c04-37480e60339b.JPG)
 
 
 ## Technical Details
 
-POKERFOX is a multiplayer Android game which was developed using Android Studio and the programming language
+PARTYPOKER is a multiplayer Android game which was developed using Android Studio and the programming language
 Java and Android SDK version 26. The multiplayer component was implemented using the 3rd party framework called Salut.
-PokerFox can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
+PARTYPOKER can be played on any Android device, the only requirement is that WifiDirect is enabled on al participating devices.
 
 * [Android Studio](https://developer.android.com/studio/) 
 * [Salut Network](https://salut-a-toi.org/)
-
-## Other
-
-* Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
-* Code Quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sonarqube.examples.standard-sqscanner-travis-project&metric=alert_status)](https://sonarcloud.io/dashboard/index/com.sonarqube.examples.standard-sqscanner-travis-project)
 
 ## Authors
 

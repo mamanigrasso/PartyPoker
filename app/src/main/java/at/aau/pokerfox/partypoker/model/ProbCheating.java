@@ -340,23 +340,18 @@ public class ProbCheating {
 
         if (streetDrawPossible == true && fixTogether == 3 && streetBreaker == 0) { //optimal Row of Ranks (distance 1 each between 4 cards)
             probForStreet = 8 * 4;      //8 outs because 4 suits below the lowest card and 4 suits above the highest card
-            // System.out.println("optimal Row");
         } else if (streetDrawPossible == true && (fixTogether == 3 || fixTogether == 4) && aceAtFirst == true) {
             probForStreet = 4 * 4;     //4 outs because ace is at the Beginning of the street
-            // System.out.println("Ace at beginning");
         } else if (streetDrawPossible == true && ((fixTogether == 3 && streetBreaker == 1 && doubledRanks == 0) || (
                     fixTogether == 4 && streetBreaker == 1 && doubledRanks == 1))) {
             probForStreet = 4 * 4;     //4 outs because there has to be this rank in one of the 4 suits in the turn or the river
-                // System.out.println("Row with one distance 2 or one doubled rank");
         } else if (streetDrawPossible == true && fixTogether == 4 && doubledRanks ==1 && aceAtFirst == false && aceIsLastCardInStreet == false) {
             probForStreet = 8 * 4;  // e.g. 6,7,7,8,9 --> 4 outs at below lowest and 4 outs above highest card
         } else if (aceIsLastCardInStreet == true &&streetCards.size()==4) {
             probForStreet = 4 * 4;     //4 outs because the ace has to be at last
-            //System.out.println("Ace at last - Draw");
         } else if ((streetDrawPossible == true && fixTogether == 4 && doubledRanks==0&&streetBreaker==0)||(aceIsLastCardInStreet==true &&streetCards.size()==5)) {
             probForStreet = 100;  //100% Street - with or without aceAtLast
         } else if (streetDrawPossible == false) {
-            // System.out.println("No streetDraw there");
         }
 
         return probForStreet;

@@ -44,21 +44,26 @@ public class MessageHandler implements SalutDataCallback {
 
     public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToDevice(destinationDevice, message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToDevice(destinationDevice, message, new InnerSalutCallback(message));
     }
 
     public void sendMessageToAllClients(@NonNull final AbstractMessage message) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToAllDevices(message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToAllDevices(message, new InnerSalutCallback(message));
     }
 
     public void sendMessageToHost(@NonNull final AbstractMessage message) {
         Salut network = PartyPokerApplication.getNetwork();
-        network.sendToHost(message, new InnerSalutCallback(message));
+
+        if (network != null)
+            network.sendToHost(message, new InnerSalutCallback(message));
     }
 
     private void handleMessage(String json) {
-//        Gson gson = new GsonBuilder().registerTypeAdapter(MessageWrapper.class, typeAdapterFactory).create();
         Gson gson = new Gson();
         AbstractMessage message = null;
 
@@ -165,8 +170,6 @@ public class MessageHandler implements SalutDataCallback {
 
         @Override
         public void call() {
-//            Toast.makeText(PartyPokerApplication.getAppContext(), "Sending of " + message.toString() + " " +
-//                    "went wrong.", Toast.LENGTH_LONG).show();
             Log.e("sendinWentWrong", message.toString());
         }
     }
@@ -227,7 +230,6 @@ public class MessageHandler implements SalutDataCallback {
         try {
             Gson gson = new Gson();
             message = gson.fromJson(json, c);
-//            message = LoganSquare.parse(json, c);
         } catch (JsonSyntaxException e) {
             Log.e("parseJsonToMessageClass", e.getMessage());
         }

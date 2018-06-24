@@ -1,5 +1,7 @@
 package at.aau.pokerfox.partypoker.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -81,22 +83,22 @@ public class Game {
             addPlayerBidsToPot();
 
             if (isThereAWinner()) {	// if all players have folded except one, we have a winner for this round -> so we start a new round
-                ;//startRound();
-            } else if (stepID == 3) {   // last step of this round finished
+
+            } else if (stepID == 3) {
                 roundDoneCheckWinner();
             } else {
                 maxBid = 0;
-                showCommunityCards(stepID++); // either flop, turn or river
-                getDealer(); // move dealer to head of queue
+                showCommunityCards(stepID++);
+                getDealer();
 
-                for (Player player : allPlayers) { // all players need to be asked again now
+                for (Player player : allPlayers) {
                     player.setCheckStatus(false);
                     player.setStatus("");
                 }
 
                 nextStep();
             }
-        } else { // not all players aligned yet, so ask next player for action
+        } else {
             currentPlayer = getNextPlayer();
 
             int minAmountToRaise = maxBid-currentPlayer.getCurrentBid();
@@ -125,14 +127,14 @@ public class Game {
         int playersFolded = 0;
 
         for (Player p : allPlayers) {
-            if (p.isAllIn() || p.hasFolded() || p.getCheckStatus()) // if player is all in, has folded or has called maxBid
+            if (p.isAllIn() || p.hasFolded() || p.getCheckStatus())
                 playersToAct--;
 
             if (p.hasFolded())
                 playersFolded++;
         }
 
-        return playersToAct <= 0 || playersFolded == allPlayers.size()-1;   // if no player can act anymore or all players have folded except one
+        return playersToAct <= 0 || playersFolded == allPlayers.size()-1;
     }
   
     public void playerBid(int amount) {
@@ -140,11 +142,11 @@ public class Game {
             currentPlayer.setStatus("Checked");
         else if (amount == maxBid)
             currentPlayer.setStatus("Called");
-        else if (amount > maxBid) { // player raised, we have a new max to bid
+        else if (amount > maxBid) {
             maxBid = amount;
             currentPlayer.setStatus("Raised");
 
-            for (Player player : allPlayers) { // all other players need to be asked again now
+            for (Player player : allPlayers) {
                 if (player != currentPlayer && !player.hasFolded()) {
                     player.setCheckStatus(false);
                     player.setStatus("");
@@ -177,11 +179,11 @@ public class Game {
         ArrayList<Player> activePlayers = getActivePlayers();
         ArrayList<Player> winners = new ArrayList<Player>();
 
-        if (activePlayers.size() > 1) { // there is still more than one player active, so we need to check hands to figure out the winner(s)
+        if (activePlayers.size() > 1) {
             winners = determineWinner(activePlayers, communityCards);
         } else if (activePlayers.size() == 1) {
             winners.add(activePlayers.get(0));
-        } else {	// actually impossible!
+        } else {
             throw new IllegalStateException("No active player anymore!!");
         }
 
@@ -195,7 +197,7 @@ public class Game {
         message.FinalWinner = false;
         String winnerInfo = "";
 
-        int winAmount = potSize / winners.size(); // in case of split pot
+        int winAmount = potSize / winners.size();
 
         for (Player winner : winners) {
             String winningHand = getWinningHandString(winner);
@@ -205,7 +207,7 @@ public class Game {
 
         Player finalWinner = kickOutLosersAndCheckFinalWinner(winners);
 
-        if (finalWinner != null) { // do we have a final winner?
+        if (finalWinner != null) {
             message.FinalWinner = true;
             winnerInfo = "We have a final WINNER: " + finalWinner.getName() + "!!!";
         }
@@ -217,15 +219,15 @@ public class Game {
 
         try {
             Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(e.getMessage(), "Error in Game");
         }
     }
 
     public String getWinningHandString(Player winner) {
         ArrayList<Card> cards = new ArrayList<Card>();
 
-        if (communityCards.size() == 5) {	// if all community cards are shown
+        if (communityCards.size() == 5) {
             cards.addAll(communityCards);
             cards.add(winner.getCard1());
             cards.add(winner.getCard2());
@@ -275,7 +277,7 @@ public class Game {
             return true;
         }
 
-        return false; // max player count already reached!
+        return false;
     }
 
     /**
@@ -292,7 +294,7 @@ public class Game {
             return true;
         }
 
-        return false; // only one player left, cannot be deleted!
+        return false;
     }
 
     /**
@@ -377,14 +379,6 @@ public class Game {
                 Player player = getNextPlayer();
                 Card nextCard = CardDeck.issueNextCardFromDeck();
                 player.takeCard(nextCard);
-
-                /*if (!player.isHost()) {
-                    NewCardMessage message = new NewCardMessage();
-                    message.NewHandCard = nextCard;
-                    PartyPokerApplication.getMessageHandler().sendMessageToDevice(message, player.getDevice());
-                } else {
-                    maInterface.update();
-                }*/
             }
         }
     }
@@ -483,7 +477,7 @@ public class Game {
     public boolean isThereAWinner() {
         ArrayList<Player> activePlayers = getActivePlayers();
 
-        if (activePlayers.size() == 1) {	// we have a winner for this round!
+        if (activePlayers.size() == 1) {
             handleWinner(activePlayers);
             return true;
         }
@@ -554,7 +548,6 @@ public class Game {
         return communityCards;
     }
 
-    // just for testing!
     public void addCommunityCard(Card c) {
         communityCards.add(c);
     }
@@ -600,6 +593,6 @@ public class Game {
                 return p;
         }
 
-        return null;
+        return allPlayers.get(0);
     }
 }

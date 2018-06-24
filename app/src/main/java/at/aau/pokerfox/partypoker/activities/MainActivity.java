@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
 
-//                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
-//                click.start();
             }
 
 
@@ -68,16 +66,6 @@ public class MainActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent("TablechoiceActivity");
-//                Bundle bundle = new Bundle();
-//                bundle.putString(BUNDLE_PLAYER_NAME, playerName);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-
-//                MediaPlayer click1 = MediaPlayer.create(MainActivity.this,R.raw.click);
-//                click1.start();
-//                MediaPlayer click = MediaPlayer.create(MainActivity.this,R.raw.click);
-//                click.start();
                 discoverAndJoinService();
             }
         });
