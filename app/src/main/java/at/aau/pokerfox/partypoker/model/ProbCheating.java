@@ -171,10 +171,8 @@ public class ProbCheating {
         //if aceIsLastCardInStreet would be the we would count the probability of "RoyalFlushDraw"
         if (streetResult=='C'&&aceIsLastCardInStreet == false) {
 
-            int counter = 0;
             boolean sameSuit = false;
             boolean doubled = false;
-            boolean sameRank = false;
 
             for (int i = 1; i < streetCards.size(); i++) {
                 if (streetCards.get(i).getRank() == streetCards.get(i - 1).getRank() && doubled == false) {
@@ -357,18 +355,14 @@ public class ProbCheating {
         return probForStreet;
 
     }
-    //Ace is the special card because, it can be there at the beginning or at the end of the street
-    //the code above checks if it is an the beginning now we need to check it at the end of the street
     public void aceAtLast () {
 
 
-        int counterForAceStreet = 0;  //has to be 3 that a streetDraw is possible
-        //First check, if we have a street with ace at last
-        if (allCardsOfCheater.get(0).getRank() == 0) { //the ace has the rank 0 so we need to check it
+        int counterForAceStreet = 0;
+        if (allCardsOfCheater.get(0).getRank() == 0) {
             counterForAceStreet++;
         }
-        //Then we take a for-loop to check the higher ranks
-        for (int z = 9; z < 13; z++) { //We check from Rank 9 to 12
+        for (int z = 9; z < 13; z++) {
             for (int i = 1; i < allCardsOfCheater.size(); i++) {
                 if (allCardsOfCheater.get(i).getRank() == z) {
                     counterForAceStreet++;
@@ -376,14 +370,12 @@ public class ProbCheating {
             }
         }
 
-        //Alltogether the counterForAceStreet has to be at least 4 to call it "aceAtLastStreetDraw"
         if (counterForAceStreet >= 4) {
             aceIsLastCardInStreet=true;
         } else {
             aceIsLastCardInStreet=false;
         }
 
-        //If we have this street, we can add the Cheater-Cards to the streetCards
         if (aceIsLastCardInStreet==true) {
             if (allCardsOfCheater.get(0).getRank() == 0) {
                 streetCards.add(allCardsOfCheater.get(0));
@@ -398,14 +390,12 @@ public class ProbCheating {
         }
     }
 
-    //Method to iterate threw the added street-cards just for fixing bucks
     public void iterateThrewStreetCards () {
         for (int i = 0; i < streetCards.size(); i++) {
             System.out.println(streetCards.get(i).getRank());
         }
     }
 
-    //Shows the prob. from the best combination you can get with one missing card (=DRAW) - appart from FullHouse-Quads (look comment in the method)
     public String probCheat(ArrayList<Card> allCardsOfCheater) {
 
         this.allCardsOfCheater = allCardsOfCheater;
@@ -418,7 +408,6 @@ public class ProbCheating {
         } else if (probStraightFlushDraw() != 0) {
             streetCards.clear();
             showProb = "Probability for Straight Flush: " + probStraightFlushDraw() + "%";
-            //If we have a Full House we don´t want to know the prob of a Quads, because we have 100% Full-House
         } else if (probFourOfAKindDraw(counterOfSameRank()) != 0 && probFullHouseDraw(counterOfSameRank())!=100) {
             showProb = "Probability for Quads: " + probFourOfAKindDraw(counterOfSameRank()) + "%";
         } else if (probFullHouseDraw(counterOfSameRank()) != 0) {
@@ -439,7 +428,6 @@ public class ProbCheating {
         return showProb;
     }
 
-    //Just for test-cases
     public void addCardsToArrayList(Card c) {
         allCardsOfCheater.add(c);
     }

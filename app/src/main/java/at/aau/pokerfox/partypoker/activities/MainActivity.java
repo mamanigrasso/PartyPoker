@@ -14,8 +14,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.widget.Toast;
 
 

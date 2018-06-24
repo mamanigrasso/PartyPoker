@@ -85,7 +85,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
-    private int roundStep = 0;
 
     private TextView tvTablePot;
 
@@ -719,11 +718,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     public void buttonRaisePressed(View v) {
         if (!raiseActive) {
             int playerChips = 0;
-            int playerBid = 0;
             for (Player p : players) {
                 if (p.getDeviceId().equals(myDeviceName)) {
                     playerChips = p.getChipCount();
-                    playerBid = p.getCurrentBid();
                 }
             }
 
@@ -818,33 +815,28 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop1) {
-            roundStep = 1;
             int[] myIds = {R.id.flop1};
             int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (flop2) {
-            roundStep = 1;
             int[] myIds = {R.id.flop2};
             int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (flop3) {
-            roundStep = 1;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (turn) {
-            roundStep=2;
             int[] myIds = {R.id.turn};
             int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
-            roundStep=3;
             int[] myIds = {R.id.river};
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -921,9 +913,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void handleInitGameMessage(Bundle bundle) {
-        ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
+        ArrayList<Player> playersList = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
-        int bigBlind = bundle.getInt(BroadcastKeys.BIG_BLIND);
+        int bigBlindList = bundle.getInt(BroadcastKeys.BIG_BLIND);
 
         this.players = players;
         this.bigBlind = bigBlind;
@@ -933,13 +925,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void handleNewCardMessage(Bundle bundle) {
-        Card newHandCard = bundle.getParcelable(BroadcastKeys.CARD);
 
     }
 
     private void handleUpdateTableMessage(Bundle bundle) {
         this.communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
-        ArrayList<Player> players = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
+        ArrayList<Player> playersList = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
         if (lastCardCnt < this.communityCards.size()) {
             lastCardCnt = this.communityCards.size();
@@ -1015,8 +1006,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         drawCards(playerCards);
     }
 
-    public void drawCards (int [] CardIDs) {
-        for(int i : CardIDs) {
+    public void drawCards (int [] cardIDs) {
+        for(int i : cardIDs) {
             final ImageView cardView = findViewById(i);
             cardView.setImageDrawable(getDrawable(Card.getCards()));
         }
@@ -1124,7 +1115,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     public void initSeekBar() {
         sbRaiseAmount = findViewById(R.id.sbRaiseAmount);
-        final int bigBlind = this.bigBlind;
+        final int bigBlindFinal = this.bigBlind;
 
         sbRaiseAmount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -1138,7 +1129,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-                raiseAmount = sbMinAmount + (bigBlind*progress);
+                raiseAmount = sbMinAmount + (bigBlindFinal*progress);
             }
         });
     }
@@ -1254,9 +1245,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     public void testProbability() {
-
-        ImageView flop3 = findViewById(R.id.flop3);
-        ImageView turn = findViewById(R.id.turn);
 
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override

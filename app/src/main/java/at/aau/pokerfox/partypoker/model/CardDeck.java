@@ -9,12 +9,10 @@ import at.aau.pokerfox.partypoker.R;
 public class CardDeck {
 
     private static ArrayList<Card> cards;
-    private static CardDeck DECK = new CardDeck();
     private static ArrayList<Integer> drawableIdList;
     private static Random random = new Random();
 
     private CardDeck() {
-        drawableIdList = new ArrayList<Integer>();
         drawableIdList.add(R.drawable.hearts_2);
         drawableIdList.add(R.drawable.hearts_3);
         drawableIdList.add(R.drawable.hearts_4);

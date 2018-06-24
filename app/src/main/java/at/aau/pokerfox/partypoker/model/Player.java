@@ -2,13 +2,7 @@ package at.aau.pokerfox.partypoker.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
-import android.os.AsyncTask;
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.peak.salut.SalutDevice;

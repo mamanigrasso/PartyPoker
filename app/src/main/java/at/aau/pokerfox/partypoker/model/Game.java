@@ -7,7 +7,6 @@ import java.util.LinkedList;
 
 import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
-import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;

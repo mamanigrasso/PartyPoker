@@ -1,10 +1,8 @@
 package at.aau.pokerfox.partypoker.activities;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,7 +31,6 @@ public class HostGameActivity extends AppCompatActivity {
     public static final String BUNDLE_PLAYER_POT = "BUNDLE_PLAYER_POT";
     public static final String BUNDLE_CHEATING_ALLOWED = "CHEATING_ALLOWED";
 
-    private String tableName = "";
     private Salut network;
 
     @Override
@@ -45,22 +42,18 @@ public class HostGameActivity extends AppCompatActivity {
 
         final String playerName = getIntent().getExtras().getString(MainActivity.BUNDLE_PLAYER_NAME);
 
-        final EditText txt_tablename = findViewById(R.id.txt_table);
-        CheckBox cbx_cheaton = findViewById(R.id.box_cheatOn);
-        final EditText txt_bigblind = findViewById(R.id.txt_bigblind);
-        final EditText txt_playerpot= findViewById(R.id.txt_playerpot);
-        final CheckBox box_cheaton = findViewById(R.id.box_cheatOn);
-        final Button btn_create = findViewById(R.id.btn_create);
+        final EditText txtBigblind = findViewById(R.id.txt_bigblind);
+        final EditText txtPlayerpot= findViewById(R.id.txt_playerpot);
+        final CheckBox boxCheaton = findViewById(R.id.box_cheatOn);
+        final Button btnCreate = findViewById(R.id.btn_create);
         final TextView txtConnectedPlayers = findViewById(R.id.txt_connected_players);
         final Button btnStartGame = findViewById(R.id.btn_start_game);
 
-        btn_create.setOnClickListener(new View.OnClickListener() {
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 PartyPokerApplication.resetConnectedDevices();
-                Salut appNetwork = PartyPokerApplication.getNetwork();
-
 
                     SalutDataReceiver dataReceiver = new SalutDataReceiver(HostGameActivity.this, PartyPokerApplication
                             .getMessageHandler());
@@ -95,7 +88,7 @@ public class HostGameActivity extends AppCompatActivity {
                         }
                     });
 
-                btn_create.setVisibility(View.INVISIBLE);
+                btnCreate.setVisibility(View.INVISIBLE);
 
             }
 
@@ -108,9 +101,9 @@ public class HostGameActivity extends AppCompatActivity {
                 Intent intent = new Intent("GameActivity");
 
                 Bundle bundle = new Bundle();
-                bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txt_bigblind.getText().toString()));
-                bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txt_playerpot.getText().toString()));
-                bundle.putBoolean(BUNDLE_CHEATING_ALLOWED, box_cheaton.isChecked());
+                bundle.putInt(BUNDLE_BIG_BLIND, Integer.parseInt(txtBigblind.getText().toString()));
+                bundle.putInt(BUNDLE_PLAYER_POT, Integer.parseInt(txtPlayerpot.getText().toString()));
+                bundle.putBoolean(BUNDLE_CHEATING_ALLOWED, boxCheaton.isChecked());
                 bundle.putString(BUNDLE_PLAYER_NAME, playerName);
                 bundle.putString(BUNDLE_DEVICE_NAME, network.thisDevice.deviceName);
                 intent.putExtras(bundle);

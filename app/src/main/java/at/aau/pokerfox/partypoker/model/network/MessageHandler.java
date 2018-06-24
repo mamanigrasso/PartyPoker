@@ -64,7 +64,6 @@ public class MessageHandler implements SalutDataCallback {
     }
 
     private void handleMessage(String json) {
-        Gson gson = new Gson();
         AbstractMessage message = null;
 
         try {

@@ -40,8 +40,8 @@ public class PartyPokerApplication extends Application {
         return isHost;
     }
 
-    public static void setIsHost(boolean _ishost) {
-        isHost = _ishost;
+    public static void setIsHost(boolean ishost) {
+        isHost = ishost;
     }
 
     public static Context getAppContext() {
