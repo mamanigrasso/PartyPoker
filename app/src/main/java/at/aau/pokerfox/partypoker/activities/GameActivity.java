@@ -854,8 +854,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     private void handleInitGameMessage(Bundle bundle) {
+        ArrayList<Player> playersList = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         isCheatingAllowed = bundle.getBoolean(BroadcastKeys.CHEAT_ON);
+        int bigBlindList = bundle.getInt(BroadcastKeys.BIG_BLIND);
 
+        this.players = players;
+        this.bigBlind = bigBlind;
 
         initGameMessageReceived = true;
         initGame();
@@ -867,6 +871,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
     private void handleUpdateTableMessage(Bundle bundle) {
         this.communityCards = bundle.getParcelableArrayList(BroadcastKeys.CARDS);
+        ArrayList<Player> playersList = bundle.getParcelableArrayList(BroadcastKeys.PLAYERS);
         potSize = bundle.getInt(BroadcastKeys.NEW_POT);
         if (lastCardCnt < this.communityCards.size()) {
             lastCardCnt = this.communityCards.size();
@@ -879,7 +884,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
         if (!initGameMessageReceived)
             throw new RuntimeException("Communication Error! InitGameMessage not received!");
-
+        this.players = players;
         updateViews();
     }
 
@@ -1179,6 +1184,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     }
 
     public void testProbability() {
+        ImageView flop3 = findViewById(R.id.flop3);
+        ImageView turn = findViewById(R.id.turn);
 
 
             btnProbability.setOnClickListener(new View.OnClickListener() {
