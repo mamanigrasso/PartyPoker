@@ -1347,13 +1347,13 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                                     openedCards.add(communityCards.get(0));
                                     openedCards.add(communityCards.get(1));
                                     openedCards.add(communityCards.get(2));
-                                    Player cheater = new Player();
+                                    int i = 0;
                                     for(Player p: players) {
                                         if(p.getName().equals(myPlayerName)) {
-                                            cheater=p;
+                                            players.get(i).setCheatStatus(true);
                                         }
+                                        i++;
                                     }
-                                    cheater.setCheatStatus(true);
                                 }
 
                                 dialogInterface.dismiss();
