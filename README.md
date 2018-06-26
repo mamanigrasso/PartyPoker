@@ -15,9 +15,9 @@ The goal is to win as many chips as possible from other players.
 
 ## Cheating
 
-Cheating is allowed once per round. Click on the Cheat button to select one of the three different cheat options(EYE, DEAD MANS HAND or Probability).
-But beware, other players can clap you up by clicking the big round red button with the call sign and selecting the player who cheats.
-If the player is correct, then the round ends for the cheating player and the player who pressed the button gets 1/5 of the chips from the player who has cheated.
+Cheating can be allowed or not by the host. Click on the Cheat button to select one of the three different cheat options(EYE, DEAD MANS HAND or Probability).
+But be aware, other players can give you a high penalty by clicking the big red button with the call sign and selecting you as the "cheater".
+If the opposite player was right you have to pay him/her 1/3 of your chips, but if the opposite player was wrong, you get 1/3 of his/her chips.
 
 * Eye - The Eye Cheat option gives you access to one card of any player you choose.
 
