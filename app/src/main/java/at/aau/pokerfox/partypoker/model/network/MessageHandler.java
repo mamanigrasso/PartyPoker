@@ -27,8 +27,20 @@ import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.ShowWinnerMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.UpdateTableMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.YourTurnMessage;
+import at.aau.pokerfox.partypoker.model.network.typeadapters.RuntimeTypeAdapterFactory;
 
 public class MessageHandler implements SalutDataCallback {
+
+    private final RuntimeTypeAdapterFactory typeAdapterFactory = RuntimeTypeAdapterFactory
+            .of(AbstractMessage.class, "type")
+            .registerSubtype(ActionMessage.class)
+            .registerSubtype(ReplaceCardMessage.class)
+            .registerSubtype(CheatPenaltyMessage.class)
+            .registerSubtype(InitGameMessage.class)
+            .registerSubtype(NewCardMessage.class)
+            .registerSubtype(YourTurnMessage.class)
+            .registerSubtype(UpdateTableMessage.class)
+            .registerSubtype(ShowWinnerMessage.class);
 
     public void sendMessageToDevice(@NonNull final AbstractMessage message, @Nullable SalutDevice destinationDevice) {
         Salut network = PartyPokerApplication.getNetwork();
@@ -52,6 +64,8 @@ public class MessageHandler implements SalutDataCallback {
     }
 
     private void handleMessage(String json) {
+//        Gson gson = new GsonBuilder().registerTypeAdapter(MessageWrapper.class, typeAdapterFactory).create();
+        Gson gson = new Gson();
         AbstractMessage message = null;
 
         try {
@@ -157,6 +171,8 @@ public class MessageHandler implements SalutDataCallback {
 
         @Override
         public void call() {
+//            Toast.makeText(PartyPokerApplication.getAppContext(), "Sending of " + message.toString() + " " +
+//                    "went wrong.", Toast.LENGTH_LONG).show();
             Log.e("sendinWentWrong", message.toString());
         }
     }
@@ -217,6 +233,7 @@ public class MessageHandler implements SalutDataCallback {
         try {
             Gson gson = new Gson();
             message = gson.fromJson(json, c);
+//            message = LoganSquare.parse(json, c);
         } catch (JsonSyntaxException e) {
             Log.e("parseJsonToMessageClass", e.getMessage());
         }

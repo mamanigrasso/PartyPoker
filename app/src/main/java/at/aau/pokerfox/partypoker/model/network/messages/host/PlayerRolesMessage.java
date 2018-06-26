@@ -1,4 +1,4 @@
-package at.aau.pokerfox.partypoker.model.network.messages.client;
+package at.aau.pokerfox.partypoker.model.network.messages.host;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -7,22 +7,19 @@ import at.aau.pokerfox.partypoker.model.Player;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.MessageTypes;
 
-/**
- * Created by Manuel on 09.06.2018.
- */
-
 @JsonObject
-public class CheatPenaltyMessage extends AbstractMessage {
-    public CheatPenaltyMessage() {
-        this.MessageType = MessageTypes.CHEAT_PENALTY;
+public class PlayerRolesMessage extends AbstractMessage {
+
+    public PlayerRolesMessage() {
+        this.MessageType = MessageTypes.PLAYER_ROLES;
     }
 
     @JsonField
-    public String complainer;
+    public Boolean IsSmallBlind;
 
     @JsonField
-    public String cheater;
+    public Boolean IsBigBlind;
 
     @JsonField
-    public Boolean penalizeCheater;
+    public Boolean IsDealer;
 }

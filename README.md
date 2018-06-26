@@ -1,5 +1,5 @@
-[![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=at.aau.pokerfox.partypoker&metric=alert_status)](https://sonarcloud.io/dashboard?id=at.aau.pokerfox.partypoker)
+* Build : [![Build status](https://travis-ci.com/mamanigrasso/PartyPoker.svg?branch=master)](https://travis-ci.com/mamanigrasso/PartyPoker) 
+* Code quality : [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=at.aau.pokerfox.partypoker&metric=alert_status)](https://sonarcloud.io/dashboard?id=at.aau.pokerfox.partypoker)
 
 # PARTYPOKER
 ![Pokerfox](https://github.com/mamanigrasso/PartyPoker/blob/master/app/src/main/res/drawable-xxhdpi/fox.png)

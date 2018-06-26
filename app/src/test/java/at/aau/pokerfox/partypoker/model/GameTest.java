@@ -584,6 +584,13 @@ public class GameTest {
         assertTrue(andy.isBigBlind());
         assertEquals(CHIP_COUNT - SMALL_BLIND*2, andy.getChipCount());
     }
+
+    @Test
+    public void isHostFalseTest() {
+
+        PartyPokerApplication.setIsHost(false);
+        assertFalse(PartyPokerApplication.isHost());
+    }
     
     @Test
     public void playersBidTest() {
@@ -621,7 +628,7 @@ public class GameTest {
         Game.getInstance().playerBid(SMALL_BLIND + 50);
         Game.getInstance().playerBid(CHIP_COUNT);
 
-        assertTrue(marco.getStatus().equals("ALL-IN"));
+        assertTrue(marco.getStatus() == "ALL-IN");
         assertTrue(mathias.isDealer());
     }
 
@@ -629,8 +636,8 @@ public class GameTest {
     public void drawableCardTest() {
         DrawableCard card = new DrawableCard("testcard", "testcardid", 1234);
 
-        assertTrue(card.getName().equals("testcard"));
-        assertTrue(card.getCardID().equals("testcardid"));
+        assertTrue(card.getName() == "testcard");
+        assertTrue(card.getCardID() == "testcardid");
         assertTrue(card.getImageID() == 1234);
     }
 }

@@ -1,5 +1,6 @@
 package at.aau.pokerfox.partypoker.model;
 
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by Andreas on 28.05.2018.

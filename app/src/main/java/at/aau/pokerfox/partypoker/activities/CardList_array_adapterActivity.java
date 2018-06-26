@@ -2,6 +2,7 @@ package at.aau.pokerfox.partypoker.activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +18,21 @@ import at.aau.pokerfox.partypoker.model.DrawableCard;
  * Created by Andreas on 28.05.2018.
  */
 
-public class CardListArrayAdapterActivity extends ListActivity {
+
+//This class on the one hand creates a new ArrayAdapter based on the "CardListAdapter-class"
+    //On the other hand it fills up an ArrayList named "cardList" which contains allDrawableCards that we have in our Deck
+    //Now the adapter uses this list for the creation of the adapter
+
+//In the end this class gives the result back which is being catched by the method "onActivityResult" at the GameActivity.class
 
 
-    public final static String RESULT_CARD_ID = "deadMansCardID";
+public class CardList_array_adapterActivity  extends ListActivity {
+
+
+    public final static String resultCardID = "deadMansCardID";
+    private String[] cardnames;
+    private String[] cardIDs;
+    private ArrayList<Integer> cardDrawableIdList;
     private ArrayList<DrawableCard> cardList;
 
 
@@ -38,7 +50,7 @@ public class CardListArrayAdapterActivity extends ListActivity {
 
                 Intent returnIntent = new Intent();
 
-                returnIntent.putExtra(RESULT_CARD_ID,d.getCardID());
+                returnIntent.putExtra(resultCardID,d.getCardID());
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -47,19 +59,22 @@ public class CardListArrayAdapterActivity extends ListActivity {
 
     public void fillUpCardList() {
 
-        String[] cardnames = new String[52];
-        String[] cardIDs = new String[52];
-        ArrayList<Integer> cardDrawableIdList = new ArrayList<>();
+        cardnames = new String [52];
+        cardIDs = new String [52];
+        cardDrawableIdList = new ArrayList<>();
         cardList = new ArrayList<>();
 
+        //Filling up with the CardNames
         for (int i = 0; i<52; i++) {
-            cardnames[i]= getResources().getResourceEntryName(CardDeck.getDrawableIds().get(i));
+            cardnames[i]= getResources().getResourceEntryName(CardDeck.getDrawableIds().get(i)); //hopefully works
         }
 
+        //Fillig up with the CardIDs
         for (int i = 0; i<52; i++) {
             cardIDs[i]=CardDeck.getDrawableIds().get(i).toString();
         }
 
+        //Filling up with the DrawableObjects
         for (int i = 0; i<52; i++) {
             cardDrawableIdList.add(CardDeck.getDrawableIds().get(i));
         }

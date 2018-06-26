@@ -2,7 +2,13 @@ package at.aau.pokerfox.partypoker.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import android.os.AsyncTask;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.peak.salut.SalutDevice;
@@ -87,6 +93,10 @@ public class Player implements Parcelable {
         return hasFolded;
     }
 
+    public boolean getIsAllIn() {
+        return isAllIn;
+    }
+
     public void setIsAllIn(boolean allIn) {
         isAllIn = allIn;
     }
@@ -134,19 +144,28 @@ public class Player implements Parcelable {
         return checkStatus;
     }
 
+    public PlayerAction getNewPlayerAction() {
+        return new PlayerAction(this);
+    }
 
+    // Cheating-Area: Player1 loses Chips, if his cheating was blown by player2;
+    // Or Player2 loses Chips, because he thought player1 was cheating, but he didn´t;
     public void reduceChipCount(int amountOfReduce) {
         chipCount-=amountOfReduce;
     }
 
+    // Cheating-Area: Opposite to @reduceChipCount;
+    // The lost chips of one player go to his opposite
     public void raiseChipCount(int amountOfRaise) {
         chipCount+=amountOfRaise;
     }
 
+    //Cheating-Area: Set @true, if the player has Cheated in the last round;
     public void setCheatStatus(boolean hasCheated) {
         this.cheatStatus=hasCheated;
     }
 
+    //Cheating-Area: Gets the status, if the player has Cheated in the last round;
     public boolean getCheatStatus() {
         return cheatStatus;
     }

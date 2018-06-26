@@ -31,7 +31,7 @@ public class CardListAdapter extends ArrayAdapter<DrawableCard> {
     }
 
     public CardListAdapter(Activity contextActivity, ArrayList <DrawableCard> list) {
-        super(contextActivity, R.layout.activity_cardimages_row, list);
+        super(contextActivity, R.layout.activity_cardimages_row, list); //is not an inner class
         this.contextActivity = contextActivity;
         this.list = list;
     }
