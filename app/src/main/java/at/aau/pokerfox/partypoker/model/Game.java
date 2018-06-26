@@ -604,4 +604,8 @@ public class Game {
 
         return allPlayers.get(0);
     }
+
+    public void setCheatStatusTrue() {
+        currentPlayer.setCheatStatus(true);
+    }
 }
