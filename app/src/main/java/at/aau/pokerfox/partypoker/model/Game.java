@@ -570,7 +570,7 @@ public class Game {
         Player complainer = getPlayerByName(complainerName);
         Player cheater = getPlayerByName(cheaterName);
 
-        int penalty = cheater.getChipCount()/5;
+        int penalty = cheater.getChipCount()/3;
 
         if (!penalizeCheater) {
             if (complainer.getChipCount() >= penalty) {

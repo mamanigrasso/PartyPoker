@@ -86,7 +86,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
-    private int roundStep = 0; //=0 if no tablecards are visible, 1 if flop3, 2 if turn and 3 if river is visible while gaming
+    private int flopMarker = -1;
 
     private TextView tvTablePot;
 
@@ -557,6 +557,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         for (Card c : communityCards) {
             ivTableCards.get(i).setVisibility(View.VISIBLE);
             ivTableCards.get(i).setImageDrawable(getDrawable(c.getDrawableID()));
+            flopMarker=communityCards.size();
             i++;
         }
         if (performTurn)
@@ -827,33 +828,28 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop1) {
-            roundStep = 1;
             int[] myIds = {R.id.flop1};
             int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (flop2) {
-            roundStep = 1;
             int[] myIds = {R.id.flop2};
             int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (flop3) {
-            roundStep = 1;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (turn) {
-            roundStep=2;
             int[] myIds = {R.id.turn};
             int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
-            roundStep=3;
             int[] myIds = {R.id.river};
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -1138,8 +1134,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 timeoutDialog.schedule(new TimerTask() {
 
                     public void run() {
-                        chooseTheCheater.dismiss(); //timeout after 5 seconds
-                        timeoutDialog.cancel(); //timer is canceled now
+                        chooseTheCheater.dismiss();
+                        timeoutDialog.cancel();
                     }
                 }, 5000);
 
@@ -1317,61 +1313,57 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //the right winning-probability of the choosen player
     public void testProbability() {
 
-        ImageView flop3 = findViewById(R.id.flop3);
-        ImageView turn = findViewById(R.id.turn);
-
         //Cheat-Funktion is just for the round when the 3 flop-cards are visible
-       //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (flopMarker == 3) {
+                        final ArrayList<Card> openedCards = new ArrayList<>(5);
 
-                    final ArrayList<Card> openedCards = new ArrayList<>(5);
+                        //Adding the Playernames to our Array for the Dialog
+                        addingPlayerNamesToArray();
 
-                    //Adding the Playernames to our Array for the Dialog
-                    addingPlayerNamesToArray();
+                        btnShowTableCard.setVisibility(View.GONE);
+                        btnProbability.setVisibility(View.GONE);
+                        btnChooseOneCardFromDeck.setVisibility(View.GONE);
 
-                    btnShowTableCard.setVisibility(View.GONE);
-                    btnProbability.setVisibility(View.GONE);
-                    btnChooseOneCardFromDeck.setVisibility(View.GONE);
+                        AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+                        createDialog.setTitle("Choose the player you want");
+                        createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int indexPosition) {
 
-                    AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
-                    createDialog.setTitle("Choose the player you want");
-                    createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                                if (PartyPokerApplication.isHost()) {
 
-                            if (PartyPokerApplication.isHost()) {
+                                    openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
+                                    openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(0));
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(1));
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(2));
+                                } else {
+                                    openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
+                                    openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
+                                    openedCards.add(communityCards.get(0));
+                                    openedCards.add(communityCards.get(1));
+                                    openedCards.add(communityCards.get(2));
+                                }
 
-                                openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
-                                openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
-                                openedCards.add(Game.getInstance().getCommunityCards().get(0));
-                                openedCards.add(Game.getInstance().getCommunityCards().get(1));
-                                openedCards.add(Game.getInstance().getCommunityCards().get(2));
-                            } else {
-                                openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
-                                openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
-                                openedCards.add(communityCards.get(0));
-                                openedCards.add(communityCards.get(1));
-                                openedCards.add(communityCards.get(2));
-                            }
-
-                            dialogInterface.dismiss();
+                                dialogInterface.dismiss();
 
 
                                 ProbCheating probCheating = new ProbCheating();
                                 String probResult = probCheating.probCheat(openedCards);
                                 Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
 
-                        }
-                    });
+                            }
+                        });
 
 
-                    final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
+                        final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
 
                         findProbOfPlayerX.show();
+                    }
                 }
             });
-        }
-    //}
+    }
 }
