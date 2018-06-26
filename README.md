@@ -17,7 +17,7 @@ The goal is to win as many chips as possible from other players.
 
 Cheating can be allowed or not by the host. Click on the Cheat button to select one of the three different cheat options(EYE, DEAD MANS HAND or Probability).
 But be aware, other players can give you a high penalty by clicking the big red button with the call sign and selecting you as the "cheater".
-If the opposite player was right you have to pay him/her 1/3 of your chips, but if the opposite player was wrong, you get 1/3 of his/her chips.
+If the opposite player was right you have to pay him/her 1/3 of your chips, but if the opposite player was wrong, you get the same amount of him/her.
 
 * Eye - The Eye Cheat option gives you access to one card of any player you choose.
 
