@@ -89,6 +89,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
     private int flopMarker = -1;
+    boolean clickFlagShowCheater = false;
 
     private TextView tvTablePot;
 
@@ -560,6 +561,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             ivTableCards.get(i).setVisibility(View.VISIBLE);
             ivTableCards.get(i).setImageDrawable(getDrawable(c.getDrawableID()));
             flopMarker=communityCards.size();
+            if(communityCards.size()<=3) {
+                clickFlagShowCheater=false;
+            }
             i++;
         }
         if (performTurn)
@@ -1092,23 +1096,22 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
     //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
-        /*if (isCheatingAllowed) {
-            showTheCheater = new ShowTheCheater();
-        }*/
-
-        if (communityCards.size()<5) {
-            btnCheatingAlarm.setVisibility(View.INVISIBLE);
-        }
 
         btnCheatingAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if (communityCards.size()<5) {
+                    Toast.makeText(GameActivity.this, "ShowTheCheater-Function is not available yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, "Wait until the river is visible!", Toast.LENGTH_SHORT).show();
+                }
 
-                if (communityCards.size() == 5) {
+                if (clickFlagShowCheater==true&&communityCards.size()==5) {
+                    Toast.makeText(GameActivity.this, "You are allowed to blame just ONE player per round!", Toast.LENGTH_SHORT).show();
+                }
+                if (communityCards.size() == 5&&clickFlagShowCheater==false) {
 
-                    //for (int i = 0; i < players.size(); i++) {
-                        //if (i < players.size() - 1) {
+                            clickFlagShowCheater=true;
 
                             addingPlayerNamesToArray();
 
@@ -1137,7 +1140,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                                         Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
                                     } else {
                                         Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
-
                                     }
                                 }
                             });
@@ -1149,7 +1151,6 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
 
                             chooseTheCheater.show();
 
-
                             final Timer timeoutDialog = new Timer();
 
                             //Timer to close after 5 seconds
@@ -1160,12 +1161,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                                     timeoutDialog.cancel();
                                 }
                             }, 5000);
+                }
 
-                            btnCheatingAlarm.setEnabled(false);
-                        }
-                       // i++;
-                    //}
-               // }
             }
 
         });
