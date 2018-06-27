@@ -9,6 +9,7 @@ public enum MessageTypes {
     WON_AMOUNT,
     SHOW_WINNER,
     REPLACE_CARD,
+    GET_PROBABILITY,
     CHEAT_PENALTY,
     YOUR_TURN
 }

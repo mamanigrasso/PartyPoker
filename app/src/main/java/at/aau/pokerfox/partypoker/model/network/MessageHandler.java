@@ -21,6 +21,7 @@ import at.aau.pokerfox.partypoker.PartyPokerApplication;
 import at.aau.pokerfox.partypoker.model.network.messages.AbstractMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.CheatPenaltyMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.GetProbabilityMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.InitGameMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.host.NewCardMessage;
@@ -35,6 +36,7 @@ public class MessageHandler implements SalutDataCallback {
             .of(AbstractMessage.class, "type")
             .registerSubtype(ActionMessage.class)
             .registerSubtype(ReplaceCardMessage.class)
+            .registerSubtype(GetProbabilityMessage.class)
             .registerSubtype(CheatPenaltyMessage.class)
             .registerSubtype(InitGameMessage.class)
             .registerSubtype(NewCardMessage.class)
@@ -92,6 +94,13 @@ public class MessageHandler implements SalutDataCallback {
                     extras.putBoolean(BroadcastKeys.CARD_TO_REPLACE, replaceCardMessage.replaceCard1);
 
                     sendBroadcast(Broadcasts.REPLACE_CARD_MESSAGE, extras);
+                    break;
+
+                case GET_PROBABILITY:
+                    GetProbabilityMessage getProbabilityMessage = LoganSquare.parse(json, GetProbabilityMessage.class);
+                    extras.putBoolean(BroadcastKeys.CHEATSTATUS_CLIENT, getProbabilityMessage.clientCheatStatus);
+
+                    sendBroadcast(Broadcasts.GET_PROBABILITY_MESSAGE, extras);
                     break;
 
                 case CHEAT_PENALTY:
@@ -198,6 +207,10 @@ public class MessageHandler implements SalutDataCallback {
             return message;
 
         message = parseJsonToMessageClass(json, ReplaceCardMessage.class);
+        if (message != null)
+            return message;
+
+        message=parseJsonToMessageClass(json, GetProbabilityMessage.class);
         if (message != null)
             return message;
 

@@ -22,5 +22,6 @@ public class BroadcastKeys {
     public static final String COMPLAINER = "COMPLAINER";
     public static final String CHEATER = "CHEATER";
     public static final String PENALIZECHEATER = "PENALIZECHEATER";
+    public static final String CHEATSTATUS_CLIENT = "CHEATSTATUS_CLIENT";
 
 }

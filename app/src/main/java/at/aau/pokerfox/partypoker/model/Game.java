@@ -566,6 +566,10 @@ public class Game {
         currentPlayer.replaceCard(replaceCard1, replacementCard);
     }
 
+    public void replaceCheatStatus (Boolean cheatStatus) {
+        currentPlayer.setCheatStatus(cheatStatus);
+    }
+
     public void cheatPenalty(String complainerName, String cheaterName, boolean penalizeCheater) {
         Player complainer = getPlayerByName(complainerName);
         Player cheater = getPlayerByName(cheaterName);
