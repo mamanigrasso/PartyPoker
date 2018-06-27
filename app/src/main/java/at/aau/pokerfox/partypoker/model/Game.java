@@ -566,11 +566,15 @@ public class Game {
         currentPlayer.replaceCard(replaceCard1, replacementCard);
     }
 
+    public void replaceCheatStatus (Boolean cheatStatus) {
+        currentPlayer.setCheatStatus(cheatStatus);
+    }
+
     public void cheatPenalty(String complainerName, String cheaterName, boolean penalizeCheater) {
         Player complainer = getPlayerByName(complainerName);
         Player cheater = getPlayerByName(cheaterName);
 
-        int penalty = cheater.getChipCount()/5;
+        int penalty = cheater.getChipCount()/3;
 
         if (!penalizeCheater) {
             if (complainer.getChipCount() >= penalty) {
@@ -603,5 +607,9 @@ public class Game {
         }
 
         return allPlayers.get(0);
+    }
+
+    public void setCheatStatusTrue() {
+        currentPlayer.setCheatStatus(true);
     }
 }

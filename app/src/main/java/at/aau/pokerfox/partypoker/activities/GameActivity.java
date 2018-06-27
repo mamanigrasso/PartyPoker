@@ -45,10 +45,12 @@ import at.aau.pokerfox.partypoker.model.network.BroadcastKeys;
 import at.aau.pokerfox.partypoker.model.network.Broadcasts;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ActionMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.CheatPenaltyMessage;
+import at.aau.pokerfox.partypoker.model.network.messages.client.GetProbabilityMessage;
 import at.aau.pokerfox.partypoker.model.network.messages.client.ReplaceCardMessage;
 
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.ACTION_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.CHEAT_PENALTY_MESSAGE;
+import static at.aau.pokerfox.partypoker.model.network.Broadcasts.GET_PROBABILITY_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.INIT_GAME_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.NEW_CARD_MESSAGE;
 import static at.aau.pokerfox.partypoker.model.network.Broadcasts.REPLACE_CARD_MESSAGE;
@@ -86,7 +88,8 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private int sbMinAmount = 0;
     private boolean initGameMessageReceived = false;
     private boolean cheatOptionsVisible = false;
-    private int roundStep = 0; //=0 if no tablecards are visible, 1 if flop3, 2 if turn and 3 if river is visible while gaming
+    private int flopMarker = -1;
+    boolean clickFlagShowCheater = false;
 
     private TextView tvTablePot;
 
@@ -557,6 +560,10 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         for (Card c : communityCards) {
             ivTableCards.get(i).setVisibility(View.VISIBLE);
             ivTableCards.get(i).setImageDrawable(getDrawable(c.getDrawableID()));
+            flopMarker=communityCards.size();
+            if(communityCards.size()<=3) {
+                clickFlagShowCheater=false;
+            }
             i++;
         }
         if (performTurn)
@@ -827,33 +834,28 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
             turnCards(myIds, drawableIds);
         }
         if (flop1) {
-            roundStep = 1;
             int[] myIds = {R.id.flop1};
             int[] drawableIds = {this.communityCards.get(0).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (flop2) {
-            roundStep = 1;
             int[] myIds = {R.id.flop2};
             int[] drawableIds = {this.communityCards.get(1).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (flop3) {
-            roundStep = 1;
             int[] myIds = {R.id.flop3};
             int[] drawableIds = {this.communityCards.get(2).getDrawableID()};
             turnCards(myIds, drawableIds);
 
         }
         if (turn) {
-            roundStep=2;
             int[] myIds = {R.id.turn};
             int[] drawableIds = {this.communityCards.get(3).getDrawableID()};
             turnCards(myIds, drawableIds);
         }
         if (river) {
-            roundStep=3;
             int[] myIds = {R.id.river};
             int[] drawableIds = {this.communityCards.get(4).getDrawableID()};
             turnCards(myIds, drawableIds);
@@ -916,6 +918,7 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     private void registerForPokerBroadcasts(@NonNull PokerBroadcastReceiver receiver) {
         IntentFilter filter = new IntentFilter(ACTION_MESSAGE);
         filter.addAction(Broadcasts.REPLACE_CARD_MESSAGE);
+        filter.addAction(Broadcasts.GET_PROBABILITY_MESSAGE);
         filter.addAction(Broadcasts.CHEAT_PENALTY_MESSAGE);
         filter.addAction(Broadcasts.INIT_GAME_MESSAGE);
         filter.addAction(Broadcasts.UPDATE_TABLE_MESSAGE);
@@ -941,6 +944,12 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
         boolean cardToReplace = bundle.getBoolean(BroadcastKeys.CARD_TO_REPLACE);
 
         Game.getInstance().replacePlayersCard(cardToReplace, replacementCard);
+    }
+
+    private void handleGetProbabilityMessage (Bundle bundle) {
+        boolean cheatstatusClient = bundle.getBoolean(BroadcastKeys.CHEATSTATUS_CLIENT);
+
+        Game.getInstance().replaceCheatStatus(cheatstatusClient);
     }
 
     private void handleCheatPenaltyMessage(Bundle bundle) {
@@ -1018,6 +1027,9 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
                 case REPLACE_CARD_MESSAGE:
                     handleReplaceCardMessage(extras);
                     break;
+                case GET_PROBABILITY_MESSAGE:
+                    handleGetProbabilityMessage(extras);
+                    break;
                 case CHEAT_PENALTY_MESSAGE:
                     handleCheatPenaltyMessage(extras);
                     break;
@@ -1084,69 +1096,78 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //If you think somebody was cheating click on the BigRedButton on the Display and choose somebody
     //If you were right - the opposite get´s a penalty, if you were wrong - you get one
     public void showTheCheater () {
-        if (isCheatingAllowed) {
-            showTheCheater = new ShowTheCheater();
-        }
 
         btnCheatingAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                addingPlayerNamesToArray();
+                if (communityCards.size()<5) {
+                    Toast.makeText(GameActivity.this, "ShowTheCheater-Function is not available yet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, "Wait until the river is visible!", Toast.LENGTH_SHORT).show();
+                }
 
-                AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+                if (clickFlagShowCheater==true&&communityCards.size()==5) {
+                    Toast.makeText(GameActivity.this, "You are allowed to blame just ONE player per round!", Toast.LENGTH_SHORT).show();
+                }
+                if (communityCards.size() == 5&&clickFlagShowCheater==false) {
 
-                createDialog.setTitle("Choose the Cheater! You have 5 seconds");
-                createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int indexPosition) {
-                        Player cheater = getPlayerByName(playerNames[indexPosition]);
+                            clickFlagShowCheater=true;
 
-                        if (PartyPokerApplication.isHost()) {
-                            Game.getInstance().cheatPenalty(myPlayerName, playerNames[indexPosition], cheater.getCheatStatus());
-                        } else {
-                            CheatPenaltyMessage message = new CheatPenaltyMessage();
-                            message.complainer = myPlayerName;
-                            message.cheater = playerNames[indexPosition];
-                            message.penalizeCheater = cheater.getCheatStatus();
-                            PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
-                        }
+                            addingPlayerNamesToArray();
 
-                        updatePlayerChipsViews();
+                            AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
 
-                        dialogInterface.dismiss();
-                        if (cheater.getCheatStatus()) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
-                            Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
+                            createDialog.setTitle("Choose the Cheater! You have 5 seconds");
+                            createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                                    Player cheater = getPlayerByName(playerNames[indexPosition]);
 
-                        }
-                    }
-                });
+                                    if (PartyPokerApplication.isHost()) {
+                                        Game.getInstance().cheatPenalty(myPlayerName, playerNames[indexPosition], cheater.getCheatStatus());
+                                    } else {
+                                        CheatPenaltyMessage message = new CheatPenaltyMessage();
+                                        message.complainer = myPlayerName;
+                                        message.cheater = playerNames[indexPosition];
+                                        message.penalizeCheater = cheater.getCheatStatus();
+                                        PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                                    }
 
-                createDialog.setNegativeButton("Cancel", null);
-                createDialog.setCancelable(true);
+                                    updatePlayerChipsViews();
 
-                final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
+                                    dialogInterface.dismiss();
+                                    if (cheater.getCheatStatus()) {  //Shows TOAST whether the player choose right or wrong - dependency to "wasCheating"
+                                        Toast.makeText(GameActivity.this, "You were right", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(GameActivity.this, "You were wrong", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
 
-                chooseTheCheater.show();
+                            createDialog.setNegativeButton("Cancel", null);
+                            createDialog.setCancelable(true);
 
+                            final AlertDialog chooseTheCheater = createDialog.create();  //Dialog is beeing created
 
-                final Timer timeoutDialog = new Timer();
+                            chooseTheCheater.show();
 
-                //Timer to close after 5 seconds
-                timeoutDialog.schedule(new TimerTask() {
+                            final Timer timeoutDialog = new Timer();
 
-                    public void run() {
-                        chooseTheCheater.dismiss(); //timeout after 5 seconds
-                        timeoutDialog.cancel(); //timer is canceled now
-                    }
-                }, 5000);
+                            //Timer to close after 5 seconds
+                            timeoutDialog.schedule(new TimerTask() {
+
+                                public void run() {
+                                    chooseTheCheater.dismiss();
+                                    timeoutDialog.cancel();
+                                }
+                            }, 5000);
+                }
 
             }
 
-
         });
+
+
     }
 
     private Player getPlayerByName(String playerName) {
@@ -1317,61 +1338,62 @@ public class GameActivity extends AppCompatActivity implements ModActInterface {
     //the right winning-probability of the choosen player
     public void testProbability() {
 
-        ImageView flop3 = findViewById(R.id.flop3);
-        ImageView turn = findViewById(R.id.turn);
-
         //Cheat-Funktion is just for the round when the 3 flop-cards are visible
-       //if (roundStep == 1) {
             btnProbability.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (flopMarker == 3) {
+                        final ArrayList<Card> openedCards = new ArrayList<>(5);
 
-                    final ArrayList<Card> openedCards = new ArrayList<>(5);
+                        //Adding the Playernames to our Array for the Dialog
+                        addingPlayerNamesToArray();
 
-                    //Adding the Playernames to our Array for the Dialog
-                    addingPlayerNamesToArray();
+                        btnShowTableCard.setVisibility(View.GONE);
+                        btnProbability.setVisibility(View.GONE);
+                        btnChooseOneCardFromDeck.setVisibility(View.GONE);
 
-                    btnShowTableCard.setVisibility(View.GONE);
-                    btnProbability.setVisibility(View.GONE);
-                    btnChooseOneCardFromDeck.setVisibility(View.GONE);
+                        AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
+                        createDialog.setTitle("Choose the player you want");
+                        createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int indexPosition) {
 
-                    AlertDialog.Builder createDialog = new AlertDialog.Builder(GameActivity.this);
-                    createDialog.setTitle("Choose the player you want");
-                    createDialog.setSingleChoiceItems(playerNames, -1, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int indexPosition) {
+                                if (PartyPokerApplication.isHost()) {
 
-                            if (PartyPokerApplication.isHost()) {
+                                    openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
+                                    openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(0));
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(1));
+                                    openedCards.add(Game.getInstance().getCommunityCards().get(2));
+                                    Game.getInstance().setCheatStatusTrue();
+                                } else {
+                                    openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
+                                    openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
+                                    openedCards.add(communityCards.get(0));
+                                    openedCards.add(communityCards.get(1));
+                                    openedCards.add(communityCards.get(2));
 
-                                openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard1());
-                                openedCards.add(Game.getInstance().getPlayerByName(playerNames[indexPosition]).getCard2());
-                                openedCards.add(Game.getInstance().getCommunityCards().get(0));
-                                openedCards.add(Game.getInstance().getCommunityCards().get(1));
-                                openedCards.add(Game.getInstance().getCommunityCards().get(2));
-                            } else {
-                                openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard1());
-                                openedCards.add(getPlayerByName(playerNames[indexPosition]).getCard2());
-                                openedCards.add(communityCards.get(0));
-                                openedCards.add(communityCards.get(1));
-                                openedCards.add(communityCards.get(2));
-                            }
+                                    GetProbabilityMessage message = new GetProbabilityMessage();
+                                    message.clientCheatStatus = true;
+                                    PartyPokerApplication.getMessageHandler().sendMessageToHost(message);
+                                }
 
-                            dialogInterface.dismiss();
+                                dialogInterface.dismiss();
 
 
                                 ProbCheating probCheating = new ProbCheating();
                                 String probResult = probCheating.probCheat(openedCards);
                                 Toast.makeText(GameActivity.this, probResult, Toast.LENGTH_LONG).show();
 
-                        }
-                    });
+                            }
+                        });
 
 
-                    final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
+                        final AlertDialog findProbOfPlayerX = createDialog.create();  //Dialog is beeing created
 
                         findProbOfPlayerX.show();
+                    }
                 }
             });
-        }
-    //}
+    }
 }

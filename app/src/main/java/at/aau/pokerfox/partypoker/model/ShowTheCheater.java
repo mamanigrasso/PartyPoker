@@ -20,12 +20,6 @@ public class ShowTheCheater {
      * @param penalty - chips that will be reduced
      */
 
-    // @ditHeCheat should be called after this sequence in class "Game";
-    //
-    // System.out.println("Current pot size: " + potSize);
-
-    // LOC 54 inside the "for-Loop"
-
     public void ditHeCheat(ArrayList<Player> activePlayers, Player user, Player cheater, int penalty) {
 
         for (Player aktualPlayer : activePlayers) {
