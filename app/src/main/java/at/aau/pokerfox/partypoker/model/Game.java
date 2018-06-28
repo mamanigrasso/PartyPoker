@@ -585,6 +585,8 @@ public class Game {
                 complainer.setChipCount(0);
             }
         } else {
+            cheater.setHasFolded(true);
+
             if (cheater.getChipCount() >= penalty) {
                 cheater.reduceChipCount(penalty);
                 complainer.raiseChipCount(penalty);
