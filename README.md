@@ -21,6 +21,8 @@ If the opposite player was right you have to pay him/her 1/3 of your chips, but 
 
 * Dead man's Hand - With this special cheat option, it is possible to select any card of a full deck and change it with one of the two cards on your hand.
 
+* The Eye Cheat Option gives you access to a card of any player after the turn is visible.
+
 * Probability - This cheating option can be used in the round when the flop is visible but the turn and the river are still not visible. Probability cheating allows you gettin the probability for the best hand the selected player can get with one another card (with the turn or the river). It shows you the probability for what the selected player can have when all cards are visible from the combination "three of a kind" up to the "royal flush".
 
 ## Preview Scene
